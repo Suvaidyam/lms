@@ -53,7 +53,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-01 12:29:55.777660",
+ "modified": "2024-12-01 17:36:19.337085",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Course Table",
@@ -72,6 +72,7 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

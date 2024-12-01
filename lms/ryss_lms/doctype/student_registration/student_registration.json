@@ -1,24 +1,137 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:STU-{#####}",
  "creation": "2024-11-30 17:19:37.368737",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_cggt"
+  "personal_data_tab",
+  "personal_data_section",
+  "first__given_name",
+  "father__spouse_name",
+  "date_of_birth_ddmmyyyy",
+  "mobile_no",
+  "address_2_road_area",
+  "country",
+  "state",
+  "column_break_gpsv",
+  "last__family_name",
+  "gender",
+  "isd_code",
+  "address_1_door__apartment_no_building_society",
+  "address_3_city__town__village",
+  "pin__zip",
+  "district",
+  "tab_2_tab",
+  "educational_qualifications"
  ],
  "fields": [
   {
-   "fieldname": "section_break_cggt",
+   "fieldname": "personal_data_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "first__given_name",
+   "fieldtype": "Data",
+   "label": "First / Given Name"
+  },
+  {
+   "fieldname": "last__family_name",
+   "fieldtype": "Data",
+   "label": "Last / Family Name"
+  },
+  {
+   "fieldname": "father__spouse_name",
+   "fieldtype": "Data",
+   "label": "Father / Spouse Name"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "link_filters": "[[\"Gender\",\"gender\",\"in\",[\"Male\",\"Female\",\"Transgender\"]]]",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "date_of_birth_ddmmyyyy",
+   "fieldtype": "Date",
+   "label": "Date of Birth (dd/mm/yyyy)"
+  },
+  {
+   "fieldname": "isd_code",
+   "fieldtype": "Int",
+   "label": "ISD Code"
+  },
+  {
+   "default": "+91-",
+   "fieldname": "mobile_no",
+   "fieldtype": "Phone",
+   "label": "Mobile No."
+  },
+  {
+   "fieldname": "address_1_door__apartment_no_building_society",
+   "fieldtype": "Data",
+   "label": "Address 1 (Door / Apartment No., Building, Society)"
+  },
+  {
+   "fieldname": "address_2_road_area",
+   "fieldtype": "Data",
+   "label": "Address 2 (Road, Area)"
+  },
+  {
+   "fieldname": "address_3_city__town__village",
+   "fieldtype": "Data",
+   "label": "Address 3 (City / Town / Village)"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "pin__zip",
+   "fieldtype": "Data",
+   "label": "Pin / Zip"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "District"
+  },
+  {
+   "fieldname": "personal_data_tab",
+   "fieldtype": "Tab Break",
+   "label": "Personal Data"
+  },
+  {
+   "fieldname": "tab_2_tab",
+   "fieldtype": "Tab Break",
+   "label": "Education"
+  },
+  {
+   "fieldname": "educational_qualifications",
+   "fieldtype": "Link",
+   "label": "Educational Qualifications",
+   "options": "Education Table"
+  },
+  {
+   "fieldname": "column_break_gpsv",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-01 16:39:04.600452",
+ "modified": "2024-12-01 17:37:42.488756",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

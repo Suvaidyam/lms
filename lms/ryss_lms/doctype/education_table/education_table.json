@@ -16,7 +16,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-01 13:29:07.953403",
+ "modified": "2024-12-01 17:34:45.884396",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Education Table",
@@ -36,7 +36,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "award"
 }
