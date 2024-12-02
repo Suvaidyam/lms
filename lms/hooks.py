@@ -116,7 +116,13 @@ scheduler_events = {
 	"daily": ["lms.job.doctype.job_opportunity.job_opportunity.update_job_openings"],
 }
 
-fixtures = ["Custom Field", "Function", "Industry", "LMS Category"]
+fixtures = ["Custom Field", "Function", "Industry", "LMS Category", "Regional Training Centre",
+ "Training Centre District",
+ "Education Table",
+ "Regional Training Centre Table for Offline Course",
+ "Batch Table",
+ "Course Table",
+ "Student Registration"]
 
 # Testing
 # -------

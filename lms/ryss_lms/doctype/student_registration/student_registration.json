@@ -6,6 +6,17 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "course_and_centre_selection_tab",
+  "date_of_application",
+  "course_id",
+  "batch_no",
+  "training_centre_district",
+  "training_centre_id",
+  "column_break_gfys",
+  "course_name",
+  "course_mode",
+  "term_start_date",
+  "regional_training_centre",
   "personal_data_tab",
   "personal_data_section",
   "first__given_name",
@@ -169,11 +180,74 @@
    "fieldname": "documents_to_submit_tab",
    "fieldtype": "Tab Break",
    "label": "Documents to Submit"
+  },
+  {
+   "fieldname": "course_and_centre_selection_tab",
+   "fieldtype": "Tab Break",
+   "label": "Course and Centre Selection"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date_of_application",
+   "fieldtype": "Date",
+   "label": "Date of Application"
+  },
+  {
+   "fieldname": "course_id",
+   "fieldtype": "Link",
+   "label": "Course ID",
+   "options": "Course Table"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No",
+   "options": "Course Table"
+  },
+  {
+   "fieldname": "training_centre_district",
+   "fieldtype": "Link",
+   "label": "Training Centre District",
+   "options": "Training Centre District"
+  },
+  {
+   "fieldname": "training_centre_id",
+   "fieldtype": "Link",
+   "label": "Training Centre ID",
+   "options": "Regional Training Centre Table for Offline Course"
+  },
+  {
+   "fieldname": "column_break_gfys",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "course_name",
+   "fieldtype": "Link",
+   "label": "Course Name",
+   "options": "Course Table"
+  },
+  {
+   "fieldname": "course_mode",
+   "fieldtype": "Autocomplete",
+   "label": "Course Mode",
+   "options": "Offline\nOnline"
+  },
+  {
+   "fieldname": "term_start_date",
+   "fieldtype": "Date",
+   "label": "Term Start Date",
+   "options": "Course Table"
+  },
+  {
+   "fieldname": "regional_training_centre",
+   "fieldtype": "Link",
+   "label": "Regional Training Centre",
+   "options": "Regional Training Centre"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 08:48:26.412668",
+ "modified": "2024-12-02 15:29:46.703308",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",

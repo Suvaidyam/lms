@@ -1,0 +1,98 @@
+[
+ {
+  "course_id": "FSC-01",
+  "course_start_date": "2023-07-23",
+  "current_batch__no": 2,
+  "current_batch__start_date": "2023-07-23",
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "500",
+  "modified": "2024-12-01 12:40:51.871611",
+  "name": "gtq4a2ktot",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "FSC-02",
+  "course_start_date": "2023-07-23",
+  "current_batch__no": 1,
+  "current_batch__start_date": "2023-07-23",
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "500",
+  "modified": "2024-12-01 12:42:46.735736",
+  "name": "gv2jploo6m",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "FSC-03",
+  "course_start_date": "2023-07-23",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "500",
+  "modified": "2024-12-01 12:43:02.336467",
+  "name": "gv7f8rtfni",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "FSC-04",
+  "course_start_date": "2023-07-23",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "500",
+  "modified": "2024-12-01 12:43:14.620891",
+  "name": "gvbai02pp5",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "FSC-05",
+  "course_start_date": "2025-01-01",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "300",
+  "modified": "2024-12-01 12:44:02.930625",
+  "name": "gvc82c2nq7",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "NFFC",
+  "course_start_date": "2025-01-01",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "Open",
+  "modified": "2024-12-01 12:45:03.764797",
+  "name": "h0dd1rjmpd",
+  "physical_doc__verification_required": "No"
+ },
+ {
+  "course_id": "CMMC",
+  "course_start_date": "2025-07-01",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "Open",
+  "modified": "2024-12-01 12:45:58.000800",
+  "name": "h0uc5mq3fl",
+  "physical_doc__verification_required": "Yes"
+ },
+ {
+  "course_id": "CNCC",
+  "course_start_date": "2025-07-01",
+  "current_batch__no": 0,
+  "current_batch__start_date": null,
+  "docstatus": 0,
+  "doctype": "Batch Table",
+  "max__intake": "Open",
+  "modified": "2024-12-01 12:46:17.632551",
+  "name": "h14go0k3ni",
+  "physical_doc__verification_required": "No"
+ }
+]
