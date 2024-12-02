@@ -24,7 +24,14 @@
   "pin__zip",
   "district",
   "tab_2_tab",
-  "educational_qualifications"
+  "educational_qualifications",
+  "rsk__kvk",
+  "farm_data_tab",
+  "year_of_nf",
+  "extent_of_agriculture_in_ha",
+  "willingness_to_provide_at_least_05_ha_12_ac",
+  "farm_geocordinats",
+  "documents_to_submit_tab"
  ],
  "fields": [
   {
@@ -123,11 +130,50 @@
   {
    "fieldname": "column_break_gpsv",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rsk__kvk",
+   "fieldtype": "Link",
+   "label": "RSK / KVK",
+   "options": "RBK"
+  },
+  {
+   "fieldname": "farm_data_tab",
+   "fieldtype": "Tab Break",
+   "label": "Farm Data"
+  },
+  {
+   "fieldname": "year_of_nf",
+   "fieldtype": "Float",
+   "label": "Year of NF",
+   "precision": "1"
+  },
+  {
+   "fieldname": "extent_of_agriculture_in_ha",
+   "fieldtype": "Float",
+   "label": "Extent of Agriculture in Ha",
+   "precision": "4"
+  },
+  {
+   "fieldname": "willingness_to_provide_at_least_05_ha_12_ac",
+   "fieldtype": "Select",
+   "label": "Willingness to provide at least 0.5 ha/ 1.2 ac of agricultural land for NF practices",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "farm_geocordinats",
+   "fieldtype": "Geolocation",
+   "label": "Farm Geocordinats"
+  },
+  {
+   "fieldname": "documents_to_submit_tab",
+   "fieldtype": "Tab Break",
+   "label": "Documents to Submit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-01 17:37:42.488756",
+ "modified": "2024-12-02 08:48:26.412668",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
