@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:STU-{#####}",
+ "autoname": "format:SR-{#####}",
  "creation": "2024-11-30 17:19:37.368737",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -104,8 +104,9 @@
   },
   {
    "fieldname": "country",
-   "fieldtype": "Data",
-   "label": "Country"
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
   },
   {
    "fieldname": "pin__zip",
@@ -114,13 +115,15 @@
   },
   {
    "fieldname": "state",
-   "fieldtype": "Data",
-   "label": "State"
+   "fieldtype": "Link",
+   "label": "State",
+   "options": "State"
   },
   {
    "fieldname": "district",
-   "fieldtype": "Data",
-   "label": "District"
+   "fieldtype": "Link",
+   "label": "District",
+   "options": "District"
   },
   {
    "fieldname": "personal_data_tab",
@@ -193,28 +196,31 @@
    "label": "Date of Application"
   },
   {
+   "fetch_from": "course_name.course_id",
    "fieldname": "course_id",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Course ID",
-   "options": "Course Table"
+   "read_only": 1
   },
   {
+   "fetch_from": "course_name.batch_no",
    "fieldname": "batch_no",
    "fieldtype": "Data",
    "label": "Batch No",
-   "options": "Course Table"
+   "read_only": 1
   },
   {
    "fieldname": "training_centre_district",
    "fieldtype": "Link",
    "label": "Training Centre District",
-   "options": "Training Centre District"
+   "options": "Regional Training Centre Table for Offline Course"
   },
   {
+   "fetch_from": "training_centre_district.center_id",
    "fieldname": "training_centre_id",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Training Centre ID",
-   "options": "Regional Training Centre Table for Offline Course"
+   "read_only": 1
   },
   {
    "fieldname": "column_break_gfys",
@@ -227,27 +233,30 @@
    "options": "Course Table"
   },
   {
+   "fetch_from": "course_name.course_mode",
    "fieldname": "course_mode",
-   "fieldtype": "Autocomplete",
+   "fieldtype": "Data",
    "label": "Course Mode",
-   "options": "Offline\nOnline"
+   "read_only": 1
   },
   {
+   "fetch_from": "course_name.erm_start_date",
    "fieldname": "term_start_date",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": "Term Start Date",
-   "options": "Course Table"
+   "read_only": 1
   },
   {
+   "fetch_from": "training_centre_district.fetched_centre_name",
    "fieldname": "regional_training_centre",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Regional Training Centre",
-   "options": "Regional Training Centre"
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 15:29:46.703308",
+ "modified": "2024-12-04 17:53:26.854933",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",

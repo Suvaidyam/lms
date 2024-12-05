@@ -1,16 +1,18 @@
 {
+ "_comments": "[{\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9cefsma6ff\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9drp0fmlu5\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9eadp416pu\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9f7v7g1crk\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9g37gqig1h\"}]",
  "actions": [],
- "allow_rename": 1,
  "autoname": "field:center_id",
  "creation": "2024-12-01 12:16:43.981669",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "center_id",
+  "country_name",
+  "state_name",
+  "district_name",
   "district",
   "centre_name",
-  "state__province",
-  "country",
+  "fetched_centre_name",
   "batch_name_fsc"
  ],
  "fields": [
@@ -21,36 +23,56 @@
    "unique": 1
   },
   {
-   "fieldname": "district",
-   "fieldtype": "Link",
-   "label": "District",
-   "options": "Training Centre District"
-  },
-  {
    "fieldname": "centre_name",
    "fieldtype": "Link",
    "label": "Centre Name",
    "options": "Regional Training Centre"
   },
   {
-   "fieldname": "state__province",
-   "fieldtype": "Data",
-   "label": "State / Province"
-  },
-  {
-   "fieldname": "country",
-   "fieldtype": "Data",
-   "label": "Country"
-  },
-  {
    "fieldname": "batch_name_fsc",
    "fieldtype": "Int",
+   "in_list_view": 1,
    "label": "Batch Size  FSC-01"
+  },
+  {
+   "fieldname": "country_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Country Name",
+   "options": "Country"
+  },
+  {
+   "fieldname": "state_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "State / Province",
+   "options": "State"
+  },
+  {
+   "fieldname": "district_name",
+   "fieldtype": "Link",
+   "label": "District Name",
+   "options": "District",
+   "unique": 1
+  },
+  {
+   "fetch_from": "district_name.district_name",
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "District Name"
+  },
+  {
+   "fetch_from": "centre_name.centre_name",
+   "fieldname": "fetched_centre_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Centre Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 15:29:15.396019",
+ "modified": "2024-12-04 17:32:08.197055",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Regional Training Centre Table for Offline Course",
@@ -70,7 +92,9 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "district"
 }

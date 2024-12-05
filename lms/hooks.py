@@ -13,7 +13,10 @@ app_license = "AGPL"
 
 # Includes in <head>
 # ------------------
-
+fixtures = [
+	"Regional Training Centre",
+	"Education Table",
+	"Regional Training Centre Table for Offline Course",]
 # include js, css files in header of desk.html
 # app_include_css = "/assets/lms/css/lms.css"
 # app_include_js = "/assets/lms/js/lms.js"
@@ -83,6 +86,14 @@ setup_wizard_requires = "assets/lms/js/setup_wizard.js"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+doctype_js = {
+	 "Regional Training Centre Table for Offline Course" : [
+        "public/js/utils.js"
+    ],
+		 "Regional Training Centre" : [
+        "public/js/utils.js"
+    ],
+}
 # DocType Class
 # ---------------
 # Override standard doctype classes
