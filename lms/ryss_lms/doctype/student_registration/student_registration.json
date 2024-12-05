@@ -17,8 +17,6 @@
   "course_mode",
   "term_start_date",
   "regional_training_centre",
-  "section_break_kcpw",
-  "rsk__kvk",
   "personal_data_tab",
   "personal_data_section",
   "first__given_name",
@@ -36,6 +34,8 @@
   "address_3_city__town__village",
   "pin__zip",
   "district",
+  "section_break_lfls",
+  "rsk__kvk",
   "tab_2_tab",
   "educational_qualifications",
   "farm_data_tab",
@@ -256,13 +256,13 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_kcpw",
+   "fieldname": "section_break_lfls",
    "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-05 16:31:36.899694",
+ "modified": "2024-12-05 16:40:00.415689",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
