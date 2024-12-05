@@ -13,11 +13,15 @@
   "title",
   "start_date",
   "end_date",
+  "current_batch__no",
+  "current_batch__start_date",
   "column_break_4",
   "allow_self_enrollment",
   "start_time",
   "end_time",
   "timezone",
+  "max__intake",
+  "physical_doc__verification_required",
   "section_break_rgfj",
   "medium",
   "category",
@@ -326,11 +330,32 @@
   {
    "fieldname": "section_break_khcn",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "current_batch__no",
+   "fieldtype": "Int",
+   "label": "Current Batch  No"
+  },
+  {
+   "fieldname": "current_batch__start_date",
+   "fieldtype": "Date",
+   "label": "Current Batch  Start Date"
+  },
+  {
+   "fieldname": "max__intake",
+   "fieldtype": "Int",
+   "label": "Max.  Intake"
+  },
+  {
+   "fieldname": "physical_doc__verification_required",
+   "fieldtype": "Select",
+   "label": "Physical Doc  Verification Required",
+   "options": "\nYes\nNo"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-18 16:28:41.336928",
+ "modified": "2024-12-05 15:15:25.863871",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS Batch",

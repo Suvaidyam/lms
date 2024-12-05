@@ -17,6 +17,8 @@
   "course_mode",
   "term_start_date",
   "regional_training_centre",
+  "section_break_kcpw",
+  "rsk__kvk",
   "personal_data_tab",
   "personal_data_section",
   "first__given_name",
@@ -36,7 +38,6 @@
   "district",
   "tab_2_tab",
   "educational_qualifications",
-  "rsk__kvk",
   "farm_data_tab",
   "year_of_nf",
   "extent_of_agriculture_in_ha",
@@ -146,6 +147,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.course_mode == \"Offline\"",
    "fieldname": "rsk__kvk",
    "fieldtype": "Link",
    "label": "RSK / KVK",
@@ -196,7 +198,7 @@
    "label": "Date of Application"
   },
   {
-   "fetch_from": "course_name.course_id",
+   "fetch_from": "course_name.title",
    "fieldname": "course_id",
    "fieldtype": "Data",
    "label": "Course ID",
@@ -230,7 +232,7 @@
    "fieldname": "course_name",
    "fieldtype": "Link",
    "label": "Course Name",
-   "options": "Course Table"
+   "options": "LMS Course"
   },
   {
    "fetch_from": "course_name.course_mode",
@@ -240,7 +242,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "course_name.erm_start_date",
+   "fetch_from": "course_name.term_start_date",
    "fieldname": "term_start_date",
    "fieldtype": "Data",
    "label": "Term Start Date",
@@ -252,11 +254,15 @@
    "fieldtype": "Data",
    "label": "Regional Training Centre",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_kcpw",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-04 17:53:26.854933",
+ "modified": "2024-12-05 16:31:36.899694",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",

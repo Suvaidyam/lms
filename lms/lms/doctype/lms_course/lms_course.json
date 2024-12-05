@@ -16,12 +16,18 @@
  "field_order": [
   "title",
   "video_link",
+  "course_mode",
+  "batch_no",
+  "term_start_date",
   "column_break_3",
   "instructors",
   "tags",
+  "award",
   "column_break_htgn",
   "image",
   "category",
+  "duration__month",
+  "credits",
   "status",
   "section_break_7",
   "published",
@@ -284,6 +290,38 @@
    "fieldtype": "Data",
    "label": "Rating",
    "read_only": 1
+  },
+  {
+   "fieldname": "course_mode",
+   "fieldtype": "Select",
+   "label": "Course Mode",
+   "options": "\nOffline\nOnline"
+  },
+  {
+   "fieldname": "award",
+   "fieldtype": "Autocomplete",
+   "label": "Award",
+   "options": "Certification in Natural Farming Foundation Course\nDiploma in Natural Farming\nB.Sc. in Natural Farming\nB.Sc. (Hons) in Natural Farming\nPG Diploma in Natural Farming\nCertificate in Natural Farming Foundation Course\nCertified Model Maker Course\nCertificate Nutritional Counselling Course"
+  },
+  {
+   "fieldname": "duration__month",
+   "fieldtype": "Int",
+   "label": "Duration  (Month)"
+  },
+  {
+   "fieldname": "credits",
+   "fieldtype": "Data",
+   "label": " Credits"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Int",
+   "label": "Batch No"
+  },
+  {
+   "fieldname": "term_start_date",
+   "fieldtype": "Date",
+   "label": "Term Start Date"
   }
  ],
  "is_published_field": "published",
@@ -310,7 +348,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-10-30 23:08:31.842860",
+ "modified": "2024-12-05 16:02:18.693639",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS Course",
