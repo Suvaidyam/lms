@@ -43,7 +43,18 @@
   "extent_of_agriculture_in_ha",
   "willingness_to_provide_at_least_05_ha_12_ac",
   "farm_geocordinats",
-  "documents_to_submit_tab"
+  "documents_to_submit_tab",
+  "statement_of_purpose",
+  "10th_grade_marks_sheet__passing_certificate",
+  "graduate__pg_diploma_marks_sheet",
+  "caste_certificate",
+  "land_lease_or_ownership_document",
+  "column_break_pagg",
+  "photograph",
+  "12th_undergraduate_marks_sheet__passing_certificate",
+  "post_graduate_marks_sheet",
+  "vo_resolution_only_for_offline_courses_in_india",
+  "certificate_for_physically_challenged"
  ],
  "fields": [
   {
@@ -258,11 +269,74 @@
   {
    "fieldname": "section_break_lfls",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "statement_of_purpose",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Statement of Purpose",
+   "reqd": 1
+  },
+  {
+   "fieldname": "photograph",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Photograph",
+   "reqd": 1
+  },
+  {
+   "fieldname": "10th_grade_marks_sheet__passing_certificate",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "10th Grade Marks Sheet / Passing Certificate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "12th_undergraduate_marks_sheet__passing_certificate",
+   "fieldtype": "Attach",
+   "label": "12th Undergraduate Marks Sheet / Passing Certificate"
+  },
+  {
+   "fieldname": "graduate__pg_diploma_marks_sheet",
+   "fieldtype": "Attach",
+   "label": "Graduate / PG Diploma Marks Sheet"
+  },
+  {
+   "fieldname": "post_graduate_marks_sheet",
+   "fieldtype": "Attach",
+   "label": "Post Graduate Marks Sheet"
+  },
+  {
+   "fieldname": "caste_certificate",
+   "fieldtype": "Attach",
+   "label": "Caste Certificate"
+  },
+  {
+   "fieldname": "vo_resolution_only_for_offline_courses_in_india",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "VO Resolution (Only for Offline Courses in India) ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "certificate_for_physically_challenged",
+   "fieldtype": "Data",
+   "label": "Certificate for Physically Challenged"
+  },
+  {
+   "fieldname": "land_lease_or_ownership_document",
+   "fieldtype": "Attach",
+   "label": "Land Lease or Ownership Document",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pagg",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-05 16:40:00.415689",
+ "modified": "2024-12-05 17:38:40.188348",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
