@@ -8,14 +8,13 @@
  "field_order": [
   "course_and_centre_selection_tab",
   "date_of_application",
-  "course_id",
   "batch_no",
-  "training_centre_district",
+  "term_start_date",
   "training_centre_id",
   "column_break_gfys",
   "course_name",
   "course_mode",
-  "term_start_date",
+  "training_centre_district",
   "regional_training_centre",
   "personal_data_tab",
   "personal_data_section",
@@ -42,6 +41,12 @@
   "year_of_nf",
   "extent_of_agriculture_in_ha",
   "willingness_to_provide_at_least_05_ha_12_ac",
+  "section_break_wiau",
+  "latitude",
+  "column_break_ucmj",
+  "longitude",
+  "section_break_ylvi",
+  "fetch_location",
   "farm_geocordinats",
   "documents_to_submit_tab",
   "statement_of_purpose",
@@ -209,13 +214,6 @@
    "label": "Date of Application"
   },
   {
-   "fetch_from": "course_name.title",
-   "fieldname": "course_id",
-   "fieldtype": "Data",
-   "label": "Course ID",
-   "read_only": 1
-  },
-  {
    "fetch_from": "course_name.batch_no",
    "fieldname": "batch_no",
    "fieldtype": "Data",
@@ -332,11 +330,40 @@
   {
    "fieldname": "column_break_pagg",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_wiau",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Data",
+   "label": "Farm Geocoordinates Latitude",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ucmj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "label": "Farm Geocoordinates Longitude:",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fetch_location",
+   "fieldtype": "Button",
+   "label": "Fetch Geolocation"
+  },
+  {
+   "fieldname": "section_break_ylvi",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-05 17:38:40.188348",
+ "modified": "2024-12-06 12:07:27.875320",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
