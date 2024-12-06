@@ -14,31 +14,35 @@
   {
    "fieldname": "country_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Country Name",
    "options": "Country"
   },
   {
    "fieldname": "state_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "State Name",
    "options": "State"
   },
   {
    "fieldname": "district_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "District Name",
    "options": "District"
   },
   {
    "fieldname": "centre_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Centre Name",
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-05 12:51:47.019767",
+ "modified": "2024-12-06 14:39:03.337175",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Regional Training Centre",

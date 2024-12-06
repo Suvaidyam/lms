@@ -2,6 +2,27 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Student Registration', {
+    refresh(frm) {
+        apply_filter("state_name", "country_name", frm, frm.doc.country);
+        apply_filter("district_name", "state_name", frm, frm.doc.state);
+    },
+    country_name(frm) {
+        apply_filter("state_name", "country_name", frm, frm.doc.country);
+    },
+    state_name(frm) {
+        apply_filter("district_name", "state_name", frm, frm.doc.state);
+    },
+    country_name(frm) {
+        frm.set_value({
+            "state_name": "",
+            "district_name": "",
+        })
+    },
+    state_name(frm) {
+        frm.set_value({
+            "district_name": "",
+        })
+    },
     fetch_location: function (frm) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -23,7 +44,6 @@ frappe.ui.form.on('Student Registration', {
                     ]
                 };
                 frm.set_value('farm_geocordinats', JSON.stringify(geoJSON));
-                frm.save();
             });
         } else {
             frappe.msgprint({
