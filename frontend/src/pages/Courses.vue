@@ -8,7 +8,7 @@
 				:items="[{ label: __('Courses'), route: { name: 'Courses' } }]"
 			/>
 			<div class="flex space-x-2 justify-end">
-				<div class="w-46 md:w-44">
+				<div class="w-40 md:w-44">
 					<FormControl
 						v-if="categories.data?.length"
 						type="select"
@@ -30,6 +30,7 @@
 					</FormControl>
 				</div>
 				<router-link
+					v-if="user.data?.is_moderator || user.data?.is_instructor"
 					:to="{
 						name: 'CourseForm',
 						params: {
@@ -37,7 +38,7 @@
 						},
 					}"
 				>
-					<Button v-if="user.data?.is_moderator" variant="solid">
+					<Button variant="solid">
 						<template #prefix>
 							<Plus class="h-4 w-4" />
 						</template>
@@ -48,6 +49,7 @@
 		</header>
 		<div class="">
 			<Tabs
+				v-if="hasCourses"
 				v-model="tabIndex"
 				tablistClass="overflow-x-visible flex-wrap !gap-3 md:flex-nowrap"
 				:tabs="makeTabs"
@@ -101,46 +103,101 @@
 							<CourseCard :course="course" />
 						</router-link>
 					</div>
-					<div
-						v-else
-						class="grid flex-1 place-items-center text-xl font-medium text-gray-500"
-					>
-						<div class="flex flex-col items-center justify-center mt-4">
-							<div>
-								{{ __('No {0} courses found').format(tab.label.toLowerCase()) }}
-							</div>
-						</div>
+					<div v-else class="p-5 italic text-gray-500">
+						{{ __('No {0} courses').format(tab.label.toLowerCase()) }}
 					</div>
 				</template>
 			</Tabs>
+			<div
+				v-else-if="
+					!courses.loading &&
+					(user.data?.is_moderator || user.data?.is_instructor)
+				"
+				class="grid grid-cols-3 p-5"
+			>
+				<router-link
+					:to="{
+						name: 'CourseForm',
+						params: {
+							courseName: 'new',
+						},
+					}"
+				>
+					<div class="bg-gray-50 py-32 px-5 rounded-md">
+						<div class="flex flex-col items-center text-center space-y-2">
+							<Plus
+								class="size-10 stroke-1 text-gray-800 p-1 rounded-full border bg-white"
+							/>
+							<div class="font-medium">
+								{{ __('Create a Course') }}
+							</div>
+							<span class="text-gray-700 text-sm leading-4">
+								{{ __('You can add chapters and lessons to it.') }}
+							</span>
+						</div>
+					</div>
+				</router-link>
+			</div>
+			<div
+				v-else-if="!courses.loading && !hasCourses"
+				class="text-center p-5 text-gray-600 mt-52 w-3/4 md:w-1/2 mx-auto space-y-2"
+			>
+				<BookOpen class="size-10 mx-auto stroke-1 text-gray-500" />
+				<div class="text-xl font-medium">
+					{{ __('No courses found') }}
+				</div>
+				<div class="leading-5">
+					{{
+						__(
+							'There are no courses available at the moment. Keep an eye out, fresh learning experiences are on the way soon!'
+						)
+					}}
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
 import {
-	Breadcrumbs,
-	Tabs,
 	Badge,
+	Breadcrumbs,
 	Button,
-	FormControl,
+	call,
 	createResource,
+	FormControl,
+	Tabs,
 } from 'frappe-ui'
 import CourseCard from '@/components/CourseCard.vue'
-import { Plus, Search } from 'lucide-vue-next'
+import { BookOpen, Plus, Search } from 'lucide-vue-next'
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import { updateDocumentTitle } from '@/utils'
+import { useRouter } from 'vue-router'
+import { useSettings } from '@/stores/settings'
 
 const user = inject('$user')
 const searchQuery = ref('')
 const currentCategory = ref(null)
+const hasCourses = ref(false)
+const router = useRouter()
+const settings = useSettings()
 
 onMounted(() => {
+	checkLearningPath()
 	let queries = new URLSearchParams(location.search)
 	if (queries.has('category')) {
 		currentCategory.value = queries.get('category')
 	}
 })
+
+const checkLearningPath = () => {
+	if (
+		settings.learningPaths.data &&
+		(!user.data?.is_moderator || !user.data?.is_instructor)
+	) {
+		router.push({ name: 'Programs' })
+	}
+}
 
 const courses = createResource({
 	url: 'lms.lms.utils.get_courses',
@@ -221,6 +278,16 @@ const categories = createResource({
 			value: null,
 		})
 	},
+})
+
+watch(courses, () => {
+	if (courses.data) {
+		Object.keys(courses.data).forEach((section) => {
+			if (courses.data[section].length) {
+				hasCourses.value = true
+			}
+		})
+	}
 })
 
 watch(

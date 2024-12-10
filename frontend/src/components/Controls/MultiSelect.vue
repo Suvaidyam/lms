@@ -2,6 +2,7 @@
 	<div>
 		<label class="block mb-1" :class="labelClasses" v-if="label">
 			{{ label }}
+			<span class="text-red-500" v-if="required">*</span>
 		</label>
 		<div class="grid grid-cols-3 gap-1">
 			<Button
@@ -115,6 +116,9 @@ const props = defineProps({
 		type: Function,
 		default: (value) => `${value} is an Invalid value`,
 	},
+	required: {
+		type: Boolean,
+	},
 })
 
 const values = defineModel()
@@ -152,24 +156,11 @@ const filterOptions = createResource({
 	url: 'frappe.desk.search.search_link',
 	method: 'POST',
 	cache: [text.value, props.doctype],
+	auto: true,
 	params: {
 		txt: text.value,
 		doctype: props.doctype,
 	},
-	/* transform: (data) => {
-        let allData = data
-            .filter((c) => {
-                return c.description.split(', ')[1]
-            })
-            .map((option) => {
-                let email = option.description.split(', ')[1]
-                return {
-                    label: option.label || email,
-                    value: email,
-                }
-            })
-        return allData
-    }, */
 })
 
 const options = computed(() => {

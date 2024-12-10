@@ -52,7 +52,6 @@ class CourseLesson(Document):
 			ex.lesson = None
 			ex.course = None
 			ex.index_ = 0
-			ex.index_label = ""
 			ex.save(ignore_permissions=True)
 
 	def check_and_create_folder(self):
@@ -94,14 +93,14 @@ def save_progress(lesson, course):
 
 	frappe.db.set_value("LMS Enrollment", membership, "current_lesson", lesson)
 
-	quiz_completed = get_quiz_progress(lesson)
-	if not quiz_completed:
-		return 0
-
 	if frappe.db.exists(
 		"LMS Course Progress", {"lesson": lesson, "member": frappe.session.user}
 	):
 		return
+
+	quiz_completed = get_quiz_progress(lesson)
+	if not quiz_completed:
+		return 0
 
 	frappe.get_doc(
 		{

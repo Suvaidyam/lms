@@ -1,18 +1,18 @@
 <template>
 	<div
 		class="flex h-full flex-col justify-between transition-all duration-300 ease-in-out bg-gray-50"
-		:class="isSidebarCollapsed ? 'w-14' : 'w-56'"
+		:class="sidebarStore.isSidebarCollapsed ? 'w-14' : 'w-56'"
 	>
 		<div
 			class="flex flex-col overflow-hidden"
-			:class="isSidebarCollapsed ? 'items-center' : ''"
+			:class="sidebarStore.isSidebarCollapsed ? 'items-center' : ''"
 		>
-			<UserDropdown :isCollapsed="isSidebarCollapsed" />
+			<UserDropdown :isCollapsed="sidebarStore.isSidebarCollapsed" />
 			<div class="flex flex-col" v-if="sidebarSettings.data">
 				<SidebarLink
 					v-for="link in sidebarLinks"
 					:link="link"
-					:isCollapsed="isSidebarCollapsed"
+					:isCollapsed="sidebarStore.isSidebarCollapsed"
 					class="mx-2 my-0.5"
 				/>
 			</div>
@@ -22,11 +22,11 @@
 			>
 				<div
 					class="flex items-center justify-between pr-2 cursor-pointer"
-					:class="isSidebarCollapsed ? 'pl-3' : 'pl-4'"
+					:class="sidebarStore.isSidebarCollapsed ? 'pl-3' : 'pl-4'"
 					@click="showWebPages = !showWebPages"
 				>
 					<div
-						v-if="!isSidebarCollapsed"
+						v-if="!sidebarStore.isSidebarCollapsed"
 						class="flex items-center text-sm text-gray-600 my-1"
 					>
 						<span class="grid h-5 w-6 flex-shrink-0 place-items-center">
@@ -53,7 +53,7 @@
 					<SidebarLink
 						v-for="link in sidebarSettings.data.web_pages"
 						:link="link"
-						:isCollapsed="isSidebarCollapsed"
+						:isCollapsed="sidebarStore.isSidebarCollapsed"
 						class="mx-2 my-0.5"
 						:showControls="isModerator ? true : false"
 						@openModal="openPageModal"
@@ -64,17 +64,19 @@
 		</div>
 		<SidebarLink
 			:link="{
-				label: isSidebarCollapsed ? 'Expand' : 'Collapse',
+				label: sidebarStore.isSidebarCollapsed ? 'Expand' : 'Collapse',
 			}"
-			:isCollapsed="isSidebarCollapsed"
-			@click="isSidebarCollapsed = !isSidebarCollapsed"
+			:isCollapsed="sidebarStore.isSidebarCollapsed"
+			@click="toggleSidebar()"
 			class="m-2"
 		>
 			<template #icon>
 				<span class="grid h-5 w-6 flex-shrink-0 place-items-center">
 					<CollapseSidebar
 						class="h-4.5 w-4.5 text-gray-700 duration-300 ease-in-out"
-						:class="{ '[transform:rotateY(180deg)]': isSidebarCollapsed }"
+						:class="{
+							'[transform:rotateY(180deg)]': sidebarStore.isSidebarCollapsed,
+						}"
 					/>
 				</span>
 			</template>
@@ -96,12 +98,15 @@ import { ref, onMounted, inject, watch } from 'vue'
 import { getSidebarLinks } from '../utils'
 import { usersStore } from '@/stores/user'
 import { sessionStore } from '@/stores/session'
+import { useSidebar } from '@/stores/sidebar'
+import { useSettings } from '@/stores/settings'
 import { ChevronRight, Plus } from 'lucide-vue-next'
 import { createResource, Button } from 'frappe-ui'
 import PageModal from '@/components/Modals/PageModal.vue'
 
 const { user, sidebarSettings } = sessionStore()
 const { userResource } = usersStore()
+let sidebarStore = useSidebar()
 const socket = inject('$socket')
 const unreadCount = ref(0)
 const sidebarLinks = ref(getSidebarLinks())
@@ -110,6 +115,7 @@ const isModerator = ref(false)
 const isInstructor = ref(false)
 const pageToEdit = ref(null)
 const showWebPages = ref(false)
+const settingsStore = useSettings()
 
 onMounted(() => {
 	socket.on('publish_lms_notifications', (data) => {
@@ -179,6 +185,28 @@ const addQuizzes = () => {
 	}
 }
 
+const addPrograms = () => {
+	if (settingsStore.learningPaths.data) {
+		let activeFor = ['Programs', 'ProgramForm']
+		let index = 1
+		if (!isInstructor.value && !isModerator.value) {
+			sidebarLinks.value = sidebarLinks.value.filter(
+				(link) => link.label !== 'Courses'
+			)
+			activeFor.push('CourseDetail')
+			activeFor.push('Lesson')
+			index = 0
+		}
+
+		sidebarLinks.value.splice(index, 0, {
+			label: 'Programs',
+			icon: 'Route',
+			to: 'Programs',
+			activeFor: activeFor,
+		})
+	}
+}
+
 const openPageModal = (link) => {
 	showPageModal.value = true
 	pageToEdit.value = link
@@ -211,8 +239,11 @@ watch(userResource, () => {
 		isModerator.value = userResource.data.is_moderator
 		isInstructor.value = userResource.data.is_instructor
 		addQuizzes()
+		addPrograms()
 	}
 })
 
-let isSidebarCollapsed = ref(getSidebarFromStorage())
+const toggleSidebar = () => {
+	sidebarStore.isSidebarCollapsed = !sidebarStore.isSidebarCollapsed
+}
 </script>

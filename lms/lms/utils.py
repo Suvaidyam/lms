@@ -109,7 +109,7 @@ def get_chapters(course):
 		chapter_details = frappe.db.get_value(
 			"Course Chapter",
 			{"name": chapter.chapter},
-			["name", "title", "description"],
+			["name", "title"],
 			as_dict=True,
 		)
 		chapter.update(chapter_details)
@@ -157,11 +157,12 @@ def get_lesson_details(chapter, progress=False):
 				"file_type",
 				"instructor_notes",
 				"course",
+				"content",
 			],
 			as_dict=True,
 		)
 		lesson_details.number = f"{chapter.idx}.{row.idx}"
-		lesson_details.icon = get_lesson_icon(lesson_details.body)
+		lesson_details.icon = get_lesson_icon(lesson_details.body, lesson_details.content)
 
 		if progress:
 			lesson_details.is_complete = get_progress(lesson_details.course, lesson_details.name)
@@ -170,20 +171,38 @@ def get_lesson_details(chapter, progress=False):
 	return lessons
 
 
-def get_lesson_icon(content):
-	icon = None
-	macros = find_macros(content)
+def get_lesson_icon(body, content):
+	if content:
+		content = json.loads(content)
 
+		for block in content.get("blocks"):
+			if block.get("type") == "upload" and block.get("data").get("file_type").lower() in [
+				"mp4",
+				"webm",
+				"ogg",
+				"mov",
+			]:
+				return "icon-youtube"
+
+			if block.get("type") == "embed" and block.get("data").get("service") in [
+				"youtube",
+				"vimeo",
+			]:
+				return "icon-youtube"
+
+			if block.get("type") == "quiz":
+				return "icon-quiz"
+
+		return "icon-list"
+
+	macros = find_macros(body)
 	for macro in macros:
 		if macro[0] == "YouTubeVideo" or macro[0] == "Video":
-			icon = "icon-youtube"
+			return "icon-youtube"
 		elif macro[0] == "Quiz":
-			icon = "icon-quiz"
+			return "icon-quiz"
 
-	if not icon:
-		icon = "icon-list"
-
-	return icon
+	return "icon-list"
 
 
 @frappe.whitelist(allow_guest=True)
@@ -482,11 +501,6 @@ def first_lesson_exists(course):
 		return False
 
 	return True
-
-
-def redirect_to_courses_list():
-	frappe.local.flags.redirect_location = "/lms/courses"
-	raise frappe.Redirect
 
 
 def has_course_instructor_role(member=None):
@@ -841,7 +855,10 @@ def get_telemetry_boot_info():
 	}
 
 
+@frappe.whitelist()
 def is_onboarding_complete():
+	if not has_course_moderator_role():
+		return {"is_onboarded": False}
 	course_created = frappe.db.a_row_exists("LMS Course")
 	chapter_created = frappe.db.a_row_exists("Course Chapter")
 	lesson_created = frappe.db.a_row_exists("Course Lesson")
@@ -1027,23 +1044,13 @@ def get_course_details(course):
 			"currency",
 			"amount_usd",
 			"enable_certification",
+			"lessons",
+			"enrollments",
+			"rating",
 		],
 		as_dict=1,
 	)
 	course_details.tags = course_details.tags.split(",") if course_details.tags else []
-	course_details.lesson_count = get_lesson_count(course_details.name)
-
-	course_details.enrollment_count = frappe.db.count(
-		"LMS Enrollment", {"course": course_details.name, "member_type": "Student"}
-	)
-	course_details.enrollment_count_formatted = format_number(
-		course_details.enrollment_count
-	)
-
-	avg_rating = get_average_rating(course_details.name) or 0
-	course_details.avg_rating = flt(
-		avg_rating, frappe.get_system_settings("float_precision") or 3
-	)
 
 	course_details.instructors = get_instructors(course_details.name)
 	if course_details.paid_course:
@@ -1092,14 +1099,14 @@ def get_categorized_courses(courses):
 		):
 			new.append(course)
 
-		if course.membership and course.published:
+		if course.membership:
 			enrolled.append(course)
 		elif course.is_instructor:
 			created.append(course)
 
 		categories = [live, enrolled, created]
 		for category in categories:
-			category.sort(key=lambda x: x.enrollment_count, reverse=True)
+			category.sort(key=lambda x: cint(x.enrollments), reverse=True)
 
 		live.sort(key=lambda x: x.featured, reverse=True)
 
@@ -1124,11 +1131,20 @@ def get_course_outline(course, progress=False):
 		chapter_details = frappe.db.get_value(
 			"Course Chapter",
 			chapter.chapter,
-			["name", "title", "description"],
+			["name", "title", "is_scorm_package", "launch_file", "scorm_package"],
 			as_dict=True,
 		)
 		chapter_details["idx"] = chapter.idx
 		chapter_details.lessons = get_lessons(course, chapter_details, progress=progress)
+
+		if chapter_details.is_scorm_package:
+			chapter_details.scorm_package = frappe.db.get_value(
+				"File",
+				chapter_details.scorm_package,
+				["file_name", "file_size", "file_url"],
+				as_dict=1,
+			)
+
 		outline.append(chapter_details)
 	return outline
 
@@ -1142,8 +1158,14 @@ def get_lesson(course, chapter, lesson):
 		"Lesson Reference", {"parent": chapter_name, "idx": lesson}, "lesson"
 	)
 	lesson_details = frappe.db.get_value(
-		"Course Lesson", lesson_name, ["include_in_preview", "title"], as_dict=1
+		"Course Lesson",
+		lesson_name,
+		["include_in_preview", "title", "is_scorm_package"],
+		as_dict=1,
 	)
+	if not lesson_details or lesson_details.is_scorm_package:
+		return {}
+
 	membership = get_membership(course)
 	course_title = frappe.db.get_value("LMS Course", course, "title")
 	if (
@@ -1258,7 +1280,7 @@ def get_batch_details(batch):
 	batch_details.instructors = get_instructors(batch)
 
 	batch_details.courses = frappe.get_all(
-		"Batch Course", filters={"parent": batch}, fields=["course", "title"]
+		"Batch Course", filters={"parent": batch}, fields=["course", "title", "evaluator"]
 	)
 	batch_details.students = frappe.get_all(
 		"Batch Student", {"parent": batch}, pluck="student"
@@ -1732,3 +1754,81 @@ def enroll_in_batch(batch, payment_name=None):
 			)
 
 		student.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def get_programs():
+	if (
+		has_course_moderator_role()
+		or has_course_instructor_role()
+		or has_course_evaluator_role()
+	):
+		programs = frappe.get_all("LMS Program", fields=["name"])
+	else:
+		programs = frappe.get_all(
+			"LMS Program Member", {"member": frappe.session.user}, ["parent as name", "progress"]
+		)
+
+	for program in programs:
+		program_courses = frappe.get_all(
+			"LMS Program Course", {"parent": program.name}, ["course"], order_by="idx"
+		)
+		program.courses = []
+		for course in program_courses:
+			program.courses.append(get_course_details(course.course))
+
+		program.members = frappe.db.count("LMS Program Member", {"parent": program.name})
+
+	return programs
+
+
+@frappe.whitelist()
+def enroll_in_program_course(program, course):
+	enrollment = frappe.db.exists(
+		"LMS Enrollment", {"member": frappe.session.user, "course": course}
+	)
+
+	if enrollment:
+		enrollment = frappe.db.get_value(
+			"LMS Enrollment", enrollment, ["name", "current_lesson"], as_dict=1
+		)
+		enrollment.current_lesson = get_lesson_index(enrollment.current_lesson)
+		return enrollment
+
+	program_courses = frappe.get_all(
+		"LMS Program Course", {"parent": program}, ["course", "idx"], order_by="idx"
+	)
+	current_course_idx = [
+		program_course.idx
+		for program_course in program_courses
+		if program_course.course == course
+	][0]
+
+	for program_course in program_courses:
+		if program_course.idx < current_course_idx:
+			enrollment = frappe.db.get_value(
+				"LMS Enrollment",
+				{"member": frappe.session.user, "course": program_course.course},
+				["name", "progress"],
+				as_dict=1,
+			)
+			if enrollment and enrollment.progress != 100:
+				frappe.throw(
+					_("Please complete the previous courses in the program to enroll in this course.")
+				)
+			elif not enrollment:
+				frappe.throw(
+					_("Please complete the previous courses in the program to enroll in this course.")
+				)
+			else:
+				continue
+
+	enrollment = frappe.new_doc("LMS Enrollment")
+	enrollment.update(
+		{
+			"member": frappe.session.user,
+			"course": course,
+		}
+	)
+	enrollment.save()
+	return enrollment

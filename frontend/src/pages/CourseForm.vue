@@ -7,6 +7,14 @@
 				>
 					<Breadcrumbs class="h-7" :items="breadcrumbs" />
 					<div class="flex items-center mt-3 md:mt-0">
+						<Button v-if="courseResource.data?.name" @click="trashCourse()">
+							<template #prefix>
+								<Trash2 class="w-4 h-4 stroke-1.5" />
+							</template>
+							<span>
+								{{ __('Delete') }}
+							</span>
+						</Button>
 						<Button variant="solid" @click="submitCourse()" class="ml-2">
 							<span>
 								{{ __('Save') }}
@@ -23,15 +31,23 @@
 							v-model="course.title"
 							:label="__('Title')"
 							class="mb-4"
+							:required="true"
 						/>
 						<FormControl
 							v-model="course.short_introduction"
 							:label="__('Short Introduction')"
+							:placeholder="
+								__(
+									'A one line introduction to the course that appears on the course card'
+								)
+							"
 							class="mb-4"
+							:required="true"
 						/>
 						<div class="mb-4">
-							<div class="mb-1.5 text-sm text-gray-700">
+							<div class="mb-1.5 text-sm text-gray-600">
 								{{ __('Course Description') }}
+								<span class="text-red-500">*</span>
 							</div>
 							<TextEditor
 								:content="course.description"
@@ -41,49 +57,62 @@
 								editorClass="prose-sm max-w-none border-b border-x bg-gray-100 rounded-b-md py-1 px-2 min-h-[7rem]"
 							/>
 						</div>
-						<FileUploader
-							v-if="!course.course_image"
-							:fileTypes="['image/*']"
-							:validateFile="validateFile"
-							@success="(file) => saveImage(file)"
-						>
-							<template
-								v-slot="{ file, progress, uploading, openFileSelector }"
-							>
-								<div class="mb-4">
-									<Button @click="openFileSelector" :loading="uploading">
-										{{
-											uploading ? `Uploading ${progress}%` : 'Upload an image'
-										}}
-									</Button>
-								</div>
-							</template>
-						</FileUploader>
-						<div v-else class="mb-4">
-							<div class="text-xs text-gray-600 mb-1">
+						<div class="mb-4">
+							<div class="text-xs text-gray-600 mb-2">
 								{{ __('Course Image') }}
+								<span class="text-red-500">*</span>
 							</div>
-							<div class="flex items-center">
-								<div class="border rounded-md p-2 mr-2">
-									<FileText class="h-5 w-5 stroke-1.5 text-gray-700" />
+							<FileUploader
+								v-if="!course.course_image"
+								:fileTypes="['image/*']"
+								:validateFile="validateFile"
+								@success="(file) => saveImage(file)"
+							>
+								<template
+									v-slot="{ file, progress, uploading, openFileSelector }"
+								>
+									<div class="flex items-center">
+										<div class="border rounded-md w-fit py-5 px-20">
+											<Image class="size-5 stroke-1 text-gray-700" />
+										</div>
+										<div class="ml-4">
+											<Button @click="openFileSelector">
+												{{ __('Upload') }}
+											</Button>
+											<div class="mt-2 text-gray-600 text-sm">
+												{{
+													__('Appears on the course card in the course list')
+												}}
+											</div>
+										</div>
+									</div>
+								</template>
+							</FileUploader>
+							<div v-else class="mb-4">
+								<div class="flex items-center">
+									<img
+										:src="course.course_image.file_url"
+										class="border rounded-md w-40"
+									/>
+									<div class="ml-4">
+										<Button @click="removeImage()">
+											{{ __('Remove') }}
+										</Button>
+										<div class="mt-2 text-gray-600 text-sm">
+											{{ __('Appears on the course card in the course list') }}
+										</div>
+									</div>
 								</div>
-								<div class="flex flex-col">
-									<span>
-										{{ course.course_image.file_name }}
-									</span>
-									<span class="text-sm text-gray-500 mt-1">
-										{{ getFileSize(course.course_image.file_size) }}
-									</span>
-								</div>
-								<X
-									@click="removeImage()"
-									class="bg-gray-200 rounded-md cursor-pointer stroke-1.5 w-5 h-5 p-1 ml-4"
-								/>
 							</div>
 						</div>
 						<FormControl
 							v-model="course.video_link"
 							:label="__('Preview Video')"
+							:placeholder="
+								__(
+									'Paste the youtube link of a short video introducing the course'
+								)
+							"
 							class="mb-4"
 						/>
 						<div class="mb-4">
@@ -104,6 +133,8 @@
 								</div>
 								<FormControl
 									v-model="newTag"
+									:placeholder="__('Keywords for the course')"
+									class="w-52"
 									@keyup.enter="updateTags()"
 									id="tags"
 								/>
@@ -121,6 +152,8 @@
 							v-model="instructors"
 							doctype="User"
 							:label="__('Instructors')"
+							:filters="{ ignore_user_type: 1 }"
+							:required="true"
 						/>
 					</div>
 					<div class="container border-t">
@@ -130,7 +163,7 @@
 						<div class="grid grid-cols-3 gap-10 mb-4">
 							<div
 								v-if="user.data?.is_moderator"
-								class="flex flex-col space-y-3"
+								class="flex flex-col space-y-4"
 							>
 								<FormControl
 									type="checkbox"
@@ -223,15 +256,11 @@ import {
 	ref,
 	reactive,
 	watch,
+	getCurrentInstance,
 } from 'vue'
-import {
-	convertToTitleCase,
-	showToast,
-	getFileSize,
-	updateDocumentTitle,
-} from '@/utils'
+import { showToast, updateDocumentTitle } from '@/utils'
 import Link from '@/components/Controls/Link.vue'
-import { FileText, X } from 'lucide-vue-next'
+import { Image, Trash2, X } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 import CourseOutline from '@/components/CourseOutline.vue'
 import MultiSelect from '@/components/Controls/MultiSelect.vue'
@@ -243,6 +272,8 @@ const newTag = ref('')
 const router = useRouter()
 const instructors = ref([])
 const settingsStore = useSettings()
+const app = getCurrentInstance()
+const { $dialog } = app.appContext.config.globalProperties
 
 const props = defineProps({
 	courseName: {
@@ -403,6 +434,9 @@ const submitCourse = () => {
 			onSuccess(data) {
 				capture('course_created')
 				showToast('Success', 'Course created successfully', 'check')
+				if (!settingsStore.onboardingDetails.data?.is_onboarded) {
+					settingsStore.onboardingDetails.reload()
+				}
 				router.push({
 					name: 'CourseForm',
 					params: { courseName: data.name },
@@ -415,23 +449,37 @@ const submitCourse = () => {
 	}
 }
 
-const validateMandatoryFields = () => {
-	const mandatory_fields = [
-		'title',
-		'short_introduction',
-		'description',
-		'video_link',
-		'course_image',
-	]
-	for (const field of mandatory_fields) {
-		if (!course[field]) {
-			let fieldLabel = convertToTitleCase(field.split('_').join(' '))
-			return `${fieldLabel} is mandatory`
+const deleteCourse = createResource({
+	url: 'lms.lms.api.delete_course',
+	makeParams(values) {
+		return {
+			course: props.courseName,
 		}
-	}
-	if (course.paid_course && (!course.course_price || !course.currency)) {
-		return __('Course price and currency are mandatory for paid courses')
-	}
+	},
+	onSuccess() {
+		showToast(__('Success'), __('Course deleted successfully'), 'check')
+		router.push({ name: 'Courses' })
+	},
+})
+
+const trashCourse = () => {
+	$dialog({
+		title: __('Delete Course'),
+		message: __(
+			'Deleting the course will also delete all its chapters and lessons. Are you sure you want to delete this course?'
+		),
+		actions: [
+			{
+				label: __('Delete'),
+				theme: 'red',
+				variant: 'solid',
+				onClick(close) {
+					deleteCourse.submit()
+					close()
+				},
+			},
+		],
+	})
 }
 
 watch(

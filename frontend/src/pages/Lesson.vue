@@ -17,14 +17,9 @@
 						)
 					}}
 				</p>
-				<router-link
-					v-if="user.data"
-					:to="{ name: 'CourseDetail', params: { courseName: courseName } }"
-				>
-					<Button variant="solid">
-						{{ __('Start Learning') }}
-					</Button>
-				</router-link>
+				<Button v-if="user.data" @click="enrollStudent()" variant="solid">
+					{{ __('Start Learning') }}
+				</Button>
 				<Button v-else @click="redirectToLogin()">
 					{{ __('Login') }}
 				</Button>
@@ -108,7 +103,7 @@
 					<span
 						class="h-6 mr-1"
 						:class="{
-							'avatar-group overlap': lesson.data.instructors.length > 1,
+							'avatar-group overlap': lesson.data.instructors?.length > 1,
 						}"
 					>
 						<UserAvatar
@@ -116,7 +111,10 @@
 							:user="instructor"
 						/>
 					</span>
-					<CourseInstructors :instructors="lesson.data.instructors" />
+					<CourseInstructors
+						v-if="lesson.data?.instructors"
+						:instructors="lesson.data.instructors"
+					/>
 				</div>
 				<div
 					v-if="
@@ -151,6 +149,7 @@
 					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-5"
 				>
 					<LessonContent
+						v-if="lesson.data?.body"
 						:content="lesson.data.body"
 						:youtube="lesson.data.youtube"
 						:quizId="lesson.data.quiz_id"
@@ -194,7 +193,7 @@ import { createResource, Breadcrumbs, Button } from 'frappe-ui'
 import { computed, watch, inject, ref, onMounted, onBeforeUnmount } from 'vue'
 import CourseOutline from '@/components/CourseOutline.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import Discussions from '@/components/Discussions.vue'
 import { getEditorTools, updateDocumentTitle } from '../utils'
@@ -204,6 +203,7 @@ import CourseInstructors from '@/components/CourseInstructors.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 
 const user = inject('$user')
+const router = useRouter()
 const route = useRoute()
 const allowDiscussions = ref(false)
 const editor = ref(null)
@@ -243,6 +243,13 @@ const lesson = createResource({
 	},
 	auto: true,
 	onSuccess(data) {
+		if (Object.keys(data).length === 0) {
+			router.push({
+				name: 'CourseDetail',
+				params: { courseName: props.courseName },
+			})
+			return
+		}
 		lessonProgress.value = data.membership?.progress
 		if (data.content) editor.value = renderEditor('editor', data.content)
 		if (
@@ -279,7 +286,7 @@ const renderEditor = (holder, content) => {
 }
 
 const markProgress = () => {
-	if (user.data && !lesson.data?.progress) {
+	if (user.data && lesson.data && !lesson.data.progress) {
 		progress.submit()
 	}
 }
@@ -301,14 +308,14 @@ const breadcrumbs = computed(() => {
 	let items = [{ label: 'All Courses', route: { name: 'Courses' } }]
 	items.push({
 		label: lesson?.data?.course_title,
-		route: { name: 'CourseDetail', params: { course: props.courseName } },
+		route: { name: 'CourseDetail', params: { courseName: props.courseName } },
 	})
 	items.push({
 		label: lesson?.data?.title,
 		route: {
 			name: 'Lesson',
 			params: {
-				course: props.courseName,
+				courseName: props.courseName,
 				chapterNumber: props.chapterNumber,
 				lessonNumber: props.lessonNumber,
 			},
@@ -369,14 +376,38 @@ const checkIfDiscussionsAllowed = () => {
 
 const allowEdit = () => {
 	if (user.data?.is_moderator) return true
-	if (lesson.data?.instructors.includes(user.data?.name)) return true
+	if (lesson.data?.instructors?.includes(user.data?.name)) return true
 	return false
 }
 
 const allowInstructorContent = () => {
 	if (user.data?.is_moderator) return true
-	if (lesson.data?.instructors.includes(user.data?.name)) return true
+	if (lesson.data?.instructors?.includes(user.data?.name)) return true
 	return false
+}
+
+const enrollment = createResource({
+	url: 'frappe.client.insert',
+	makeParams() {
+		return {
+			doc: {
+				doctype: 'LMS Enrollment',
+				course: props.courseName,
+				member: user.data?.name,
+			},
+		}
+	},
+})
+
+const enrollStudent = () => {
+	enrollment.submit(
+		{},
+		{
+			onSuccess() {
+				window.location.reload()
+			},
+		}
+	)
 }
 
 const redirectToLogin = () => {

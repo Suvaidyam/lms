@@ -57,6 +57,15 @@ export function formatNumberIntoCurrency(number, currency) {
 	return ''
 }
 
+// create a function that formats numbers in thousands to k
+
+export function formatAmount(amount) {
+	if (amount > 999) {
+		return (amount / 1000).toFixed(1) + 'k'
+	}
+	return amount
+}
+
 export function convertToTitleCase(str) {
 	if (!str) {
 		return ''
@@ -84,7 +93,7 @@ export function showToast(title, text, icon, iconClasses = null) {
 	if (!iconClasses) {
 		if (icon == 'check') {
 			iconClasses = 'bg-green-600 text-white rounded-md p-px'
-		} else if (icon == 'circle-warn') {
+		} else if (icon == 'alert-circle') {
 			iconClasses = 'bg-yellow-600 text-white rounded-md p-px'
 		} else {
 			iconClasses = 'bg-red-600 text-white rounded-md p-px'

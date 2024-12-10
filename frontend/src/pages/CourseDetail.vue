@@ -16,16 +16,16 @@
 					</div>
 					<div class="flex items-center">
 						<Tooltip
-							v-if="course.data.avg_rating"
+							v-if="course.data.rating"
 							:text="__('Average Rating')"
 							class="flex items-center"
 						>
 							<Star class="h-5 w-5 text-gray-100 fill-orange-500" />
 							<span class="ml-1">
-								{{ course.data.avg_rating }}
+								{{ course.data.rating }}
 							</span>
 						</Tooltip>
-						<span v-if="course.data.avg_rating" class="mx-3">&middot;</span>
+						<span v-if="course.data.rating" class="mx-3">&middot;</span>
 						<Tooltip
 							v-if="course.data.enrollment_count"
 							:text="__('Enrolled Students')"
@@ -67,14 +67,18 @@
 					<CourseCardOverlay :course="course" class="md:hidden mb-4" />
 					<div
 						v-html="course.data.description"
-						class="course-description"
+						class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal"
 					></div>
 					<div class="mt-10">
-						<CourseOutline :courseName="course.data.name" :showOutline="true" />
+						<CourseOutline
+							:title="__('Course Outline')"
+							:courseName="course.data.name"
+							:showOutline="true"
+						/>
 					</div>
 					<CourseReviews
 						:courseName="course.data.name"
-						:avg_rating="course.data.avg_rating"
+						:avg_rating="course.data.rating"
 						:membership="course.data.membership"
 					/>
 				</div>
@@ -116,7 +120,7 @@ const breadcrumbs = computed(() => {
 	let items = [{ label: 'All Courses', route: { name: 'Courses' } }]
 	items.push({
 		label: course?.data?.title,
-		route: { name: 'CourseDetail', params: { course: course?.data?.name } },
+		route: { name: 'CourseDetail', params: { courseName: course?.data?.name } },
 	})
 	return items
 })
@@ -131,26 +135,6 @@ const pageMeta = computed(() => {
 updateDocumentTitle(pageMeta)
 </script>
 <style>
-.course-description p {
-	margin-bottom: 1rem;
-	line-height: 1.7;
-}
-.course-description li {
-	line-height: 1.7;
-}
-
-.course-description ol {
-	list-style: auto;
-	margin: revert;
-	padding: revert;
-}
-
-.course-description ul {
-	list-style: disc;
-	margin: revert;
-	padding: revert;
-}
-
 .avatar-group {
 	display: inline-flex;
 	align-items: center;

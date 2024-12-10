@@ -1,10 +1,12 @@
 import frappe
 from frappe.desk.page.setup_wizard.setup_wizard import add_all_roles_to
+from lms.lms.api import give_dicussions_permission
 
 
 def after_install():
 	add_pages_to_nav()
 	create_batch_source()
+	give_dicussions_permission()
 
 
 def after_sync():
@@ -64,7 +66,9 @@ def delete_lms_roles():
 
 
 def create_course_creator_role():
-	if not frappe.db.exists("Role", "Course Creator"):
+	if frappe.db.exists("Role", "Course Creator"):
+		frappe.db.set_value("Role", "Course Creator", "desk_access", 0)
+	else:
 		role = frappe.get_doc(
 			{
 				"doctype": "Role",
@@ -77,7 +81,9 @@ def create_course_creator_role():
 
 
 def create_moderator_role():
-	if not frappe.db.exists("Role", "Moderator"):
+	if frappe.db.exists("Role", "Moderator"):
+		frappe.db.set_value("Role", "Moderator", "desk_access", 0)
+	else:
 		role = frappe.get_doc(
 			{
 				"doctype": "Role",
@@ -90,7 +96,9 @@ def create_moderator_role():
 
 
 def create_evaluator_role():
-	if not frappe.db.exists("Role", "Batch Evaluator"):
+	if frappe.db.exists("Role", "Batch Evaluator"):
+		frappe.db.set_value("Role", "Batch Evaluator", "desk_access", 0)
+	else:
 		role = frappe.new_doc("Role")
 		role.update(
 			{
@@ -103,7 +111,9 @@ def create_evaluator_role():
 
 
 def create_lms_student_role():
-	if not frappe.db.exists("Role", "LMS Student"):
+	if frappe.db.exists("Role", "LMS Student"):
+		frappe.db.set_value("Role", "LMS Student", "desk_access", 0)
+	else:
 		role = frappe.new_doc("Role")
 		role.update(
 			{

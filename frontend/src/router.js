@@ -28,6 +28,12 @@ const routes = [
 		props: true,
 	},
 	{
+		path: '/courses/:courseName/learn/:chapterName',
+		name: 'SCORMChapter',
+		component: () => import('@/pages/SCORMChapter.vue'),
+		props: true,
+	},
+	{
 		path: '/batches',
 		name: 'Batches',
 		component: () => import('@/pages/Batches.vue'),
@@ -175,6 +181,17 @@ const routes = [
 		name: 'QuizSubmission',
 		component: () => import('@/pages/QuizSubmission.vue'),
 		props: true,
+	},
+	{
+		path: '/programs/:programName',
+		name: 'ProgramForm',
+		component: () => import('@/pages/ProgramForm.vue'),
+		props: true,
+	},
+	{
+		path: '/programs',
+		name: 'Programs',
+		component: () => import('@/pages/Programs.vue'),
 	},
 ]
 

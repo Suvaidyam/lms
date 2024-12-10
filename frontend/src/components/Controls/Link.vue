@@ -2,6 +2,7 @@
 	<div class="space-y-1.5">
 		<label class="block" :class="labelClasses" v-if="attrs.label">
 			{{ attrs.label }}
+			<span class="text-red-500" v-if="attrs.required">*</span>
 		</label>
 		<Autocomplete
 			ref="autocomplete"
@@ -43,6 +44,7 @@
 				</div>
 			</template>
 		</Autocomplete>
+		<p v-if="description" class="text-sm text-gray-600">{{ description }}</p>
 	</div>
 </template>
 
@@ -63,6 +65,10 @@ const props = defineProps({
 		default: () => ({}),
 	},
 	modelValue: {
+		type: String,
+		default: '',
+	},
+	description: {
 		type: String,
 		default: '',
 	},
@@ -117,7 +123,7 @@ const options = createResource({
 	transform: (data) => {
 		return data.map((option) => {
 			return {
-				label: option.value,
+				label: option.label || option.value,
 				value: option.value,
 				description: option.description,
 			}

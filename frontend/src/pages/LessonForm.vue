@@ -6,13 +6,22 @@
 					class="sticky top-0 z-10 flex flex-col md:flex-row md:items-center justify-between border-b overflow-hidden bg-white px-3 py-2.5 sm:px-5"
 				>
 					<Breadcrumbs class="text-ellipsis" :items="breadcrumbs" />
-					<Button variant="solid" @click="saveLesson()" class="mt-3 md:mt-0">
+					<Button
+						variant="solid"
+						@click="saveLesson({ showSuccessMessage: true })"
+						class="mt-3 md:mt-0"
+					>
 						{{ __('Save') }}
 					</Button>
 				</header>
 				<div class="py-5">
 					<div class="w-5/6 mx-auto">
-						<FormControl v-model="lesson.title" label="Title" class="mb-4" />
+						<FormControl
+							v-model="lesson.title"
+							label="Title"
+							class="mb-4"
+							:required="true"
+						/>
 						<FormControl
 							v-model="lesson.include_in_preview"
 							type="checkbox"
@@ -69,7 +78,7 @@
 	</div>
 </template>
 <script setup>
-import { Breadcrumbs, FormControl, createResource, Button } from 'frappe-ui'
+import { Breadcrumbs, Button, createResource, FormControl } from 'frappe-ui'
 import {
 	computed,
 	reactive,
@@ -83,12 +92,15 @@ import LessonHelp from '@/components/LessonHelp.vue'
 import { ChevronRight } from 'lucide-vue-next'
 import { updateDocumentTitle, createToast, getEditorTools } from '@/utils'
 import { capture } from '@/telemetry'
+import { useSettings } from '@/stores/settings'
 
 const editor = ref(null)
 const instructorEditor = ref(null)
 const user = inject('$user')
 const openInstructorEditor = ref(false)
+const settingsStore = useSettings()
 let autoSaveInterval
+let showSuccessMessage = false
 
 const props = defineProps({
 	courseName: {
@@ -112,6 +124,7 @@ onMounted(() => {
 	capture('lesson_form_opened')
 	editor.value = renderEditor('content')
 	instructorEditor.value = renderEditor('instructor-notes')
+	window.addEventListener('keydown', keyboardShortcut)
 })
 
 const renderEditor = (holder) => {
@@ -181,12 +194,24 @@ const addInstructorNotes = (data) => {
 
 const enableAutoSave = () => {
 	autoSaveInterval = setInterval(() => {
-		saveLesson()
+		saveLesson({ showSuccessMessage: false })
 	}, 10000)
+}
+
+const keyboardShortcut = (e) => {
+	if (
+		e.key === 's' &&
+		(e.ctrlKey || e.metaKey) &&
+		!e.target.classList.contains('ProseMirror')
+	) {
+		saveLesson({ showSuccessMessage: true })
+		e.preventDefault()
+	}
 }
 
 onBeforeUnmount(() => {
 	clearInterval(autoSaveInterval)
+	window.removeEventListener('keydown', keyboardShortcut)
 })
 
 const newLessonResource = createResource({
@@ -338,7 +363,11 @@ const convertToJSON = (lessonData) => {
 	return blocks
 }
 
-const saveLesson = () => {
+const saveLesson = (e) => {
+	showSuccessMessage = false
+	if (typeof e != 'undefined' && e.showSuccessMessage) {
+		showSuccessMessage = true
+	}
 	editor.value.save().then((outputData) => {
 		lesson.content = JSON.stringify(outputData)
 		instructorEditor.value.save().then((outputData) => {
@@ -366,6 +395,9 @@ const createNewLesson = () => {
 						onSuccess() {
 							capture('lesson_created')
 							showToast('Success', 'Lesson created successfully', 'check')
+							if (!settingsStore.onboardingDetails.data?.is_onboarded) {
+								settingsStore.onboardingDetails.reload()
+							}
 							lessonDetails.reload()
 						},
 					}
@@ -386,6 +418,11 @@ const editCurrentLesson = () => {
 		{
 			validate() {
 				return validateLesson()
+			},
+			onSuccess() {
+				showSuccessMessage
+					? showToast('Success', 'Lesson updated successfully', 'check')
+					: ''
 			},
 			onError(err) {
 				showToast('Error', err.message, 'x')

@@ -22,6 +22,7 @@
 							v-model="liveClass.title"
 							:label="__('Title')"
 							class="mb-4"
+							:required="true"
 						/>
 						<Tooltip
 							:text="
@@ -35,6 +36,7 @@
 								type="time"
 								:label="__('Time')"
 								class="mb-4"
+								:required="true"
 							/>
 						</Tooltip>
 						<FormControl
@@ -42,6 +44,7 @@
 							type="select"
 							:options="getTimezoneOptions()"
 							:label="__('Timezone')"
+							:required="true"
 						/>
 					</div>
 					<div>
@@ -50,6 +53,7 @@
 							type="date"
 							class="mb-4"
 							:label="__('Date')"
+							:required="true"
 						/>
 						<Tooltip :text="__('Duration of the live class in minutes')">
 							<FormControl
@@ -57,6 +61,7 @@
 								v-model="liveClass.duration"
 								:label="__('Duration')"
 								class="mb-4"
+								:required="true"
 							/>
 						</Tooltip>
 						<FormControl
@@ -156,25 +161,34 @@ const submitLiveClass = (close) => {
 	return createLiveClass.submit(liveClass, {
 		validate() {
 			if (!liveClass.title) {
-				return 'Please enter a title.'
+				return __('Please enter a title.')
 			}
 			if (!liveClass.date) {
-				return 'Please select a date.'
-			}
-			if (dayjs(liveClass.date).isSameOrBefore(dayjs(), 'day')) {
-				return 'Please select a future date.'
+				return __('Please select a date.')
 			}
 			if (!liveClass.time) {
-				return 'Please select a time.'
-			}
-			if (!valideTime()) {
-				return 'Please enter a valid time in the format HH:mm.'
-			}
-			if (!liveClass.duration) {
-				return 'Please select a duration.'
+				return __('Please select a time.')
 			}
 			if (!liveClass.timezone) {
-				return 'Please select a timezone.'
+				return __('Please select a timezone.')
+			}
+			if (!valideTime()) {
+				return __('Please enter a valid time in the format HH:mm.')
+			}
+			const liveClassDateTime = dayjs(`${liveClass.date}T${liveClass.time}`).tz(
+				liveClass.timezone,
+				true
+			)
+			if (
+				liveClassDateTime.isSameOrBefore(
+					dayjs().tz(liveClass.timezone, false),
+					'minute'
+				)
+			) {
+				return __('Please select a future date and time.')
+			}
+			if (!liveClass.duration) {
+				return __('Please select a duration.')
 			}
 		},
 		onSuccess() {

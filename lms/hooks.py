@@ -13,7 +13,10 @@ app_license = "AGPL"
 
 # Includes in <head>
 # ------------------
-
+fixtures = [
+	"Regional Training Centre",
+	"Education Table",
+	"Regional Training Centre Table for Offline Course",]
 # include js, css files in header of desk.html
 # app_include_css = "/assets/lms/css/lms.css"
 # app_include_js = "/assets/lms/js/lms.js"
@@ -83,6 +86,14 @@ setup_wizard_requires = "assets/lms/js/setup_wizard.js"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+doctype_js = {
+	 "Regional Training Centre Table for Offline Course" : [
+        "public/js/utils.js"
+    ],
+		 "Regional Training Centre" : [
+        "public/js/utils.js"
+    ],
+}
 # DocType Class
 # ---------------
 # Override standard doctype classes
@@ -110,12 +121,19 @@ doc_events = {
 # ---------------
 scheduler_events = {
 	"hourly": [
-		"lms.lms.doctype.lms_certificate_request.lms_certificate_request.schedule_evals"
+		"lms.lms.doctype.lms_certificate_request.lms_certificate_request.schedule_evals",
+		"lms.lms.api.update_course_statistics",
 	],
 	"daily": ["lms.job.doctype.job_opportunity.job_opportunity.update_job_openings"],
 }
 
-fixtures = ["Custom Field", "Function", "Industry", "LMS Category"]
+fixtures = ["Custom Field", "Function", "Industry", "LMS Category", "Regional Training Centre",
+ "Training Centre District",
+ "Education Table",
+ "Regional Training Centre Table for Offline Course",
+ "Batch Table",
+ "Course Table",
+ "Student Registration"]
 
 # Testing
 # -------
@@ -185,6 +203,7 @@ jinja = {
 		"lms.lms.utils.get_lesson_url",
 		"lms.page_renderers.get_profile_url",
 		"lms.overrides.user.get_palette",
+		"lms.lms.utils.is_instructor",
 	],
 	"filters": [],
 }

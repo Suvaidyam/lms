@@ -15,7 +15,11 @@
 		</header>
 		<div v-if="batch.data" class="grid grid-cols-[70%,30%] h-screen">
 			<div class="border-r-2">
-				<Tabs v-model="tabIndex" :tabs="tabs" tablistClass="overflow-y-hidden">
+				<Tabs
+					v-model="tabIndex"
+					:tabs="tabs"
+					tablistClass="overflow-y-hidden sticky top-11 bg-white z-10"
+				>
 					<template #tab="{ tab, selected }" class="overflow-x-hidden">
 						<div>
 							<button
@@ -236,7 +240,7 @@ const breadcrumbs = computed(() => {
 const isStudent = computed(() => {
 	return (
 		user?.data &&
-		batch.data?.students.length &&
+		batch.data?.students?.length &&
 		batch.data?.students.includes(user.data.name)
 	)
 })
