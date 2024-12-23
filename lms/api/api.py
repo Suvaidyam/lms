@@ -7,3 +7,10 @@ def get_lms_courses():
         # filters={'status': "Approved"},
         order_by='creation desc'
     )
+
+def get_lms_batches():
+    return frappe.get_list(
+        'LMS Batch',
+        fields=['meta_image', 'title','seat_count','batch_details', 'start_date', 'end_date', 'start_time', 'end_time',],
+        order_by='creation desc'
+    )
