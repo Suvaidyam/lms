@@ -7,7 +7,8 @@ def get_lms_courses():
         # filters={'status': "Approved"},
         order_by='creation desc'
     )
-
+    
+@frappe.whitelist()
 def get_lms_batches():
     return frappe.get_list(
         'LMS Batch',
