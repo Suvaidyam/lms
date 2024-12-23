@@ -79,6 +79,14 @@
 		>
 			{{ __('Enroll Now') }}
 		</Button>
+		<Button
+			variant="solid"
+			class="w-full mt-2"
+			v-else-if="batch.data.medium =='Offline' && batch.data.seats_left"
+			@click="enrollInOflineBatch()"
+		>
+			{{ __('Apply for Registration') }}
+		</Button>
 		<router-link
 			v-if="isModerator"
 			:to="{
@@ -161,4 +169,29 @@ const isStudent = computed(() => {
 const isModerator = computed(() => {
 	return user.data?.is_moderator
 })
+const enrollInOflineBatch = () => {
+	if (!user.data) {
+		window.location.href = `/login?redirect-to=/batches/details/${props.batch.data.name}`
+	}else{
+		window.location.href =`/app/student-registration/new`
+	}
+	// enroll.submit(
+	// 	{},
+	// 	{
+	// 		onSuccess(data) {
+	// 			showToast(
+	// 				__('Success'),
+	// 				__('You have been enrolled in this batch'),
+	// 				'check'
+	// 			)
+	// 			router.push({
+	// 				name: 'Batch',
+	// 				params: {
+	// 					batchName: props.batch.data.name,
+	// 				},
+	// 			})
+	// 		},
+		// }
+	// )
+}
 </script>

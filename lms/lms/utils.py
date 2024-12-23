@@ -1250,6 +1250,7 @@ def get_batch_details(batch):
 			"allow_self_enrollment",
 			"timezone",
 			"category",
+			"medium"
 		],
 		as_dict=True,
 	)
