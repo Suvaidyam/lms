@@ -218,6 +218,7 @@
   {
    "fieldname": "course_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Course Name",
    "options": "LMS Course"
   },
@@ -225,6 +226,7 @@
    "fetch_from": "course_name.course_mode",
    "fieldname": "course_mode",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Course Mode",
    "read_only": 1
   },
@@ -373,14 +375,16 @@
   {
    "fieldname": "program",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Program",
-   "options": "LMS Program"
+   "options": "LMS Program",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-23 17:34:36.594753",
+ "modified": "2024-12-24 11:21:32.354775",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
