@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"HcbosDhb0n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">RySS - LMS </span>\",\"col\":12}},{\"id\":\"ebrz0Rv5Zr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"LMS Website\",\"col\":3}}]",
+ "content": "[{\"id\":\"HcbosDhb0n\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">RySS - LMS </span>\",\"col\":12}},{\"id\":\"-VgAiKrj2J\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lms Batch Old\",\"col\":3}},{\"id\":\"-S2mHHqM7D\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lms Batch\",\"col\":3}},{\"id\":\"ebrz0Rv5Zr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"LMS Website\",\"col\":3}}]",
  "creation": "2024-10-18 01:41:47.264461",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "RySS - LMS",
  "links": [],
- "modified": "2024-12-18 15:35:08.419547",
+ "modified": "2024-12-23 12:00:43.781992",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "RySS - LMS",
@@ -35,6 +35,22 @@
    "label": "LMS Website",
    "type": "URL",
    "url": "/lms"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Lms Batch Old",
+   "link_to": "LMS Batch Old",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Lms Batch",
+   "link_to": "LMS Batch",
+   "stats_filter": "[]",
+   "type": "DocType"
   }
  ],
  "title": "RySS - LMS"

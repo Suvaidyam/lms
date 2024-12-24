@@ -11,6 +11,7 @@
   "batch_no",
   "term_start_date",
   "column_break_gfys",
+  "program",
   "course_name",
   "course_mode",
   "section_break_shfp",
@@ -30,12 +31,10 @@
   "column_break_gpsv",
   "last__family_name",
   "gender",
-  "isd_code",
   "address_1_door__apartment_no_building_society",
   "address_3_city__town__village",
   "pin__zip",
   "district_name",
-  "section_break_lfls",
   "rsk__kvk",
   "tab_2_tab",
   "educational_qualifications",
@@ -97,11 +96,6 @@
    "label": "Date of Birth (dd/mm/yyyy)"
   },
   {
-   "fieldname": "isd_code",
-   "fieldtype": "Int",
-   "label": "ISD Code"
-  },
-  {
    "default": "+91-",
    "fieldname": "mobile_no",
    "fieldtype": "Phone",
@@ -148,7 +142,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.course_mode == \"Offline\"",
    "fieldname": "rsk__kvk",
    "fieldtype": "Link",
    "label": "RSK / KVK",
@@ -225,6 +218,7 @@
   {
    "fieldname": "course_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Course Name",
    "options": "LMS Course"
   },
@@ -232,6 +226,7 @@
    "fetch_from": "course_name.course_mode",
    "fieldname": "course_mode",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Course Mode",
    "read_only": 1
   },
@@ -248,10 +243,6 @@
    "fieldtype": "Data",
    "label": "Regional Training Centre",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_lfls",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "statement_of_purpose",
@@ -380,12 +371,20 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Program",
+   "options": "LMS Program",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-18 15:58:33.539889",
+ "modified": "2024-12-24 11:21:32.354775",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
