@@ -17,7 +17,7 @@
  "hide_custom": 0,
  "icon": "education",
  "idx": 0,
- "is_hidden": 0,
+ "is_hidden": 1,
  "label": "LMS",
  "links": [
   {
@@ -145,7 +145,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-12-23 14:33:47.874447",
+ "modified": "2024-12-27 14:06:13.378403",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS",

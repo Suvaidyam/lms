@@ -13,7 +13,9 @@ app_license = "AGPL"
 
 # Includes in <head>
 # ------------------
-
+permission_query_conditions ={
+	"Student Registration": "lms.ryss_lms.utils.student_reg.list_query"
+}
 # include js, css files in header of desk.html
 # app_include_css = "/assets/lms/css/lms.css"
 # app_include_js = "/assets/lms/js/lms.js"
