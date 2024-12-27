@@ -53,7 +53,7 @@ frappe.ui.form.on('Student Registration', {
             });
         }
     },
-    validate: function () {
+    validate: function (frm) {
         if (frm.image_uploaded) {
             frappe.validated = false;
             frm.image_uploaded = false;
