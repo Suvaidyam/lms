@@ -8,12 +8,11 @@
  "field_order": [
   "course_and_centre_selection_tab",
   "date_of_application",
-  "batch_no",
   "term_start_date",
   "column_break_gfys",
-  "program",
   "course_name",
   "course_mode",
+  "batch_no",
   "section_break_shfp",
   "training_centre_district",
   "regional_training_centre",
@@ -193,7 +192,7 @@
    "label": "Date of Application"
   },
   {
-   "fetch_from": "course_name.batch_no",
+   "fetch_from": "course_name.custom_batch_no",
    "fieldname": "batch_no",
    "fieldtype": "Data",
    "label": "Batch No",
@@ -224,7 +223,7 @@
    "options": "LMS Course"
   },
   {
-   "fetch_from": "course_name.course_mode",
+   "fetch_from": "course_name.custom_course_mode",
    "fieldname": "course_mode",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -232,7 +231,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "course_name.term_start_date",
+   "fetch_from": "course_name.custom_term_start_date",
    "fieldname": "term_start_date",
    "fieldtype": "Data",
    "label": "Term Start Date",
@@ -372,20 +371,12 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "program",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Program",
-   "options": "LMS Program",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-27 11:14:26.061495",
+ "modified": "2024-12-27 12:55:28.041033",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
