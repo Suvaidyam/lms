@@ -88,7 +88,8 @@
    "fieldtype": "Link",
    "label": "Gender",
    "link_filters": "[[\"Gender\",\"gender\",\"in\",[\"Male\",\"Female\",\"Transgender\"]]]",
-   "options": "Gender"
+   "options": "Gender",
+   "reqd": 1
   },
   {
    "fieldname": "date_of_birth_ddmmyyyy",
@@ -384,7 +385,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-24 11:21:32.354775",
+ "modified": "2024-12-27 11:14:26.061495",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
