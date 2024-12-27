@@ -52,5 +52,17 @@ frappe.ui.form.on('Student Registration', {
                 indicator: 'red'
             });
         }
-    }
+    },
+    validate: function () {
+        if (frm.image_uploaded) {
+            frappe.validated = false;
+            frm.image_uploaded = false;
+        }
+    },
+    ...['photograph', 'vo_resolution_only_for_offline_courses_in_india', 'land_lease_or_ownership_document', '10th_grade_marks_sheet__passing_certificate',].reduce((acc, field) => {
+        acc[field] = function (frm) {
+            frm.image_uploaded = true;
+        };
+        return acc;
+    }, {})
 });
