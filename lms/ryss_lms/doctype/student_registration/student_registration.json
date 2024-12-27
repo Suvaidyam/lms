@@ -202,7 +202,8 @@
    "fieldname": "training_centre_district",
    "fieldtype": "Link",
    "label": "Training Centre District",
-   "options": "Regional Training Centre Table for Offline Course"
+   "options": "Regional Training Centre Table for Offline Course",
+   "reqd": 1
   },
   {
    "fetch_from": "training_centre_district.center_id",
@@ -220,7 +221,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Course Name",
-   "options": "LMS Course"
+   "options": "LMS Course",
+   "reqd": 1
   },
   {
    "fetch_from": "course_name.custom_course_mode",
@@ -253,8 +255,7 @@
   },
   {
    "fieldname": "photograph",
-   "fieldtype": "Attach",
-   "in_list_view": 1,
+   "fieldtype": "Attach Image",
    "label": "Photograph",
    "reqd": 1
   },
@@ -373,10 +374,11 @@
    "search_index": 1
   }
  ],
+ "image_field": "photograph",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-27 12:55:28.041033",
+ "modified": "2024-12-27 14:04:08.588066",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
