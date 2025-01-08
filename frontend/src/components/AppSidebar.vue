@@ -185,19 +185,39 @@ const addQuizzes = () => {
 	}
 }
 
-const addPrograms = () => {
-	if (settingsStore.learningPaths.data) {
-		let activeFor = ['Programs', 'ProgramForm']
-		let index = 1
-		if (!isInstructor.value && !isModerator.value) {
-			sidebarLinks.value = sidebarLinks.value.filter(
-				(link) => link.label !== 'Courses'
-			)
-			activeFor.push('CourseDetail')
-			activeFor.push('Lesson')
-			index = 0
-		}
+const addAssignments = () => {
+	if (isInstructor.value || isModerator.value) {
+		sidebarLinks.value.push({
+			label: 'Assignments',
+			icon: 'Pencil',
+			to: 'Assignments',
+			activeFor: ['Assignments', 'AssignmentForm'],
+		})
+	}
+}
 
+const addPrograms = () => {
+	let activeFor = ['Programs', 'ProgramForm']
+	let index = 1
+	let canAddProgram = false
+
+	if (
+		!isInstructor.value &&
+		!isModerator.value &&
+		settingsStore.learningPaths.data
+	) {
+		sidebarLinks.value = sidebarLinks.value.filter(
+			(link) => link.label !== 'Courses'
+		)
+		activeFor.push('CourseDetail')
+		activeFor.push('Lesson')
+		index = 0
+		canAddProgram = true
+	} else if (isInstructor.value || isModerator.value) {
+		canAddProgram = true
+	}
+
+	if (canAddProgram) {
 		sidebarLinks.value.splice(index, 0, {
 			label: 'Programs',
 			icon: 'Route',
@@ -238,8 +258,9 @@ watch(userResource, () => {
 	if (userResource.data) {
 		isModerator.value = userResource.data.is_moderator
 		isInstructor.value = userResource.data.is_instructor
-		addQuizzes()
 		addPrograms()
+		addQuizzes()
+		addAssignments()
 	}
 })
 

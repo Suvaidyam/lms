@@ -8,11 +8,11 @@
  "field_order": [
   "course_and_centre_selection_tab",
   "date_of_application",
-  "batch_no",
   "term_start_date",
   "column_break_gfys",
   "course_name",
   "course_mode",
+  "batch_no",
   "section_break_shfp",
   "training_centre_district",
   "regional_training_centre",
@@ -30,12 +30,10 @@
   "column_break_gpsv",
   "last__family_name",
   "gender",
-  "isd_code",
   "address_1_door__apartment_no_building_society",
   "address_3_city__town__village",
   "pin__zip",
   "district_name",
-  "section_break_lfls",
   "rsk__kvk",
   "tab_2_tab",
   "educational_qualifications",
@@ -61,7 +59,8 @@
   "12th_undergraduate_marks_sheet__passing_certificate",
   "post_graduate_marks_sheet",
   "vo_resolution_only_for_offline_courses_in_india",
-  "certificate_for_physically_challenged"
+  "certificate_for_physically_challenged",
+  "amended_from"
  ],
  "fields": [
   {
@@ -88,17 +87,13 @@
    "fieldtype": "Link",
    "label": "Gender",
    "link_filters": "[[\"Gender\",\"gender\",\"in\",[\"Male\",\"Female\",\"Transgender\"]]]",
-   "options": "Gender"
+   "options": "Gender",
+   "reqd": 1
   },
   {
    "fieldname": "date_of_birth_ddmmyyyy",
    "fieldtype": "Date",
    "label": "Date of Birth (dd/mm/yyyy)"
-  },
-  {
-   "fieldname": "isd_code",
-   "fieldtype": "Int",
-   "label": "ISD Code"
   },
   {
    "default": "+91-",
@@ -147,7 +142,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.course_mode == \"Offline\"",
    "fieldname": "rsk__kvk",
    "fieldtype": "Link",
    "label": "RSK / KVK",
@@ -198,7 +192,7 @@
    "label": "Date of Application"
   },
   {
-   "fetch_from": "course_name.batch_no",
+   "fetch_from": "course_name.custom_batch_no",
    "fieldname": "batch_no",
    "fieldtype": "Data",
    "label": "Batch No",
@@ -208,7 +202,8 @@
    "fieldname": "training_centre_district",
    "fieldtype": "Link",
    "label": "Training Centre District",
-   "options": "Regional Training Centre Table for Offline Course"
+   "options": "Regional Training Centre Table for Offline Course",
+   "reqd": 1
   },
   {
    "fetch_from": "training_centre_district.center_id",
@@ -224,18 +219,22 @@
   {
    "fieldname": "course_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Course Name",
-   "options": "LMS Course"
+   "options": "LMS Course",
+   "reqd": 1
   },
   {
-   "fetch_from": "course_name.course_mode",
+   "fetch_from": "course_name.custom_course_mode",
    "fieldname": "course_mode",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Course Mode",
    "read_only": 1
   },
   {
-   "fetch_from": "course_name.term_start_date",
+   "fetch_from": "course_name.custom_term_start_date",
    "fieldname": "term_start_date",
    "fieldtype": "Data",
    "label": "Term Start Date",
@@ -249,10 +248,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_lfls",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "statement_of_purpose",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -261,8 +256,7 @@
   },
   {
    "fieldname": "photograph",
-   "fieldtype": "Attach",
-   "in_list_view": 1,
+   "fieldtype": "Attach Image",
    "label": "Photograph",
    "reqd": 1
   },
@@ -369,11 +363,23 @@
    "fieldtype": "Link",
    "label": "District",
    "options": "District"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Student Registration",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
+ "image_field": "photograph",
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-12-06 15:45:02.224684",
+ "modified": "2024-12-27 14:52:11.286058",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
@@ -390,6 +396,18 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Temp Student",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

@@ -1,5 +1,4 @@
 {
- "app": "lms",
  "charts": [
   {
    "chart_name": "New Signups",
@@ -18,7 +17,7 @@
  "hide_custom": 0,
  "icon": "education",
  "idx": 0,
- "is_hidden": 0,
+ "is_hidden": 1,
  "label": "LMS",
  "links": [
   {
@@ -146,7 +145,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-11-21 12:16:25.886431",
+ "modified": "2024-12-27 14:06:13.378403",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS",
@@ -155,7 +154,11 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "LMS Admin"
+  }
+ ],
  "sequence_id": 1.0,
  "shortcuts": [
   {
@@ -213,6 +216,5 @@
    "type": "DocType"
   }
  ],
- "title": "LMS",
- "type": "Workspace"
+ "title": "LMS"
 }

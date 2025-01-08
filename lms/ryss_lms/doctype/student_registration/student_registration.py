@@ -1,9 +1,16 @@
 # Copyright (c) 2024, Frappe and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
 class StudentRegistration(Document):
-	pass
+	# def validate(self):
+	# 	if self.docstatus != "2" and not self.user:
+	# 		self.user = frappe.session.user
+
+	def on_submit(self):
+		pass
+		# enroll in a course in which student apply for enrollment
+

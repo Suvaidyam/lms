@@ -132,12 +132,6 @@ const routes = [
 		props: true,
 	},
 	{
-		path: '/assignment-submission/:assignmentName/:submissionName',
-		name: 'AssignmentSubmission',
-		component: () => import('@/pages/AssignmentSubmission.vue'),
-		props: true,
-	},
-	{
 		path: '/certified-participants',
 		name: 'CertifiedParticipants',
 		component: () => import('@/pages/CertifiedParticipants.vue'),
@@ -193,6 +187,28 @@ const routes = [
 		name: 'Programs',
 		component: () => import('@/pages/Programs.vue'),
 	},
+	{
+		path: '/assignments',
+		name: 'Assignments',
+		component: () => import('@/pages/Assignments.vue'),
+	},
+	{
+		path: '/assignments/:assignmentID',
+		name: 'AssignmentForm',
+		component: () => import('@/pages/AssignmentForm.vue'),
+		props: true,
+	},
+	{
+		path: '/assignment-submission/:assignmentID/:submissionName',
+		name: 'AssignmentSubmission',
+		component: () => import('@/pages/AssignmentSubmission.vue'),
+		props: true,
+	},
+	{
+		path: '/assignment-submissions',
+		name: 'AssignmentSubmissionList',
+		component: () => import('@/pages/AssignmentSubmissionList.vue'),
+	},
 ]
 
 let router = createRouter({
@@ -212,8 +228,7 @@ router.beforeEach(async (to, from, next) => {
 			isLoggedIn &&
 			(to.name == 'Lesson' ||
 				to.name == 'Batch' ||
-				to.name == 'Notifications' ||
-				to.name == 'Badge')
+				to.name == 'Notifications')
 		) {
 			await allUsers.promise
 		}

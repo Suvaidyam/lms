@@ -5,16 +5,29 @@ import json
 import frappe
 import zipfile
 import os
+import re
 import shutil
+import requests
 import xml.etree.ElementTree as ET
 from frappe.translate import get_all_translations
 from frappe import _
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Count
-from frappe.utils import time_diff, now_datetime, get_datetime, flt
+from frappe.utils import (
+	time_diff,
+	now_datetime,
+	get_datetime,
+	cint,
+	flt,
+	now,
+	add_days,
+	format_date,
+	days_diff,
+)
 from typing import Optional
 from lms.lms.utils import get_average_rating, get_lesson_count
 from xml.dom.minidom import parseString
+from lms.lms.doctype.course_lesson.course_lesson import save_progress
 
 
 @frappe.whitelist()
@@ -166,6 +179,7 @@ def get_user_info():
 	user.is_instructor = "Course Creator" in user.roles
 	user.is_moderator = "Moderator" in user.roles
 	user.is_evaluator = "Batch Evaluator" in user.roles
+	user.is_student = "LMS Student" in user.roles
 	return user
 
 
@@ -590,7 +604,7 @@ def get_categories(doctype, filters):
 def get_members(start=0, search=""):
 	"""Get members for the given search term and start index.
 	Args: start (int): Start index for the query.
-	    search (str): Search term to filter the results.
+	                                search (str): Search term to filter the results.
 	Returns: List of members.
 	"""
 
@@ -839,8 +853,6 @@ def delete_course(course):
 			frappe.delete_doc("Lesson Reference", lesson)
 
 		for lesson in lessons:
-			frappe.db.delete("LMS Course Progress", {"lesson": lesson})
-
 			topics = frappe.get_all(
 				"Discussion Topic",
 				{"reference_doctype": "Course Lesson", "reference_docname": lesson},
@@ -860,6 +872,9 @@ def delete_course(course):
 	for chapter in chapters:
 		frappe.delete_doc("Course Chapter", chapter)
 
+	frappe.db.delete("LMS Course Progress", {"course": course})
+	frappe.db.delete("LMS Quiz", {"course": course})
+	frappe.db.delete("LMS Quiz Submission", {"course": course})
 	frappe.db.delete("LMS Enrollment", {"course": course})
 	frappe.delete_doc("LMS Course", course)
 
@@ -919,10 +934,35 @@ def upsert_chapter(title, course, is_scorm_package, scorm_package, name=None):
 def extract_package(course, title, scorm_package):
 	package = frappe.get_doc("File", scorm_package.name)
 	zip_path = package.get_full_path()
-
-	extract_path = frappe.get_site_path("public", "files", "scorm", course, title)
+	# check_for_malicious_code(zip_path)
+	extract_path = frappe.get_site_path("public", "scorm", course, title)
 	zipfile.ZipFile(zip_path).extractall(extract_path)
 	return extract_path
+
+
+def check_for_malicious_code(zip_path):
+	suspicious_patterns = [
+		# Unsafe inline JavaScript
+		r'on(click|load|mouseover|error|submit|focus|blur|change|keyup|keydown|keypress|resize)=".*?"',  # Inline event handlers (e.g., onerror, onclick)
+		r'<script.*?src=["\']http',  # External script tags
+		r"eval\(",  # Usage of eval()
+		r"Function\(",  # Usage of Function constructor
+		r"(btoa|atob)\(",  # Base64 encoding/decoding
+		# Dangerous XML patterns
+		r"<!ENTITY",  # XXE-related
+		r"<\?xml-stylesheet .*?>",  # External stylesheets in XML
+	]
+
+	with zipfile.ZipFile(zip_path, "r") as zf:
+		for file_name in zf.namelist():
+			if file_name.endswith((".html", ".js", ".xml")):
+				with zf.open(file_name) as file:
+					content = file.read().decode("utf-8", errors="ignore")
+					for pattern in suspicious_patterns:
+						if re.search(pattern, content):
+							frappe.throw(
+								_("Suspicious pattern found in {0}: {1}").format(file_name, pattern)
+							)
 
 
 def get_manifest_file(extract_path):
@@ -999,6 +1039,135 @@ def delete_chapter(chapter):
 
 
 def delete_scorm_package(scorm_package_path):
-	scorm_package_path = frappe.get_site_path("public", scorm_package_path)
+	scorm_package_path = frappe.get_site_path("public", scorm_package_path[1:])
 	if os.path.exists(scorm_package_path):
 		shutil.rmtree(scorm_package_path)
+
+
+@frappe.whitelist()
+def mark_lesson_progress(course, chapter_number, lesson_number):
+	chapter_name = frappe.get_value(
+		"Chapter Reference", {"parent": course, "idx": chapter_number}, "chapter"
+	)
+	lesson_name = frappe.get_value(
+		"Lesson Reference", {"parent": chapter_name, "idx": lesson_number}, "lesson"
+	)
+	save_progress(lesson_name, course)
+
+
+@frappe.whitelist()
+def get_heatmap_data(member=None, base_days=200):
+	if not member:
+		member = frappe.session.user
+
+	base_date, start_date, number_of_days, days = calculate_date_ranges(base_days)
+	date_count = initialize_date_count(days)
+
+	lesson_completions, quiz_submissions, assignment_submissions = fetch_activity_data(
+		member, start_date
+	)
+	count_dates(lesson_completions, date_count)
+	count_dates(quiz_submissions, date_count)
+	count_dates(assignment_submissions, date_count)
+
+	heatmap_data, labels, total_activities, weeks = prepare_heatmap_data(
+		start_date, number_of_days, date_count
+	)
+
+	return {
+		"heatmap_data": heatmap_data,
+		"labels": labels,
+		"total_activities": total_activities,
+		"weeks": weeks,
+	}
+
+
+def calculate_date_ranges(base_days):
+	today = format_date(now(), "YYYY-MM-dd")
+	day_today = get_datetime(today).strftime("%w")
+	padding_end = 6 - cint(day_today)
+
+	base_date = add_days(today, -base_days)
+	day_of_base_date = cint(get_datetime(base_date).strftime("%w"))
+	start_date = add_days(base_date, -day_of_base_date)
+	number_of_days = base_days + day_of_base_date + padding_end
+	days = [add_days(start_date, i) for i in range(number_of_days + 1)]
+
+	return base_date, start_date, number_of_days, days
+
+
+def initialize_date_count(days):
+	return {format_date(day, "YYYY-MM-dd"): 0 for day in days}
+
+
+def fetch_activity_data(member, start_date):
+	lesson_completions = frappe.get_all(
+		"LMS Course Progress",
+		fields=["creation"],
+		filters={"member": member, "creation": [">=", start_date]},
+	)
+
+	quiz_submissions = frappe.get_all(
+		"LMS Quiz Submission",
+		fields=["creation"],
+		filters={"member": member, "creation": [">=", start_date]},
+	)
+
+	assignment_submissions = frappe.get_all(
+		"LMS Assignment Submission",
+		fields=["creation"],
+		filters={"member": member, "creation": [">=", start_date]},
+	)
+
+	return lesson_completions, quiz_submissions, assignment_submissions
+
+
+def count_dates(data, date_count):
+	for entry in data:
+		date = format_date(entry.creation, "YYYY-MM-dd")
+		if date in date_count:
+			date_count[date] += 1
+
+
+def prepare_heatmap_data(start_date, number_of_days, date_count):
+	days_of_week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+	heatmap_data = {day: [] for day in days_of_week}
+	week_count = -(number_of_days // -7)
+	labels = [None] * week_count
+	last_seen_month = None
+	sorted_dates = sorted(date_count.keys())
+
+	for date in sorted_dates:
+		activity_count = date_count[date]
+		day_of_week = get_datetime(date).strftime("%a")
+		current_month = get_datetime(date).strftime("%b")
+		column_index = get_week_difference(start_date, date)
+
+		if 0 <= column_index < week_count:
+			heatmap_data[day_of_week].append(
+				{
+					"date": date,
+					"count": activity_count,
+					"label": f"{activity_count} activities on {format_date(date, 'dd MMM')}",
+				}
+			)
+
+			if last_seen_month != current_month:
+				labels[column_index] = current_month
+				last_seen_month = current_month
+
+	for (index, label) in enumerate(labels):
+		if not label:
+			labels[index] = ""
+
+	formatted_heatmap_data = [
+		{"name": day, "data": heatmap_data[day]} for day in days_of_week
+	]
+
+	total_activities = sum(date_count.values())
+	return formatted_heatmap_data, labels, total_activities, week_count
+
+
+def get_week_difference(start_date, current_date):
+	diff_in_days = days_diff(current_date, start_date)
+	return diff_in_days // 7

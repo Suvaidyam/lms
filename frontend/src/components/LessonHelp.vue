@@ -1,6 +1,21 @@
 <template>
 	<div class="space-y-5">
 		<div class="space-y-2">
+			<div class="flex items-center text-sm font-medium space-x-2">
+				<span>
+					{{ __('What does include in preview mean?') }}
+				</span>
+			</div>
+			<div class="text-xs text-gray-600 mb-1 leading-5">
+				{{
+					__(
+						'If Include in Preview is enabled for a lesson then the lesson will also be accessible to non logged in users.'
+					)
+				}}
+			</div>
+		</div>
+
+		<div class="space-y-2">
 			<div
 				class="flex items-center text-sm font-medium space-x-2 cursor-pointer"
 				@click="openHelpDialog('quiz')"
@@ -25,7 +40,7 @@
 				@click="openHelpDialog('upload')"
 			>
 				<span class="leading-5">
-					{{ __('How to upload content from your system?') }}
+					{{ __(contentMap['upload']) }}
 				</span>
 				<Info class="w-3 h-3 text-gray-700" />
 			</div>
@@ -44,7 +59,7 @@
 				@click="openHelpDialog('youtube')"
 			>
 				<span>
-					{{ __('How to add a YouTube Video?') }}
+					{{ __(contentMap['youtube']) }}
 				</span>
 				<Info class="w-3 h-3 text-gray-700" />
 			</div>
@@ -56,23 +71,8 @@
 				}}
 			</div>
 		</div>
-
-		<div class="space-y-2">
-			<div class="flex items-center text-sm font-medium space-x-2">
-				<span>
-					{{ __('What does include in preview mean?') }}
-				</span>
-			</div>
-			<div class="text-xs text-gray-600 mb-1 leading-5">
-				{{
-					__(
-						'If Include in Preview is enabled for a lesson then the lesson will also be accessible to non logged in users.'
-					)
-				}}
-			</div>
-		</div>
 	</div>
-	<ExplanationVideos v-model="showExplanation" :type="type" />
+	<ExplanationVideos v-model="showExplanation" :title="title" :type="type" />
 </template>
 <script setup>
 import { Info } from 'lucide-vue-next'
@@ -81,9 +81,16 @@ import ExplanationVideos from '@/components/Modals/ExplanationVideos.vue'
 
 const showExplanation = ref(false)
 const type = ref(null)
+const title = ref(null)
+const contentMap = {
+	quiz: 'How to add a Quiz?',
+	upload: 'How to upload content from your system?',
+	youtube: 'How to add a YouTube Video?',
+}
 
 const openHelpDialog = (contentType) => {
 	type.value = contentType
+	title.value = contentMap[contentType]
 	showExplanation.value = true
 }
 </script>
