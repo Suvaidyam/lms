@@ -13,6 +13,10 @@ app_license = "AGPL"
 
 # Includes in <head>
 # ------------------
+fixtures = [
+	"Regional Training Centre",
+	"Education Table",
+	"Regional Training Centre Table for Offline Course",]
 permission_query_conditions ={
 	"Student Registration": "lms.ryss_lms.utils.student_reg.list_query"
 }
@@ -85,6 +89,14 @@ setup_wizard_requires = "assets/lms/js/setup_wizard.js"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
+doctype_js = {
+	 "Regional Training Centre Table for Offline Course" : [
+        "public/js/utils.js"
+    ],
+		 "Regional Training Centre" : [
+        "public/js/utils.js"
+    ],
+}
 # DocType Class
 # ---------------
 # Override standard doctype classes
@@ -121,7 +133,13 @@ scheduler_events = {
 	"daily": ["lms.job.doctype.job_opportunity.job_opportunity.update_job_openings"],
 }
 
-fixtures = ["Custom Field", "Function", "Industry", "LMS Category"]
+fixtures = ["Custom Field", "Function", "Industry", "LMS Category", "Regional Training Centre",
+ "Training Centre District",
+ "Education Table",
+ "Regional Training Centre Table for Offline Course",
+ "Batch Table",
+ "Course Table",
+ "Student Registration"]
 
 # Testing
 # -------

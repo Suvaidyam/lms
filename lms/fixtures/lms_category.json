@@ -1,5 +1,12 @@
 [
  {
+  "category": "Mentors",
+  "docstatus": 0,
+  "doctype": "LMS Category",
+  "modified": "2024-10-22 11:14:55.878814",
+  "name": "Mentors"
+ },
+ {
   "category": "Web Development",
   "docstatus": 0,
   "doctype": "LMS Category",
@@ -47,5 +54,12 @@
   "doctype": "LMS Category",
   "modified": "2023-06-15 18:01:41.598282",
   "name": "Framework"
+ },
+ {
+  "category": "Farmer Scientist",
+  "docstatus": 0,
+  "doctype": "LMS Category",
+  "modified": "2024-10-22 11:14:39.558352",
+  "name": "Farmer Scientist"
  }
 ]
