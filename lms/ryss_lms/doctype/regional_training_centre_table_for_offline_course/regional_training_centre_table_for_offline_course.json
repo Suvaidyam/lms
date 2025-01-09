@@ -5,14 +5,12 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "program",
   "center_id",
   "country_name",
   "state_name",
   "district_name",
   "district",
   "centre_name",
-  "fetched_centre_name",
   "batch_name_fsc"
  ],
  "fields": [
@@ -24,7 +22,7 @@
   },
   {
    "fieldname": "centre_name",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Centre Name",
    "options": "Regional Training Centre"
   },
@@ -61,24 +59,11 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "District Name"
-  },
-  {
-   "fetch_from": "centre_name.centre_name",
-   "fieldname": "fetched_centre_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Centre Name"
-  },
-  {
-   "fieldname": "program",
-   "fieldtype": "Link",
-   "label": "Program",
-   "options": "LMS Program"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-23 17:24:14.707855",
+ "modified": "2025-01-09 12:42:11.837482",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Regional Training Centre Table for Offline Course",
