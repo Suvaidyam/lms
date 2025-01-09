@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"3nulSsFIp7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Course Registration</span>\",\"col\":12}},{\"id\":\"FTgh5oTDrk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Registration Form\",\"col\":7}}]",
+ "content": "[{\"id\":\"3nulSsFIp7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Course Registration</span>\",\"col\":12}},{\"id\":\"FTgh5oTDrk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Registration Form\",\"col\":4}}]",
  "creation": "2024-12-18 15:55:17.042788",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,14 +13,14 @@
  "is_hidden": 0,
  "label": "Course Registration",
  "links": [],
- "modified": "2024-12-27 11:13:35.748713",
+ "modified": "2024-12-27 14:00:18.083459",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Course Registration",
  "number_cards": [
   {
    "label": "Registration Form",
-   "number_card_name": "Registration Form"
+   "number_card_name": "Registration Form For Temp Student"
   }
  ],
  "owner": "Administrator",

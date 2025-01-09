@@ -1,6 +1,6 @@
 <template>
 	<div class="">
-		<div class="w-full flex items-center justify-between border-b pb-4">
+		<div class="w-full flex items-center justify-between pb-4">
 			<div class="font-medium text-gray-600">
 				{{ __('Statistics') }}
 			</div>
@@ -8,10 +8,10 @@
 		<div class="grid grid-cols-3 gap-5 mb-8">
 			<div class="flex items-center shadow py-2 px-3 rounded-md">
 				<div class="p-2 rounded-md bg-gray-100 mr-3">
-					<User class="w-18 h-18 stroke-1.5 text-gray-700" />
+					<User class="w-5 h-5 stroke-1.5 text-gray-700" />
 				</div>
-				<div class="flex flex-col">
-					<span class="text-xl font-semibold mb-1">
+				<div class="flex items-center space-x-2">
+					<span class="font-semibold">
 						{{ students.data?.length }}
 					</span>
 					<span class="text-gray-700">
@@ -22,10 +22,10 @@
 
 			<div class="flex items-center shadow py-2 px-3 rounded-md">
 				<div class="p-2 rounded-md bg-gray-100 mr-3">
-					<BookOpen class="w-18 h-18 stroke-1.5 text-gray-700" />
+					<BookOpen class="w-5 h-5 stroke-1.5 text-gray-700" />
 				</div>
-				<div class="flex flex-col">
-					<span class="text-xl font-semibold mb-1">
+				<div class="flex items-center space-x-2">
+					<span class="font-semibold">
 						{{ batch.courses?.length }}
 					</span>
 					<span class="text-gray-700">
@@ -36,10 +36,10 @@
 
 			<div class="flex items-center shadow py-2 px-3 rounded-md">
 				<div class="p-2 rounded-md bg-gray-100 mr-3">
-					<ShieldCheck class="w-18 h-18 stroke-1.5 text-gray-700" />
+					<ShieldCheck class="w-5 h-5 stroke-1.5 text-gray-700" />
 				</div>
-				<div class="flex flex-col">
-					<span class="text-xl font-semibold mb-1">
+				<div class="flex items-center space-x-2">
+					<span class="font-semibold">
 						{{ assessmentCount }}
 					</span>
 					<span class="text-gray-700">
@@ -48,28 +48,33 @@
 				</div>
 			</div>
 		</div>
-		<div class="mb-8">
+		<div v-if="showProgressChart" class="mb-8">
 			<div class="text-gray-600 font-medium">
 				{{ __('Progress') }}
 			</div>
 			<ApexChart
-				v-if="showProgressChart"
 				:options="chartOptions"
 				:series="chartData"
 				type="bar"
-				height="350"
+				height="200"
 			/>
 			<div
 				class="flex items-center justify-center text-sm text-gray-700 space-x-4"
 			>
 				<div class="flex items-center space-x-2">
-					<div class="w-3 h-3" style="background-color: #0289f7"></div>
+					<div
+						class="w-3 h-3 rounded-sm"
+						:style="{ 'background-color': theme.colors.green[600] }"
+					></div>
 					<div>
 						{{ __('Courses') }}
 					</div>
 				</div>
 				<div class="flex items-center space-x-2">
-					<div class="w-3 h-3" style="background-color: #e03636"></div>
+					<div
+						class="w-3 h-3 rounded-sm"
+						:style="{ 'background-color': theme.colors.blue[600] }"
+					></div>
 					<div>
 						{{ __('Assessments') }}
 					</div>
@@ -98,9 +103,6 @@
 				row-key="name"
 				:options="{
 					showTooltip: false,
-					onRowClick: (row) => {
-						openStudentProgressModal(row)
-					},
 				}"
 			>
 				<ListHeader
@@ -121,9 +123,18 @@
 					</ListHeaderItem>
 				</ListHeader>
 				<ListRows>
-					<ListRow :row="row" v-for="row in students.data">
+					<ListRow
+						:row="row"
+						v-for="row in students.data"
+						class="group cursor-pointer"
+						@click="openStudentProgressModal(row)"
+					>
 						<template #default="{ column, item }">
-							<ListRowItem :item="row[column.key]" :align="column.align">
+							<ListRowItem
+								:item="row[column.key]"
+								:align="column.align"
+								class="text-sm"
+							>
 								<template #prefix>
 									<div v-if="column.key == 'full_name'">
 										<Avatar
@@ -139,6 +150,7 @@
 									class="flex items-center space-x-4 w-full"
 								>
 									<ProgressBar :progress="row[column.key]" size="sm" />
+									<div class="text-xs">{{ row[column.key] }}%</div>
 								</div>
 								<div v-else>
 									{{ row[column.key] }}
@@ -190,13 +202,21 @@ import {
 	ListView,
 	ListRowItem,
 } from 'frappe-ui'
-import { BookOpen, Plus, ShieldCheck, Trash2, User } from 'lucide-vue-next'
+import {
+	BookOpen,
+	Clipboard,
+	Plus,
+	ShieldCheck,
+	Trash2,
+	User,
+} from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import StudentModal from '@/components/Modals/StudentModal.vue'
 import { showToast } from '@/utils'
 import ProgressBar from '@/components/ProgressBar.vue'
 import BatchStudentProgress from '@/components/Modals/BatchStudentProgress.vue'
 import ApexChart from 'vue3-apexcharts'
+import { theme } from '@/utils/theme'
 
 const showStudentModal = ref(false)
 const showStudentProgressModal = ref(false)
@@ -237,13 +257,13 @@ const getStudentColumns = () => {
 		{
 			label: 'Progress',
 			key: 'progress',
-			width: '10rem',
+			width: '15rem',
 			icon: 'activity',
 		},
 		{
 			label: 'Last Active',
 			key: 'last_active',
-			width: '15rem',
+			width: '10rem',
 			align: 'center',
 			icon: 'clock',
 		},
@@ -329,14 +349,16 @@ const getChartData = () => {
 }
 
 const getChartOptions = (categories) => {
-	const courseColor = '#0289F7'
-	const assessmentColor = '#E03636'
-	const maxY = Math.ceil(students.data?.length / 10) * 10
+	const courseColor = theme.colors.green[700]
+	const assessmentColor = theme.colors.blue[700]
+	const maxY =
+		students.data?.length % 5
+			? students.data?.length + (5 - (students.data?.length % 5))
+			: students.data?.length
 
 	return {
 		chart: {
 			type: 'bar',
-			height: 350,
 			toolbar: {
 				show: false,
 			},
@@ -344,17 +366,15 @@ const getChartOptions = (categories) => {
 		plotOptions: {
 			bar: {
 				distributed: true,
-				borderRadius: 0,
-				horizontal: false,
-				columnWidth: '30%',
+				borderRadius: 3,
+				borderRadiusApplication: 'end',
+				horizontal: true,
+				barHeight: '40%',
 			},
 		},
 		colors: Object.values(categories).map((item) =>
 			item.type === 'course' ? courseColor : assessmentColor
 		),
-		legends: {
-			show: false,
-		},
 		xaxis: {
 			categories: Object.values(categories).map((item) => item.label),
 			labels: {
@@ -363,7 +383,7 @@ const getChartOptions = (categories) => {
 				},
 				rotate: 0,
 				formatter: function (value) {
-					return value.length > 22 ? `${value.substring(0, 22)}...` : value // Trim long labels
+					return value.length > 30 ? `${value.substring(0, 30)}...` : value // Trim long labels
 				},
 			},
 		},
@@ -371,7 +391,8 @@ const getChartOptions = (categories) => {
 			max: maxY,
 			min: 0,
 			stepSize: 10,
-			tickAmount: maxY / 10,
+			tickAmount: maxY / 5,
+			/* reversed: true */
 		},
 	}
 }
