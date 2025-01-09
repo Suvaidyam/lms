@@ -14,7 +14,6 @@
   "batch_mode",
   "section_break_shfp",
   "training_centre_district",
-  "regional_training_centre",
   "column_break_kvsj",
   "training_centre_id",
   "personal_data_tab",
@@ -193,7 +192,7 @@
   {
    "fieldname": "training_centre_district",
    "fieldtype": "Link",
-   "label": "Training Centre District",
+   "label": "Regional Training Centre District",
    "options": "Regional Training Centre Table for Offline Course",
    "reqd": 1
   },
@@ -207,13 +206,6 @@
   {
    "fieldname": "column_break_gfys",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "training_centre_district.fetched_centre_name",
-   "fieldname": "regional_training_centre",
-   "fieldtype": "Data",
-   "label": "Regional Training Centre",
-   "read_only": 1
   },
   {
    "fieldname": "statement_of_purpose",
@@ -372,7 +364,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-09 12:19:17.051377",
+ "modified": "2025-01-09 12:43:53.300565",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",
