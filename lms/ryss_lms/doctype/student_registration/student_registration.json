@@ -8,12 +8,14 @@
  "field_order": [
   "course_and_centre_selection_tab",
   "date_of_application",
-  "batch_start_date",
+  "term_start_date",
   "column_break_gfys",
-  "batch",
-  "batch_mode",
+  "course_name",
+  "course_mode",
+  "batch_no",
   "section_break_shfp",
   "training_centre_district",
+  "regional_training_centre",
   "column_break_kvsj",
   "training_centre_id",
   "personal_data_tab",
@@ -192,7 +194,7 @@
   {
    "fieldname": "training_centre_district",
    "fieldtype": "Link",
-   "label": "Regional Training Centre District",
+   "label": "Training Centre District",
    "options": "Regional Training Centre Table for Offline Course",
    "reqd": 1
   },
@@ -335,28 +337,40 @@
    "search_index": 1
   },
   {
-   "fieldname": "batch",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Batch",
-   "link_filters": "[[\"LMS Batch\",\"published\",\"=\",1]]",
-   "options": "LMS Batch",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "batch.medium",
-   "fieldname": "batch_mode",
+   "fetch_from": "course_name.custom_term_start_date",
+   "fieldname": "term_start_date",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Batch Mode",
+   "label": "Term Start Date",
    "read_only": 1
   },
   {
-   "fetch_from": "batch.start_date",
-   "fieldname": "batch_start_date",
+   "fieldname": "course_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Course Name",
+   "options": "LMS Course",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "course_name.custom_course_mode",
+   "fieldname": "course_mode",
    "fieldtype": "Data",
-   "label": "Batch Start Date",
+   "in_list_view": 1,
+   "label": "Course Mode",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Data",
+   "label": "Batch No",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "training_centre_district.fetched_centre_name",
+   "fieldname": "regional_training_centre",
+   "fieldtype": "Data",
+   "label": "Regional Training Centre",
    "read_only": 1
   }
  ],
@@ -364,7 +378,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-09 12:43:53.300565",
+ "modified": "2025-01-11 12:25:30.826891",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Student Registration",

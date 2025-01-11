@@ -2,6 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Student Registration", {
+	onload: function (frm) {
+        const batchId = localStorage.getItem('batchId');
+        if (batchId) {
+            frm.set_value('batch_no', batchId);
+        }
+    },
 	refresh(frm) {
 		apply_filter("state_name", "country_name", frm, frm.doc.country);
 		apply_filter("district_name", "state_name", frm, frm.doc.state);
