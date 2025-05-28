@@ -930,6 +930,37 @@ def upsert_chapter(title, course, is_scorm_package, scorm_package, name=None):
 
 	return chapter
 
+@frappe.whitelist()
+def upsert_module(module_name,course, is_scorm_package, scorm_package=None, name=None):
+	print("upsert_module--------------------------")
+	values = frappe._dict(
+		{"module_name": module_name, "course": course, "is_scorm_package": is_scorm_package}
+	)
+	if is_scorm_package:
+			scorm_package = frappe._dict(scorm_package)
+			extract_path = extract_package(course, module_name, scorm_package)
+
+			values.update(
+				{
+					"scorm_package": scorm_package.name,
+					"scorm_package_path": extract_path.split("public")[1],
+					"manifest_file": get_manifest_file(extract_path).split("public")[1],
+					"launch_file": get_launch_file(extract_path).split("public")[1],
+				}
+		)
+
+	if name:
+		module = frappe.get_doc("Test Module", name)
+	else:
+		module = frappe.new_doc("Test Module")
+	module.update(values)
+	module.save()
+
+	# if is_scorm_package and not len(chapter.lessons):
+	# 	add_lesson(title, chapter.name, course)
+	print(module,"modulepp--------------------------")
+	return module
+
 
 def extract_package(course, title, scorm_package):
 	package = frappe.get_doc("File", scorm_package.name)
