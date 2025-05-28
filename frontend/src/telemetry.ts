@@ -49,9 +49,9 @@ export async function init() {
 async function set_enabled() {
   if (telemetry.value.enabled) return;
 
-  await call("lms.lms.telemetry.is_enabled").then((res) => {
-    telemetry.value.enabled = res;
-  });
+  // await call("lms.lms.telemetry.is_enabled").then((res) => {
+  //   telemetry.value.enabled = res;
+  // });
 }
 
 async function set_credentials() {
