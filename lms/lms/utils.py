@@ -1095,6 +1095,12 @@ def get_categorized_courses(courses):
 		"created": created,
 		"under_review": under_review,
 	}
+@frappe.whitelist(allow_guest=True)
+def get_dynamic_course():
+    courses = frappe.get_all("LMS Course", fields=["*"], filters={"custom_acadmy_program": "Post Graduation"})
+    print(courses, "==============")
+    return courses
+
 
 
 @frappe.whitelist(allow_guest=True)
