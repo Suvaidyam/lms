@@ -135,13 +135,8 @@
 									{{ tag }}
 									<X class="stroke-1.5 w-3 h-3 ml-2 cursor-pointer" @click="removeTag(tag)" />
 								</div>
-								<FormControl
-									v-model="newTag"
-									:placeholder="__('Add a keyword and then press enter')"
-									class="w-72"
-									@keyup.enter="updateTags()"
-									id="tags"
-								/>
+								<FormControl v-model="newTag" :placeholder="__('Keywords for the course')" class="w-52"
+									@keyup.enter="updateTags()" id="tags" />
 							</div>
 						</div>
 						<div class="flex">
