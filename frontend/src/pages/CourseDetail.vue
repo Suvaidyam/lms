@@ -19,7 +19,7 @@
 							v-if="parseInt(course.data.rating) > 0"
 							:text="__('Average Rating')"
 							class="flex items-center"
-						>
+						>nnn
 							<Star class="h-5 w-5 text-gray-100 fill-orange-500" />
 							<span class="ml-1">
 								{{ course.data.rating }}

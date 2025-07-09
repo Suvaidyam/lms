@@ -78,21 +78,38 @@
 							:to="
 								course.membership && course.current_lesson
 									? {
-											name: 'Lesson',
+											name: 'Lesson1',
+											// params: {
+											// 	courseName: course.name,
+											// 	chapterNumber: course.current_lesson.split('-')[0],
+											// 	lessonNumber: course.current_lesson.split('-')[1],
+											// },
 											params: {
 												courseName: course.name,
+												semesterNumber: 1,
+												moduleNumber: 1,
+												topicNumber: 1,
+												chapterNumber: 1,
 												chapterNumber: course.current_lesson.split('-')[0],
 												lessonNumber: course.current_lesson.split('-')[1],
 											},
 									  }
 									: course.membership
 									? {
-											name: 'Lesson',
+											name: 'Lesson1',
 											params: {
 												courseName: course.name,
+												semesterNumber:1,
+												moduleNumber: 1,
+												topicNumber: 1,
 												chapterNumber: 1,
 												lessonNumber: 1,
 											},
+											// params: {
+											// 	courseName: course.name,
+											// 	chapterNumber: 1,
+											// 	lessonNumber: 1,
+											// },
 									  }
 									: {
 											name: 'CourseDetail',

@@ -135,7 +135,6 @@
 									{{ tag }}
 									<X class="stroke-1.5 w-3 h-3 ml-2 cursor-pointer" @click="removeTag(tag)" />
 								</div>
-<<<<<<< Updated upstream
 								<FormControl
 									v-model="newTag"
 									:placeholder="__('Add a keyword and then press enter')"
@@ -143,10 +142,6 @@
 									@keyup.enter="updateTags()"
 									id="tags"
 								/>
-=======
-								<FormControl v-model="newTag" :placeholder="__('Keywords for the course')" class="w-52"
-									@keyup.enter="updateTags()" id="tags" />
->>>>>>> Stashed changes
 							</div>
 						</div>
 						<div class="flex">
@@ -157,7 +152,7 @@
 							<div class="w-1/2">
 								<div class="px-2 pb-0.5">
 									<div class="mb-1 text-xs text-gray-600">
-										{{ __('Acadmic Programs') }}
+										{{ __('Academic Programs') }}
 									</div>
 									<Select :options="[
 										{

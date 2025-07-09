@@ -1,15 +1,11 @@
 <template>
 	<div class="shadow rounded-md min-w-80">
-		<iframe
-			v-if="course.data.video_link"
-			:src="video_link"
-			class="rounded-t-md min-h-56 w-full"
-		/>
+		<iframe v-if="course.data.video_link" :src="video_link" class="rounded-t-md min-h-56 w-full" />
 		<div class="p-5">
 			<div v-if="course.data.price" class="text-2xl font-semibold mb-3">
 				{{ course.data.price }}
 			</div>
-			<router-link
+			<!-- <router-link
 				v-if="course.data.membership"
 				:to="{
 					name: 'Lesson',
@@ -29,58 +25,59 @@
 						{{ __('Continue Learning') }}
 					</span>
 				</Button>
+			</router-link> -->
+			<router-link v-if="course.data.membership" :to="{
+				name: 'Lesson1',
+				params: {
+					courseName: course.name,
+					semesterNumber: 1,
+					moduleNumber: 1,
+					topicNumber: 1,
+					chapterNumber: course.data.current_lesson
+						? course.data.current_lesson.split('-')[0]
+						: 1,
+					lessonNumber: course.data.current_lesson
+						? course.data.current_lesson.split('-')[1]
+						: 1,
+				},
+			}">
+				<Button variant="solid" size="md" class="w-full">
+					<span>
+						{{ __('Continue Learning') }}
+					</span>
+				</Button>
 			</router-link>
-			<router-link
-				v-else-if="course.data.paid_course"
-				:to="{
-					name: 'Billing',
-					params: {
-						type: 'course',
-						name: course.data.name,
-					},
-				}"
-			>
+			<router-link v-else-if="course.data.paid_course" :to="{
+				name: 'Billing',
+				params: {
+					type: 'course',
+					name: course.data.name,
+				},
+			}">
 				<Button variant="solid" size="md" class="w-full">
 					<span>
 						{{ __('Buy this course') }}
 					</span>
 				</Button>
 			</router-link>
-			<div
-				v-else-if="course.data.disable_self_learning"
-				class="bg-blue-100 text-blue-900 text-sm rounded-md py-1 px-3"
-			>
+			<div v-else-if="course.data.disable_self_learning"
+				class="bg-blue-100 text-blue-900 text-sm rounded-md py-1 px-3">
 				{{ __('Contact the Administrator to enroll for this course.') }}
 			</div>
-			<Button
-				v-else
-				@click="enrollStudent()"
-				variant="solid"
-				class="w-full"
-				size="md"
-			>
+			<Button v-else @click="enrollStudent()" variant="solid" class="w-full" size="md">
 				<span>
 					{{ __('Start Learning') }}
 				</span>
 			</Button>
-			<Button
-				v-if="canGetCertificate"
-				@click="fetchCertificate()"
-				variant="subtle"
-				class="w-full mt-2"
-				size="md"
-			>
+			<Button v-if="canGetCertificate" @click="fetchCertificate()" variant="subtle" class="w-full mt-2" size="md">
 				{{ __('Get Certificate') }}
 			</Button>
-			<router-link
-				v-if="user?.data?.is_moderator || is_instructor()"
-				:to="{
-					name: 'CourseForm',
-					params: {
-						courseName: course.data.name,
-					},
-				}"
-			>
+			<router-link v-if="user?.data?.is_moderator || is_instructor()" :to="{
+				name: 'CourseForm',
+				params: {
+					courseName: course.data.name,
+				},
+			}">
 				<Button variant="subtle" class="w-full mt-2" size="md">
 					<span>
 						{{ __('Edit') }}
@@ -166,11 +163,24 @@ function enrollStudent() {
 					__('You have been enrolled in this course'),
 					'check'
 				)
+				// setTimeout(() => {
+				// 	router.push({
+				// 		name: 'Lesson',
+				// 		params: {
+				// 			courseName: props.course.data.name,
+				// 			chapterNumber: 1,
+				// 			lessonNumber: 1,
+				// 		},
+				// 	})
+				// }, 2000)
 				setTimeout(() => {
 					router.push({
-						name: 'Lesson',
+						name: 'Lesson1',
 						params: {
 							courseName: props.course.data.name,
+							semesterNumber: 1,
+							moduleNumber: 1,
+							topicNumber: 1,
 							chapterNumber: 1,
 							lessonNumber: 1,
 						},
@@ -209,8 +219,7 @@ const certificate = createResource({
 	},
 	onSuccess(data) {
 		window.open(
-			`/api/method/frappe.utils.print_format.download_pdf?doctype=LMS+Certificate&name=${
-				data.name
+			`/api/method/frappe.utils.print_format.download_pdf?doctype=LMS+Certificate&name=${data.name
 			}&format=${encodeURIComponent(data.template)}`,
 			'_blank'
 		)

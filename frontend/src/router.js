@@ -21,12 +21,27 @@ const routes = [
 		component: () => import('@/pages/CourseDetail.vue'),
 		props: true,
 	},
+	
 	{
 		path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber',
 		name: 'Lesson',
 		component: () => import('@/pages/Lesson.vue'),
 		props: true,
 	},
+	{
+		path: '/courses/:courseName/learn/:semesterNumber-:moduleNumber-:topicNumber-:chapterNumber-:lessonNumber',
+		name: 'Lesson1',
+		component: () => import('@/pages/Lesson.vue'),
+		props: true,
+	},
+
+	
+	// {
+	// 	path:'/courses/:courseName/learn/:semester?/:module?/:topic?/:chapter?/:lessonNumber?',
+	// 	name: 'Lesson',
+	// 	component: () => import('@/pages/Lesson.vue'),
+	// 	props: true,
+	// },
 	{
 		path: '/courses/:courseName/learn/:chapterName',
 		name: 'SCORMChapter',
@@ -114,11 +129,17 @@ const routes = [
 		props: true,
 	},
 	{
-		path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber/edit',
+		path: '/courses/:courseName/learn/:semester/:module/:topic/:chapter/:lessonNumber/edit',
 		name: 'LessonForm',
 		component: () => import('@/pages/LessonForm.vue'),
 		props: true,
 	},
+	// {
+	// 	path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber/edit',
+	// 	name: 'LessonForm',
+	// 	component: () => import('@/pages/LessonForm.vue'),
+	// 	props: true,
+	// },
 	{
 		path: '/batches/:batchName/edit',
 		name: 'BatchForm',

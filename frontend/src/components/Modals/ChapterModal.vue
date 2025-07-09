@@ -1,39 +1,26 @@
 <template>
-	<Dialog
-		v-model="show"
-		:options="{
-			title: chapterDetail ? __('Edit Chapter') : __('Add Chapter'),
-			size: 'lg',
-			actions: [
-				{
-					label: chapterDetail ? __('Edit') : __('Create'),
-					variant: 'solid',
-					onClick: (close) =>
-						chapterDetail ? editChapter(close) : addChapter(close),
-				},
-			],
-		}"
-	>
+	<Dialog v-model="show" :options="{
+		title: chapterDetail ? __('Edit Chapter') : __('Add Chapter'),
+		size: 'lg',
+		actions: [
+			{
+				label: chapterDetail ? __('Edit') : __('Create'),
+				variant: 'solid',
+				onClick: (close) =>
+					chapterDetail ? editChapter(close) : addChapter(close),
+			},
+		],
+	}">
 		<template #body-content>
 			<div class="space-y-4 text-base">
 				<FormControl label="Title" v-model="chapter.title" :required="true" />
-				<Switch
-					size="sm"
-					:label="__('SCORM Package')"
-					:description="
-						__(
-							'Enable this only if you want to upload a SCORM package as a chapter.'
-						)
-					"
-					v-model="chapter.is_scorm_package"
-				/>
+				<Switch size="sm" :label="__('SCORM Package')" :description="__(
+					'Enable this only if you want to upload a SCORM package as a chapter.'
+				)
+					" v-model="chapter.is_scorm_package" />
 				<div v-if="chapter.is_scorm_package">
-					<FileUploader
-						v-if="!chapter.scorm_package"
-						:fileTypes="['.zip']"
-						:validateFile="validateFile"
-						@success="(file) => (chapter.scorm_package = file)"
-					>
+					<FileUploader v-if="!chapter.scorm_package" :fileTypes="['.zip']" :validateFile="validateFile"
+						@success="(file) => (chapter.scorm_package = file)">
 						<template v-slot="{ file, progress, uploading, openFileSelector }">
 							<div class="mb-4">
 								<Button @click="openFileSelector" :loading="uploading">
@@ -57,10 +44,8 @@
 									{{ getFileSize(chapter.scorm_package.file_size) }}
 								</span>
 							</div>
-							<X
-								@click="() => (chapter.scorm_package = null)"
-								class="bg-gray-200 rounded-md cursor-pointer stroke-1.5 w-5 h-5 p-1 ml-4"
-							/>
+							<X @click="() => (chapter.scorm_package = null)"
+								class="bg-gray-200 rounded-md cursor-pointer stroke-1.5 w-5 h-5 p-1 ml-4" />
 						</div>
 					</div>
 				</div>
@@ -92,6 +77,18 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	semester: {
+		type: String,
+		required: true,
+	},
+	module: {
+		type: String,
+		required: true,
+	},
+	topic: {
+		type: String,
+		required: true,
+	},
 	chapterDetail: {
 		type: Object,
 	},
@@ -105,17 +102,34 @@ const chapter = reactive({
 
 const chapterResource = createResource({
 	url: 'lms.lms.api.upsert_chapter',
-	makeParams(values) {
+	makeParams() {
 		return {
 			title: chapter.title,
 			course: props.course,
-			is_scorm_package: chapter.is_scorm_package,
+			semester: props.semester,
+			module: props.module,
+			topic: props.topic,
+			is_scorm_package: Number(chapter.is_scorm_package) || 0,
 			scorm_package: chapter.scorm_package,
 			name: props.chapterDetail?.name,
 		}
 	},
 })
 
+// const chapterReference = createResource({
+// 	url: 'frappe.client.insert',
+// 	makeParams(values) {
+// 		return {
+// 			doc: {
+// 				doctype: 'Chapter Reference',
+// 				chapter: values.name,
+// 				parent: props.course,
+// 				parenttype: 'LMS Course',
+// 				parentfield: 'chapters',
+// 			},
+// 		}
+// 	},
+// })
 const chapterReference = createResource({
 	url: 'frappe.client.insert',
 	makeParams(values) {
@@ -123,8 +137,8 @@ const chapterReference = createResource({
 			doc: {
 				doctype: 'Chapter Reference',
 				chapter: values.name,
-				parent: props.course,
-				parenttype: 'LMS Course',
+				parent: props.topic,
+				parenttype: 'Course Topic',
 				parentfield: 'chapters',
 			},
 		}
