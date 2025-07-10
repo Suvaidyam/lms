@@ -15,6 +15,23 @@ class CourseLesson(Document):
 		# self.check_and_create_folder()
 		self.validate_quiz_id()
 
+	def after_insert(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count)
+		course=frappe.get_doc("LMS Course",self.course)
+		print("=============after_insert=============", lesson_count,course.lessons)
+
+	def on_trash(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count-1)
+		print("=============on_trash=============", lesson_count)
+
+	
+	def update_lesson_count(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count)
+		print(lesson_count, "=======lesson count updated using set_value=======")
+
 	def validate_quiz_id(self):
 		if self.quiz_id and not frappe.db.exists("LMS Quiz", self.quiz_id):
 			frappe.throw(_("Invalid Quiz ID"))

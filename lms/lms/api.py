@@ -520,7 +520,9 @@ def delete_lesson(lesson, chapter):
 	frappe.db.delete("LMS Course Progress", {"lesson": lesson})
 
 	# Delete Lesson
-	frappe.db.delete("Course Lesson", lesson)
+	# frappe.db.delete("Course Lesson", lesson)
+	doc = frappe.get_doc("Course Lesson", lesson)
+	doc.delete()
 
 @frappe.whitelist()
 def delete_chapter(chapter):
@@ -869,7 +871,7 @@ def update_course_statistics():
 	courses = frappe.get_all("LMS Course", fields=["name"])
 
 	for course in courses:
-		lessons = get_lesson_count(course.name)
+		# lessons = get_lesson_count(course.name)
 
 		enrollments = frappe.db.count(
 			"LMS Enrollment", {"course": course.name, "member_type": "Student"}
@@ -881,7 +883,7 @@ def update_course_statistics():
 		frappe.db.set_value(
 			"LMS Course",
 			course.name,
-			{"lessons": lessons, "enrollments": enrollments, "rating": avg_rating},
+			{ "enrollments": enrollments, "rating": avg_rating},
 		)
 
 
