@@ -59,7 +59,7 @@
 
 				<div v-if="course.status != 'Approved'">
 					<Badge
-						variant="solid"
+						variant="subtle"
 						:theme="course.status === 'Under Review' ? 'orange' : 'blue'"
 						size="sm"
 					>
@@ -122,6 +122,7 @@ const props = defineProps({
 		default: null,
 	},
 })
+
 </script>
 <style>
 .course-image {

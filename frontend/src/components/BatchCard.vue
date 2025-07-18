@@ -1,7 +1,7 @@
 <template>
 	<div
-		class="flex flex-col shadow hover:bg-gray-100 rounded-md p-4 h-full"
-		style="min-height: 150px"
+	class="flex flex-col shadow hover:bg-gray-100 rounded-md p-4 h-full"
+	style="min-height: 150px"
 	>
 		<div class="text-lg leading-5 font-semibold mb-2">
 			{{ batch.title }}
@@ -47,6 +47,15 @@
 				<Globe class="h-4 w-4 stroke-1.5 mr-2 text-gray-600" />
 				<span>
 					{{ batch.timezone }}
+				</span>
+			</div>
+			<div
+				v-if="batch.timezone"
+				class="flex items-center text-sm text-gray-700"
+			>
+				<Globe class="h-4 w-4 stroke-1.5 mr-2 text-gray-600" />
+				<span class="text-blue-400">
+					{{ batch.medium }}
 				</span>
 			</div>
 		</div>

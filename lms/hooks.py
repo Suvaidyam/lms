@@ -17,6 +17,9 @@ fixtures = [
 	"Regional Training Centre",
 	"Education Table",
 	"Regional Training Centre Table for Offline Course",]
+permission_query_conditions ={
+	"Student Registration": "lms.ryss_lms.utils.student_reg.list_query"
+}
 # include js, css files in header of desk.html
 # app_include_css = "/assets/lms/css/lms.css"
 # app_include_js = "/assets/lms/js/lms.js"
@@ -108,6 +111,9 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
+    "User": {
+        "after_insert": "lms.academic.assign_custom_role.assign_custom_role"
+    },
 	"*": {
 		"on_change": [
 			"lms.lms.doctype.lms_badge.lms_badge.process_badges",
@@ -242,6 +248,7 @@ page_renderer = [
 	"lms.page_renderers.ProfileRedirectPage",
 	"lms.page_renderers.ProfilePage",
 	"lms.page_renderers.CoursePage",
+	"lms.page_renderers.SCORMRenderer",
 ]
 
 # set this to "/" to have profiles on the top-level

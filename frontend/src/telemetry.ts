@@ -22,24 +22,24 @@ export async function init() {
   if (!telemetry.value.enabled) return;
   try {
     await set_credentials();
-    window.posthog.init(telemetry.value.project_id, {
-      api_host: telemetry.value.host,
-      autocapture: false,
-      person_profiles: "always",
-      capture_pageview: true,
-      capture_pageleave: true,
-      disable_session_recording: false,
-      session_recording: {
-        maskAllInputs: false,
-        maskInputOptions: {
-          password: true,
-        },
-      },
-      loaded: (posthog) => {
-        window.posthog = posthog;
-        window.posthog.identify(SITENAME);
-      },
-    });
+    // window.posthog.init(telemetry.value.project_id, {
+    //   api_host: telemetry.value.host,
+    //   autocapture: false,
+    //   person_profiles: "always",
+    //   capture_pageview: true,
+    //   capture_pageleave: true,
+    //   disable_session_recording: false,
+    //   session_recording: {
+    //     maskAllInputs: false,
+    //     maskInputOptions: {
+    //       password: true,
+    //     },
+    //   },
+    //   loaded: (posthog) => {
+    //     window.posthog = posthog;
+    //     window.posthog.identify(SITENAME);
+    //   },
+    // });
   } catch (e) {
     console.trace("Failed to initialize telemetry", e);
     telemetry.value.enabled = false;
@@ -49,9 +49,9 @@ export async function init() {
 async function set_enabled() {
   if (telemetry.value.enabled) return;
 
-  await call("lms.lms.telemetry.is_enabled").then((res) => {
-    telemetry.value.enabled = res;
-  });
+  // await call("lms.lms.telemetry.is_enabled").then((res) => {
+  //   telemetry.value.enabled = res;
+  // });
 }
 
 async function set_credentials() {
@@ -76,23 +76,23 @@ export function capture(
   options: CaptureOptions = { data: { user: "" } }
 ) {
   if (!telemetry.value.enabled) return;
-  window.posthog.capture(`${APP}_${event}`, options);
+  // window.posthog.capture(`${APP}_${event}`, options);
 }
 
 export function recordSession() {
   if (!telemetry.value.enabled) return;
-  if (window.posthog && window.posthog.__loaded) {
-    window.posthog.startSessionRecording();
-  }
+  // if (window.posthog && window.posthog.__loaded) {
+  //   // window.posthog.startSessionRecording();
+  // }
 }
 
 export function stopSession() {
   if (!telemetry.value.enabled) return;
-  if (
-    window.posthog &&
-    window.posthog.__loaded &&
-    window.posthog.sessionRecordingStarted()
-  ) {
-    window.posthog.stopSessionRecording();
-  }
+  // if (
+  //   window.posthog &&
+  //   window.posthog.__loaded &&
+  //   window.posthog.sessionRecordingStarted()
+  // ) {
+  //   window.posthog.stopSessionRecording();
+  // }
 }

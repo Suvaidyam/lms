@@ -3,57 +3,35 @@
 		<div class="grid md:grid-cols-[75%,25%] h-screen">
 			<div class="border-r">
 				<header
-					class="sticky top-0 z-10 flex flex-col md:flex-row md:items-center justify-between border-b overflow-hidden bg-white px-3 py-2.5 sm:px-5"
-				>
+					class="sticky top-0 z-10 flex flex-col md:flex-row md:items-center justify-between border-b overflow-hidden bg-white px-3 py-2.5 sm:px-5">
 					<Breadcrumbs class="text-ellipsis" :items="breadcrumbs" />
-					<Button
-						variant="solid"
-						@click="saveLesson({ showSuccessMessage: true })"
-						class="mt-3 md:mt-0"
-					>
+					<Button variant="solid" @click="saveLesson({ showSuccessMessage: true })" class="mt-3 md:mt-0">
 						{{ __('Save') }}
 					</Button>
 				</header>
 				<div class="py-5">
 					<div class="w-5/6 mx-auto">
-						<FormControl
-							v-model="lesson.title"
-							label="Title"
-							class="mb-4"
-							:required="true"
-						/>
-						<FormControl
-							v-model="lesson.include_in_preview"
-							type="checkbox"
-							label="Include in Preview"
-						/>
+						<FormControl v-model="lesson.title" label="Title" class="mb-4" :required="true" />
+						<FormControl v-model="lesson.include_in_preview" type="checkbox" label="Include in Preview" />
 					</div>
 					<div class="border-t mt-4">
 						<div class="w-5/6 mx-auto pt-4">
-							<div
-								class="flex justify-between cursor-pointer"
-								@click="
-									() => {
-										openInstructorEditor = !openInstructorEditor
-									}
-								"
-							>
+							<div class="flex justify-between cursor-pointer" @click="
+								() => {
+									openInstructorEditor = !openInstructorEditor
+								}
+							">
 								<label class="block font-medium text-gray-600 mb-1">
 									{{ __('Instructor Notes') }}
 								</label>
-								<ChevronRight
-									class="stroke-2 h-5 w-5 text-gray-600"
-									:class="{
-										'rotate-90 transform duration-200': openInstructorEditor,
-										'duration-200': !openInstructorEditor,
-									}"
-								/>
+								<ChevronRight class="stroke-2 h-5 w-5 text-gray-600" :class="{
+									'rotate-90 transform duration-200': openInstructorEditor,
+									'duration-200': !openInstructorEditor,
+								}" />
 							</div>
-							<div
-								v-show="openInstructorEditor"
-								id="instructor-notes"
-								class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal py-3"
-							></div>
+							<div v-show="openInstructorEditor" id="instructor-notes"
+								class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal py-3">
+							</div>
 						</div>
 					</div>
 					<div class="border-t mt-4">
@@ -61,10 +39,9 @@
 							<label class="block font-medium text-gray-600 mb-1">
 								{{ __('Content') }}
 							</label>
-							<div
-								id="content"
-								class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal py-3"
-							></div>
+							<div id="content"
+								class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal py-3">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -79,6 +56,7 @@
 </template>
 <script setup>
 import { Breadcrumbs, Button, createResource, FormControl } from 'frappe-ui'
+import { useRoute } from 'vue-router'
 import {
 	computed,
 	reactive,
@@ -101,11 +79,38 @@ const openInstructorEditor = ref(false)
 const settingsStore = useSettings()
 let autoSaveInterval
 let showSuccessMessage = false
+const parents = reactive({})
 
+// const props = defineProps({
+// 	courseName: {
+// 		type: String,
+// 		required: true,
+// 	},
+// 	chapterNumber: {
+// 		type: String,
+// 		required: true,
+// 	},
+// 	lessonNumber: {
+// 		type: String,
+// 		required: true,
+// 	},
+// })
 const props = defineProps({
 	courseName: {
 		type: String,
 		required: true,
+	},
+	semesterNumber:{
+		type: String,
+		required:true
+	},
+	moduleNumber:{
+		type: String,
+		required:true
+	},
+	topicNumber:{
+		type: String,
+		required:true
 	},
 	chapterNumber: {
 		type: String,
@@ -125,6 +130,17 @@ onMounted(() => {
 	editor.value = renderEditor('content')
 	instructorEditor.value = renderEditor('instructor-notes')
 	window.addEventListener('keydown', keyboardShortcut)
+	const route = useRoute();
+	console.log("✅ Semester route param:", route.params.semester)
+	parents.course = props.courseName
+	parents.semester = route.params.semester
+	parents.module = route.params.module
+	parents.topic = route.params.topic
+	parents.chapter = route.params.chapter
+	console.log("✅ Parents:", parents);
+
+
+
 })
 
 const renderEditor = (holder) => {
@@ -132,6 +148,7 @@ const renderEditor = (holder) => {
 		holder: holder,
 		tools: getEditorTools(true),
 		autofocus: true,
+		defaultBlock: 'markdown',
 	})
 }
 
@@ -142,16 +159,22 @@ const lesson = reactive({
 	instructor_notes: '',
 	content: '',
 })
+const route = useRoute()
 
 const lessonDetails = createResource({
 	url: 'lms.lms.utils.get_lesson_creation_details',
 	params: {
 		course: props.courseName,
-		chapter: props.chapterNumber,
+		semester: route.params.semester,
+		module: route.params.module,
+		topic: route.params.topic,
+		chapter:  route.params.chapter,
 		lesson: props.lessonNumber,
 	},
 	auto: true,
 	onSuccess(data) {
+		console.log("Lesson details data:", data);
+		
 		if (data.lesson) {
 			Object.keys(data.lesson).forEach((key) => {
 				lesson[key] = data.lesson[key]
@@ -221,7 +244,12 @@ const newLessonResource = createResource({
 			doc: {
 				doctype: 'Course Lesson',
 				course: props.courseName,
-				chapter: lessonDetails.data?.chapter.name,
+				custom_course_semester: parents.semester,
+				custom_course_module: parents.module,
+				custom_course_topic: parents.topic,
+				chapter: parents.chapter,
+
+				// chapter: lessonDetails.data?.chapter.name,
 				...lesson,
 			},
 		}
@@ -239,22 +267,47 @@ const editLesson = createResource({
 	},
 })
 
+// const lessonReference = createResource({
+// 	url: 'frappe.client.insert',
+// 	makeParams(values) {
+// 		return {
+// 			doc: {
+// 				doctype: 'Lesson Reference',
+// 				parent: lessonDetails.data?.chapter.name,
+// 				parenttype: 'Course Chapter',
+// 				parentfield: 'lessons',
+// 				lesson: values.lesson,
+// 				idx: props.lessonNumber,
+// 			},
+// 		}
+// 	},
+// })
+
 const lessonReference = createResource({
 	url: 'frappe.client.insert',
 	makeParams(values) {
+		// return {
+		// 	doc: {
+		// 		doctype: 'Lesson Reference',
+		// 		parent: parents.chapter,
+		// 		parenttype: 'Course Chapter',
+		// 		parentfield: 'lessons',
+		// 		lesson: values.lesson,
+		// 		// idx: props.lessonNumber,
+		// 	},
+		// }
+		console.log('Creating lesson reference for:', values);
 		return {
 			doc: {
 				doctype: 'Lesson Reference',
-				parent: lessonDetails.data?.chapter.name,
+				lesson: values.lesson,
+				parent: parents.chapter,
 				parenttype: 'Course Chapter',
 				parentfield: 'lessons',
-				lesson: values.lesson,
-				idx: props.lessonNumber,
 			},
 		}
 	},
 })
-
 const convertToJSON = (lessonData) => {
 	let blocks = []
 	if (lessonData.youtube) {
@@ -453,6 +506,8 @@ const showToast = (title, text, icon) => {
 		timeout: icon == 'check' ? 5 : 10,
 	})
 }
+console.log("==========",lessonDetails, props.courseName, props.chapterNumber, props.lessonNumber);
+
 
 const breadcrumbs = computed(() => {
 	let crumbs = [
@@ -463,17 +518,28 @@ const breadcrumbs = computed(() => {
 		{
 			label: lessonDetails.data?.course_title,
 			route: { name: 'CourseForm', params: { courseName: props.courseName } },
-		},
+		}
 	]
 
 	if (lessonDetails?.data?.lesson) {
 		crumbs.push({
 			label: lessonDetails.data.lesson.title,
+			// route: {
+			// 	name: 'Lesson',
+			// 	params: {
+			// 		courseName: props.courseName,
+			// 		chapterNumber: props.chapterNumber,
+			// 		lessonNumber: props.lessonNumber,
+			// 	},
+			// },
 			route: {
-				name: 'Lesson',
+				name: 'Lesson1',
 				params: {
 					courseName: props.courseName,
-					chapterNumber: props.chapterNumber,
+					semesterNumber:1,
+					moduleNumber:1,
+					topicNumber:1,
+					chapterNumber: 1,
 					lessonNumber: props.lessonNumber,
 				},
 			},
@@ -617,5 +683,9 @@ updateDocumentTitle(pageMeta)
 iframe {
 	border-top: 3px solid theme('colors.gray.700');
 	border-bottom: 3px solid theme('colors.gray.700');
+}
+
+.tc-table {
+	border-left: 1px solid #e8e8eb;
 }
 </style>

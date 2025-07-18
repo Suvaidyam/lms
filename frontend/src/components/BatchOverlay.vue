@@ -1,18 +1,10 @@
 <template>
 	<div v-if="batch.data" class="shadow rounded-md p-5 lg:w-72">
-		<Badge
-			v-if="batch.data.seat_count && seats_left > 0"
-			theme="green"
-			class="self-start mb-2 float-right"
-		>
-			{{ seats_left }} <span v-if="seats_left > 1">{{ __('Seats Left') }}</span
-			><span v-else-if="seats_left == 1">{{ __('Seat Left') }}</span>
+		<Badge v-if="batch.data.seat_count && seats_left > 0" theme="green" class="self-start mb-2 float-right">
+			{{ seats_left }} <span v-if="seats_left > 1">{{ __('Seats Left') }}</span>
+			<span v-else-if="seats_left == 1">{{ __('Seat Left') }}</span>
 		</Badge>
-		<Badge
-			v-else-if="batch.data.seat_count && seats_left <= 0"
-			theme="red"
-			class="self-start mb-2 float-right"
-		>
+		<Badge v-else-if="batch.data.seat_count && seats_left <= 0" theme="red" class="self-start mb-2 float-right">
 			{{ __('Sold Out') }}
 		</Badge>
 		<div v-if="batch.data.amount" class="text-lg font-semibold mb-3">
@@ -22,11 +14,7 @@
 			<BookOpen class="h-4 w-4 stroke-1.5 mr-2 text-gray-700" />
 			<span> {{ batch.data.courses.length }} {{ __('Courses') }} </span>
 		</div>
-		<DateRange
-			:startDate="batch.data.start_date"
-			:endDate="batch.data.end_date"
-			class="mb-3"
-		/>
+		<DateRange :startDate="batch.data.start_date" :endDate="batch.data.end_date" class="mb-3" />
 		<div class="flex items-center mb-3">
 			<Clock class="h-4 w-4 stroke-1.5 mr-2 text-gray-700" />
 			<span>
@@ -40,54 +28,45 @@
 				{{ batch.data.timezone }}
 			</span>
 		</div>
-		<router-link
-			v-if="isModerator || isStudent"
-			:to="{
-				name: 'Batch',
-				params: {
-					batchName: batch.data.name,
-				},
-			}"
-		>
+		<router-link v-if="isModerator || isStudent" :to="{
+			name: 'Batch',
+			params: {
+				batchName: batch.data.name,
+			},
+		}">
 			<Button variant="solid" class="w-full mt-4">
 				<span>
 					{{ isModerator ? __('Manage Batch') : __('Visit Batch') }}
 				</span>
 			</Button>
 		</router-link>
-		<router-link
-			:to="{
-				name: 'Billing',
-				params: {
-					type: 'batch',
-					name: batch.data.name,
-				},
-			}"
-			v-else-if="batch.data.paid_batch && batch.data.seats_left"
-		>
+		<router-link :to="{
+			name: 'Billing',
+			params: {
+				type: 'batch',
+				name: batch.data.name,
+			},
+		}" v-else-if="batch.data.paid_batch && batch.data.seats_left">
 			<Button v-if="!isStudent" class="w-full mt-4" variant="solid">
 				<span>
 					{{ __('Register Now') }}
 				</span>
 			</Button>
 		</router-link>
-		<Button
-			variant="solid"
-			class="w-full mt-2"
-			v-else-if="batch.data.allow_self_enrollment && batch.data.seats_left"
-			@click="enrollInBatch()"
-		>
+		<Button variant="solid" class="w-full mt-2"
+			v-else-if="batch.data.allow_self_enrollment && batch.data.seats_left" @click="enrollInBatch()">
 			{{ __('Enroll Now') }}
 		</Button>
-		<router-link
-			v-if="isModerator"
-			:to="{
-				name: 'BatchForm',
-				params: {
-					batchName: batch.data.name,
-				},
-			}"
-		>
+		<Button variant="solid" class="w-full mt-2" v-else-if="batch.data.medium == 'Offline' && batch.data.seats_left"
+			@click="enrollInOflineBatch()">
+			{{ __('Apply for Registration') }}
+		</Button>
+		<router-link v-if="isModerator" :to="{
+			name: 'BatchForm',
+			params: {
+				batchName: batch.data.name,
+			},
+		}">
 			<Button class="w-full mt-2">
 				<span>
 					{{ __('Edit') }}
@@ -161,4 +140,30 @@ const isStudent = computed(() => {
 const isModerator = computed(() => {
 	return user.data?.is_moderator
 })
+const enrollInOflineBatch = () => {
+	if (!user.data) {
+		window.location.href = `/login?redirect-to=/batches/details/${props.batch.data.name}`
+	} else {
+		localStorage.setItem('batchId', props.batch.data.name);
+		window.location.href = `/app/student-registration/new`
+	}
+	// enroll.submit(
+	// 	{},
+	// 	{
+	// 		onSuccess(data) {
+	// 			showToast(
+	// 				__('Success'),
+	// 				__('You have been enrolled in this batch'),
+	// 				'check'
+	// 			)
+	// 			router.push({
+	// 				name: 'Batch',
+	// 				params: {
+	// 					batchName: props.batch.data.name,
+	// 				},
+	// 			})
+	// 		},
+	// }
+	// )
+}
 </script>

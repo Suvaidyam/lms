@@ -1,5 +1,5 @@
 import QuizBlock from '@/components/QuizBlock.vue'
-import QuizPlugin from '@/components/QuizPlugin.vue'
+import AssessmentPlugin from '@/components/AssessmentPlugin.vue'
 import { createApp, h } from 'vue'
 import { usersStore } from '../stores/user'
 import translationPlugin from '../translation'
@@ -60,8 +60,12 @@ export class Quiz {
 	}
 
 	renderQuizModal() {
-		const app = createApp(QuizPlugin, {
-			onQuizAddition: (quiz) => {
+		if (this.readOnly) {
+			return
+		}
+		const app = createApp(AssessmentPlugin, {
+			type: 'quiz',
+			onAddition: (quiz) => {
 				this.data.quiz = quiz
 				this.renderQuiz(quiz)
 			},

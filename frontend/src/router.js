@@ -21,12 +21,27 @@ const routes = [
 		component: () => import('@/pages/CourseDetail.vue'),
 		props: true,
 	},
+	
 	{
 		path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber',
 		name: 'Lesson',
 		component: () => import('@/pages/Lesson.vue'),
 		props: true,
 	},
+	{
+		path: '/courses/:courseName/learn/:semesterNumber-:moduleNumber-:topicNumber-:chapterNumber-:lessonNumber',
+		name: 'Lesson1',
+		component: () => import('@/pages/Lesson.vue'),
+		props: true,
+	},
+
+	
+	// {
+	// 	path:'/courses/:courseName/learn/:semester?/:module?/:topic?/:chapter?/:lessonNumber?',
+	// 	name: 'Lesson',
+	// 	component: () => import('@/pages/Lesson.vue'),
+	// 	props: true,
+	// },
 	{
 		path: '/courses/:courseName/learn/:chapterName',
 		name: 'SCORMChapter',
@@ -114,11 +129,17 @@ const routes = [
 		props: true,
 	},
 	{
-		path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber/edit',
+		path: '/courses/:courseName/learn/:semester/:module/:topic/:chapter/:lessonNumber/edit',
 		name: 'LessonForm',
 		component: () => import('@/pages/LessonForm.vue'),
 		props: true,
 	},
+	// {
+	// 	path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber/edit',
+	// 	name: 'LessonForm',
+	// 	component: () => import('@/pages/LessonForm.vue'),
+	// 	props: true,
+	// },
 	{
 		path: '/batches/:batchName/edit',
 		name: 'BatchForm',
@@ -129,12 +150,6 @@ const routes = [
 		path: '/job-opening/:jobName/edit',
 		name: 'JobCreation',
 		component: () => import('@/pages/JobCreation.vue'),
-		props: true,
-	},
-	{
-		path: '/assignment-submission/:assignmentName/:submissionName',
-		name: 'AssignmentSubmission',
-		component: () => import('@/pages/AssignmentSubmission.vue'),
 		props: true,
 	},
 	{
@@ -193,6 +208,28 @@ const routes = [
 		name: 'Programs',
 		component: () => import('@/pages/Programs.vue'),
 	},
+	{
+		path: '/assignments',
+		name: 'Assignments',
+		component: () => import('@/pages/Assignments.vue'),
+	},
+	{
+		path: '/assignments/:assignmentID',
+		name: 'AssignmentForm',
+		component: () => import('@/pages/AssignmentForm.vue'),
+		props: true,
+	},
+	{
+		path: '/assignment-submission/:assignmentID/:submissionName',
+		name: 'AssignmentSubmission',
+		component: () => import('@/pages/AssignmentSubmission.vue'),
+		props: true,
+	},
+	{
+		path: '/assignment-submissions',
+		name: 'AssignmentSubmissionList',
+		component: () => import('@/pages/AssignmentSubmissionList.vue'),
+	},
 ]
 
 let router = createRouter({
@@ -212,8 +249,7 @@ router.beforeEach(async (to, from, next) => {
 			isLoggedIn &&
 			(to.name == 'Lesson' ||
 				to.name == 'Batch' ||
-				to.name == 'Notifications' ||
-				to.name == 'Badge')
+				to.name == 'Notifications')
 		) {
 			await allUsers.promise
 		}

@@ -71,28 +71,45 @@
 				<template #default="{ tab }">
 					<div
 						v-if="tab.courses && tab.courses.value.length"
-						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5 mx-5"
+						class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-7 my-5 mx-5"
 					>
 						<router-link
 							v-for="course in tab.courses.value"
 							:to="
 								course.membership && course.current_lesson
 									? {
-											name: 'Lesson',
+											name: 'Lesson1',
+											// params: {
+											// 	courseName: course.name,
+											// 	chapterNumber: course.current_lesson.split('-')[0],
+											// 	lessonNumber: course.current_lesson.split('-')[1],
+											// },
 											params: {
 												courseName: course.name,
+												semesterNumber: 1,
+												moduleNumber: 1,
+												topicNumber: 1,
+												chapterNumber: 1,
 												chapterNumber: course.current_lesson.split('-')[0],
 												lessonNumber: course.current_lesson.split('-')[1],
 											},
 									  }
 									: course.membership
 									? {
-											name: 'Lesson',
+											name: 'Lesson1',
 											params: {
 												courseName: course.name,
+												semesterNumber:1,
+												moduleNumber: 1,
+												topicNumber: 1,
 												chapterNumber: 1,
 												lessonNumber: 1,
 											},
+											// params: {
+											// 	courseName: course.name,
+											// 	chapterNumber: 1,
+											// 	lessonNumber: 1,
+											// },
 									  }
 									: {
 											name: 'CourseDetail',

@@ -4,21 +4,29 @@
 			class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-3 py-2.5 sm:px-5"
 		>
 			<Breadcrumbs class="h-7" :items="breadcrumbs" />
-			<Button v-if="user.data?.is_moderator" @click="openAnnouncementModal()">
-				<span>
-					{{ __('Make an Announcement') }}
-				</span>
-				<template #suffix>
-					<SendIcon class="h-4 stroke-1.5" />
-				</template>
-			</Button>
+			<div class="flex items-center space-x-2">
+				<Button
+					v-if="user.data?.is_moderator"
+					@click="openCertificateDialog = true"
+				>
+					{{ __('Generate Certificates') }}
+				</Button>
+				<Button v-if="user.data?.is_moderator" @click="openAnnouncementModal()">
+					<span>
+						{{ __('Make an Announcement') }}
+					</span>
+					<template #suffix>
+						<SendIcon class="h-4 stroke-1.5" />
+					</template>
+				</Button>
+			</div>
 		</header>
 		<div v-if="batch.data" class="grid grid-cols-[70%,30%] h-screen">
-			<div class="border-r-2">
+			<div class="border-r">
 				<Tabs
 					v-model="tabIndex"
 					:tabs="tabs"
-					tablistClass="overflow-y-hidden sticky top-11 bg-white z-10"
+					tablistClass="overflow-y-hidden bg-white"
 				>
 					<template #tab="{ tab, selected }" class="overflow-x-hidden">
 						<div>
@@ -51,14 +59,14 @@
 							<div v-if="tab.label == 'Courses'">
 								<BatchCourses :batch="batch.data.name" />
 							</div>
-							<div v-else-if="tab.label == 'Dashboard'">
+							<div v-else-if="tab.label == 'Dashboard' && isStudent">
 								<BatchDashboard :batch="batch" :isStudent="isStudent" />
+							</div>
+							<div v-else-if="tab.label == 'Dashboard'">
+								<BatchStudents :batch="batch.data" />
 							</div>
 							<div v-else-if="tab.label == 'Live Class'">
 								<LiveClass :batch="batch.data.name" />
-							</div>
-							<div v-else-if="tab.label == 'Students'">
-								<BatchStudents :batch="batch.data.name" />
 							</div>
 							<div v-else-if="tab.label == 'Assessments'">
 								<Assessments :batch="batch.data.name" />
@@ -81,12 +89,12 @@
 				</Tabs>
 			</div>
 			<div class="p-5">
-				<div class="text-2xl font-semibold mb-2">
-					{{ batch.data.title }}
+				<div class="text-gray-700 font-semibold mb-4">
+					{{ __('About this batch') }}:
 				</div>
-				<div v-html="batch.data.description" class="leading-5 mb-2"></div>
+				<div v-html="batch.data.description" class="leading-5 mb-4"></div>
 
-				<div class="flex avatar-group overlap mb-5">
+				<div class="flex items-center avatar-group overlap mb-5">
 					<div
 						class="h-6 mr-1"
 						:class="{
@@ -169,6 +177,7 @@
 			</div>
 		</div>
 	</div>
+	<BulkCertificates v-model="openCertificateDialog" :batch="batch.data" />
 </template>
 <script setup>
 import { Breadcrumbs, Button, createResource, Tabs, Badge } from 'frappe-ui'
@@ -186,6 +195,7 @@ import {
 	SendIcon,
 	MessageCircle,
 	Globe,
+	ShieldCheck,
 } from 'lucide-vue-next'
 import { formatTime, updateDocumentTitle } from '@/utils'
 import BatchDashboard from '@/components/BatchDashboard.vue'
@@ -197,9 +207,11 @@ import Announcements from '@/components/Annoucements.vue'
 import AnnouncementModal from '@/components/Modals/AnnouncementModal.vue'
 import Discussions from '@/components/Discussions.vue'
 import DateRange from '@/components/Common/DateRange.vue'
+import BulkCertificates from '@/components/Modals/BulkCertificates.vue'
 
 const user = inject('$user')
 const showAnnouncementModal = ref(false)
+const openCertificateDialog = ref(false)
 
 const props = defineProps({
 	batchName: {
@@ -218,7 +230,7 @@ const batch = createResource({
 })
 
 const breadcrumbs = computed(() => {
-	let crumbs = [{ label: 'All Batches', route: { name: 'Batches' } }]
+	let crumbs = [{ label: 'Batches', route: { name: 'Batches' } }]
 	if (!isStudent.value) {
 		crumbs.push({
 			label: 'Details',
@@ -248,34 +260,33 @@ const isStudent = computed(() => {
 const tabIndex = ref(0)
 const tabs = computed(() => {
 	let batchTabs = []
-	if (isStudent.value) {
-		batchTabs.push({
-			label: 'Dashboard',
-			icon: LayoutDashboard,
-		})
-	}
+	batchTabs.push({
+		label: 'Dashboard',
+		icon: LayoutDashboard,
+	})
+
+	batchTabs.push({
+		label: 'Courses',
+		icon: BookOpen,
+	})
+
+	batchTabs.push({
+		label: 'Live Class',
+		icon: Laptop,
+	})
+
 	if (user.data?.is_moderator) {
-		batchTabs.push({
-			label: 'Students',
-			icon: Contact2,
-		})
 		batchTabs.push({
 			label: 'Assessments',
 			icon: BookOpenCheck,
 		})
 	}
-	batchTabs.push({
-		label: 'Live Class',
-		icon: Laptop,
-	})
-	batchTabs.push({
-		label: 'Courses',
-		icon: BookOpen,
-	})
+
 	batchTabs.push({
 		label: 'Announcements',
 		icon: Mail,
 	})
+
 	batchTabs.push({
 		label: 'Discussions',
 		icon: MessageCircle,

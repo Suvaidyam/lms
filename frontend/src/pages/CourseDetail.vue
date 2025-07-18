@@ -16,16 +16,18 @@
 					</div>
 					<div class="flex items-center">
 						<Tooltip
-							v-if="course.data.rating"
+							v-if="parseInt(course.data.rating) > 0"
 							:text="__('Average Rating')"
 							class="flex items-center"
-						>
+						>nnn
 							<Star class="h-5 w-5 text-gray-100 fill-orange-500" />
 							<span class="ml-1">
 								{{ course.data.rating }}
 							</span>
 						</Tooltip>
-						<span v-if="course.data.rating" class="mx-3">&middot;</span>
+						<span v-if="parseInt(course.data.rating) > 0" class="mx-3"
+							>&middot;</span
+						>
 						<Tooltip
 							v-if="course.data.enrollment_count"
 							:text="__('Enrolled Students')"
@@ -117,7 +119,7 @@ const course = createResource({
 })
 
 const breadcrumbs = computed(() => {
-	let items = [{ label: 'All Courses', route: { name: 'Courses' } }]
+	let items = [{ label: 'Courses', route: { name: 'Courses' } }]
 	items.push({
 		label: course?.data?.title,
 		route: { name: 'CourseDetail', params: { courseName: course?.data?.name } },

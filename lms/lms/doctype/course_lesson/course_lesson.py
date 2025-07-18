@@ -15,6 +15,23 @@ class CourseLesson(Document):
 		# self.check_and_create_folder()
 		self.validate_quiz_id()
 
+	def after_insert(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count)
+		course=frappe.get_doc("LMS Course",self.course)
+		print("=============after_insert=============", lesson_count,course.lessons)
+
+	def on_trash(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count-1)
+		print("=============on_trash=============", lesson_count)
+
+	
+	def update_lesson_count(self):
+		lesson_count = len(frappe.get_all("Course Lesson", filters={"course": self.course}))
+		frappe.db.set_value("LMS Course", self.course, "lessons", lesson_count)
+		print(lesson_count, "=======lesson count updated using set_value=======")
+
 	def validate_quiz_id(self):
 		if self.quiz_id and not frappe.db.exists("LMS Quiz", self.quiz_id):
 			frappe.throw(_("Invalid Quiz ID"))
@@ -89,27 +106,25 @@ def save_progress(lesson, course):
 		"LMS Enrollment", {"course": course, "member": frappe.session.user}
 	)
 	if not membership:
-		return
-
-	frappe.db.set_value("LMS Enrollment", membership, "current_lesson", lesson)
-
-	if frappe.db.exists(
-		"LMS Course Progress", {"lesson": lesson, "member": frappe.session.user}
-	):
-		return
-
-	quiz_completed = get_quiz_progress(lesson)
-	if not quiz_completed:
 		return 0
 
-	frappe.get_doc(
-		{
-			"doctype": "LMS Course Progress",
-			"lesson": lesson,
-			"status": "Complete",
-			"member": frappe.session.user,
-		}
-	).save(ignore_permissions=True)
+	frappe.db.set_value("LMS Enrollment", membership, "current_lesson", lesson)
+	already_completed = frappe.db.exists(
+		"LMS Course Progress", {"lesson": lesson, "member": frappe.session.user}
+	)
+
+	quiz_completed = get_quiz_progress(lesson)
+	assignment_completed = get_assignment_progress(lesson)
+
+	if not already_completed and quiz_completed and assignment_completed:
+		frappe.get_doc(
+			{
+				"doctype": "LMS Course Progress",
+				"lesson": lesson,
+				"status": "Complete",
+				"member": frappe.session.user,
+			}
+		).save(ignore_permissions=True)
 
 	progress = get_course_progress(course)
 	capture_progress_for_analytics(progress, course)
@@ -154,6 +169,32 @@ def get_quiz_progress(lesson):
 				"member": frappe.session.user,
 				"percentage": [">=", passing_percentage],
 			},
+		):
+			return False
+	return True
+
+
+def get_assignment_progress(lesson):
+	lesson_details = frappe.db.get_value(
+		"Course Lesson", lesson, ["body", "content"], as_dict=1
+	)
+	assignments = []
+
+	if lesson_details.content:
+		content = json.loads(lesson_details.content)
+
+		for block in content.get("blocks"):
+			if block.get("type") == "assignment":
+				assignments.append(block.get("data").get("assignment"))
+
+	elif lesson_details.body:
+		macros = find_macros(lesson_details.body)
+		assignments = [value for name, value in macros if name == "Assignment"]
+
+	for assignment in assignments:
+		if not frappe.db.exists(
+			"LMS Assignment Submission",
+			{"assignment": assignment, "member": frappe.session.user},
 		):
 			return False
 	return True

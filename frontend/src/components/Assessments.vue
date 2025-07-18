@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<div class="flex items-center justify-between">
-			<div class="text-lg font-semibold mb-4">
+		<div class="flex items-center justify-between mb-4">
+			<div class="text-lg font-semibold">
 				{{ __('Assessments') }}
 			</div>
 			<Button v-if="canSeeAddButton()" @click="showModal = true">
@@ -11,7 +11,7 @@
 				{{ __('Add') }}
 			</Button>
 		</div>
-		<div v-if="assessments.data?.length">
+		<div v-if="assessments.data?.length" class="text-sm">
 			<ListView
 				:columns="getAssessmentColumns()"
 				:rows="assessments.data"
@@ -19,6 +19,7 @@
 				:options="{
 					showTooltip: false,
 					getRowRoute: (row) => getRowRoute(row),
+					selectable: user.data?.is_student ? false : true,
 				}"
 			>
 				<ListHeader
@@ -38,7 +39,18 @@
 					<ListRow :row="row" v-for="row in assessments.data">
 						<template #default="{ column, item }">
 							<ListRowItem :item="row[column.key]" :align="column.align">
-								<div>
+								<div v-if="column.key == 'assessment_type'">
+									{{ row[column.key] == 'LMS Quiz' ? 'Quiz' : 'Assignment' }}
+								</div>
+								<div v-else-if="column.key == 'title'">
+									{{ row[column.key] }}
+								</div>
+								<div v-else-if="isNaN(row[column.key])">
+									<Badge :theme="getStatusTheme(row[column.key])">
+										{{ row[column.key] }}
+									</Badge>
+								</div>
+								<div v-else>
 									{{ row[column.key] }}
 								</div>
 							</ListRowItem>
@@ -80,6 +92,7 @@ import {
 	ListSelectBanner,
 	createResource,
 	Button,
+	Badge,
 } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import AssessmentModal from '@/components/Modals/AssessmentModal.vue'
@@ -145,7 +158,7 @@ const getRowRoute = (row) => {
 			return {
 				name: 'AssignmentSubmission',
 				params: {
-					assignmentName: row.assessment_name,
+					assignmentID: row.assessment_name,
 					submissionName: row.submission.name,
 				},
 			}
@@ -153,7 +166,7 @@ const getRowRoute = (row) => {
 			return {
 				name: 'AssignmentSubmission',
 				params: {
-					assignmentName: row.assessment_name,
+					assignmentID: row.assessment_name,
 					submissionName: 'new',
 				},
 			}
@@ -177,20 +190,33 @@ const getAssessmentColumns = () => {
 		{
 			label: 'Assessment',
 			key: 'title',
+			width: '25rem',
 		},
 		{
 			label: 'Type',
 			key: 'assessment_type',
+			width: '15rem',
 		},
 	]
 
 	if (!user.data?.is_moderator) {
 		columns.push({
-			label: 'Status/Score',
+			label: 'Status/Percentage',
 			key: 'status',
-			align: 'center',
+			align: 'left',
+			width: '10rem',
 		})
 	}
 	return columns
+}
+
+const getStatusTheme = (status) => {
+	if (status === 'Pass') {
+		return 'green'
+	} else if (status === 'Not Graded') {
+		return 'orange'
+	} else {
+		return 'red'
+	}
 }
 </script>

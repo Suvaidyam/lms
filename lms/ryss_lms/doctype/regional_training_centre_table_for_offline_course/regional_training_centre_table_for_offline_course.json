@@ -1,5 +1,4 @@
 {
- "_comments": "[{\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9cefsma6ff\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9drp0fmlu5\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9eadp416pu\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9f7v7g1crk\"}, {\"comment\": \"Action Failed<br><br>Student Registration: Options must be a valid DocType for field Training Cen...\", \"by\": \"Administrator\", \"name\": \"9g37gqig1h\"}]",
  "actions": [],
  "autoname": "field:center_id",
  "creation": "2024-12-01 12:16:43.981669",
@@ -12,7 +11,6 @@
   "district_name",
   "district",
   "centre_name",
-  "fetched_centre_name",
   "batch_name_fsc"
  ],
  "fields": [
@@ -24,7 +22,7 @@
   },
   {
    "fieldname": "centre_name",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Centre Name",
    "options": "Regional Training Centre"
   },
@@ -61,18 +59,11 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "District Name"
-  },
-  {
-   "fetch_from": "centre_name.centre_name",
-   "fieldname": "fetched_centre_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Centre Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-04 17:32:08.197055",
+ "modified": "2025-01-09 12:42:11.837482",
  "modified_by": "Administrator",
  "module": "RySS Lms",
  "name": "Regional Training Centre Table for Offline Course",
@@ -90,6 +81,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "show_title_field_in_link": 1,

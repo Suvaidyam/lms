@@ -1,7 +1,9 @@
 import { toast } from 'frappe-ui'
 import { useTimeAgo } from '@vueuse/core'
 import { Quiz } from '@/utils/quiz'
+import { Assignment } from '@/utils/assignment'
 import { Upload } from '@/utils/upload'
+import { Markdown } from '@/utils/markdownParser'
 import Header from '@editorjs/header'
 import Paragraph from '@editorjs/paragraph'
 import { CodeBox } from '@/utils/code'
@@ -11,6 +13,7 @@ import { watch } from 'vue'
 import dayjs from '@/utils/dayjs'
 import Embed from '@editorjs/embed'
 import SimpleImage from '@editorjs/simple-image'
+import Table from '@editorjs/table'
 
 export function createToast(options) {
 	toast({
@@ -146,10 +149,21 @@ export function htmlToText(html) {
 
 export function getEditorTools() {
 	return {
-		header: Header,
+		header: {
+			class: Header,
+			config: {
+				placeholder: 'Header',
+			},
+		},
 		quiz: Quiz,
+		assignment: Assignment,
 		upload: Upload,
+		markdown: Markdown,
 		image: SimpleImage,
+		table: {
+			class: Table,
+			inlineToolbar: true,
+		},
 		paragraph: {
 			class: Paragraph,
 			inlineToolbar: true,
@@ -168,6 +182,7 @@ export function getEditorTools() {
 		},
 		list: {
 			class: NestedList,
+			inlineToolbar: true,
 			config: {
 				defaultStyle: 'ordered',
 			},
