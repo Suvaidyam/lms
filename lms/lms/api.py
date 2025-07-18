@@ -1402,7 +1402,7 @@ def get_week_difference(start_date, current_date):
 
 @frappe.whitelist(allow_guest=True)
 def get_user_details(usr=None):
-    user_details = frappe.db.get_value("User", {"email": usr}, ["name","full_name", "email"], as_dict=True)
+    user_details = frappe.db.get_value("User", {"name": usr}, ["name","full_name", "email"], as_dict=True)
     roles = frappe.get_all(
         "Has Role",
         filters={"parent": user_details.name},
