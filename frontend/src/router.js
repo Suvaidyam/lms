@@ -28,6 +28,25 @@ const routes = [
 		props: true,
 	},
 	{
+		path: '/courses/:courseName/learn/:semesterNumber?/:moduleNumber/:topicNumber-:chapterNumber-:lessonNumber',
+		name: 'Lesson1',
+		component: () => import('@/pages/Lesson.vue'),
+		props: true,
+	},
+	// {
+	// 	path: '/courses/:courseName/learn/:moduleNumber-:topicNumber-:chapterNumber-:lessonNumber',
+	// 	name: 'Lesson2',
+	// 	component: () => import('@/pages/Lesson.vue'),
+	// 	props: true,
+	// },
+
+	// {
+	// 	path:'/courses/:courseName/learn/:semester?/:module?/:topic?/:chapter?/:lessonNumber?',
+	// 	name: 'Lesson',
+	// 	component: () => import('@/pages/Lesson.vue'),
+	// 	props: true,
+	// },
+	{
 		path: '/courses/:courseName/learn/:chapterName',
 		name: 'SCORMChapter',
 		component: () => import('@/pages/SCORMChapter.vue'),
@@ -114,7 +133,7 @@ const routes = [
 		props: true,
 	},
 	{
-		path: '/courses/:courseName/learn/:chapterNumber-:lessonNumber/edit',
+		path: '/courses/:courseName/learn/:semester?/:module/:topic/:chapter/:lessonNumber/edit',
 		name: 'LessonForm',
 		component: () => import('@/pages/LessonForm.vue'),
 		props: true,

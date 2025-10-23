@@ -1,32 +1,25 @@
 <template>
-	<Dialog
-		v-model="show"
-		:options="{
-			title: chapterDetail ? __('Edit Chapter') : __('Add Chapter'),
-			size: 'lg',
-			actions: [
-				{
-					label: chapterDetail ? __('Edit') : __('Create'),
-					variant: 'solid',
-					onClick: (close) =>
-						chapterDetail ? editChapter(close) : addChapter(close),
-				},
-			],
-		}"
-	>
+	<Dialog v-model="show" :options="{
+		title: chapterDetail ? __('Edit Chapter') : __('Add Chapter'),
+		size: 'lg',
+		actions: [
+			{
+				label: chapterDetail ? __('Edit') : __('Add Chapter'),
+				variant: 'solid',
+				onClick: (close) =>
+					chapterDetail ? editChapter(close) : addChapterChild(close),
+			},
+		],
+	}">
 		<template #body-content>
 			<div class="space-y-4 text-base">
-				<FormControl label="Title" v-model="chapter.title" :required="true" />
-				<Switch
-					size="sm"
-					:label="__('SCORM Package')"
-					:description="
-						__(
-							'Enable this only if you want to upload a SCORM package as a chapter.'
-						)
-					"
-					v-model="chapter.is_scorm_package"
-				/>
+				<FormControl v-if="chapterDetail" label="Title" v-model="chapter.title" :required="true" />
+				<Link v-else doctype="Course Chapter" v-model="chapter.title" :filters="{ custom_course_topic: props.topic }"
+					label="Add Chapter" :required="true" />
+				<Switch size="sm" :label="__('SCORM Package')" :description="__(
+					'Enable this only if you want to upload a SCORM package as a chapter.'
+				)
+					" v-model="chapter.is_scorm_package" />
 				<div v-if="chapter.is_scorm_package">
 					<FileUploader
 						v-if="!chapter.scorm_package"
@@ -38,7 +31,7 @@
 							<div class="mb-4">
 								<Button @click="openFileSelector" :loading="uploading">
 									{{
-										uploading ? `Uploading ${progress}%` : 'Upload an zip file'
+									uploading ? `Uploading ${progress}%` : 'Upload an zip file'
 									}}
 								</Button>
 							</div>
@@ -82,6 +75,7 @@ import { showToast, getFileSize } from '@/utils/'
 import { capture } from '@/telemetry'
 import { FileText, X } from 'lucide-vue-next'
 import { useSettings } from '@/stores/settings'
+import Link from '@/components/Controls/Link.vue'
 
 const show = defineModel()
 const outline = defineModel('outline')
@@ -123,8 +117,8 @@ const chapterReference = createResource({
 			doc: {
 				doctype: 'Chapter Reference',
 				chapter: values.name,
-				parent: props.course,
-				parenttype: 'LMS Course',
+				parent: props.topic,
+				parenttype: 'Submodule',
 				parentfield: 'chapters',
 			},
 		}
@@ -160,6 +154,31 @@ const addChapter = async (close) => {
 						},
 					}
 				)
+				close()
+			},
+			onError(err) {
+				showToast(__('Error'), err.messages?.[0] || err, 'x')
+			},
+		}
+	)
+}
+
+const addChapterChild = async (close) => {
+	if (!chapter.title) {
+		showToast(__('Error'), __('Please select a Chapter'), 'x')
+		return
+	}
+
+	chapterReference.submit(
+		{ name: chapter.title }, // 👈 take the value selected from Link
+		{
+			onSuccess() {
+				cleanChapter()
+				if (!settingsStore.onboardingDetails.data?.is_onboarded) {
+					settingsStore.onboardingDetails.reload()
+				}
+				outline.value.reload()
+				showToast(__('Success'), __('Chapter Child added successfully'), 'check')
 				close()
 			},
 			onError(err) {

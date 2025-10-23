@@ -31,6 +31,7 @@
   "status",
   "section_break_7",
   "published",
+  "has_semester",
   "published_on",
   "column_break_10",
   "upcoming",
@@ -43,6 +44,7 @@
   "section_break_gglp",
   "chapters",
   "related_courses",
+  "modules",
   "pricing_tab",
   "pricing_section",
   "paid_course",
@@ -123,6 +125,7 @@
   {
    "fieldname": "chapters",
    "fieldtype": "Table",
+   "hidden": 1,
    "label": "Chapters",
    "options": "Chapter Reference"
   },
@@ -322,6 +325,19 @@
    "fieldname": "term_start_date",
    "fieldtype": "Date",
    "label": "Term Start Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_semester",
+   "fieldtype": "Check",
+   "label": "Has Semester"
+  },
+  {
+   "depends_on": "eval:doc.has_semester == 0",
+   "fieldname": "modules",
+   "fieldtype": "Table",
+   "label": "Modules",
+   "options": "Course Module Child"
   }
  ],
  "is_published_field": "published",
@@ -348,7 +364,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2024-12-24 17:23:16.528898",
+ "modified": "2025-09-24 13:28:46.603334",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "LMS Course",

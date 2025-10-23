@@ -148,11 +148,16 @@ const lessonDetails = createResource({
 	url: 'lms.lms.utils.get_lesson_creation_details',
 	params: {
 		course: props.courseName,
-		chapter: props.chapterNumber,
+		module: route.params.module,
+		topic: route.params.topic,
+		chapter:  route.params.chapter,
 		lesson: props.lessonNumber,
+		semester: route.params.semester,
 	},
 	auto: true,
 	onSuccess(data) {
+		console.log("Lesson details data:", data);
+		lesson.title = data?.lesson?.title || ''
 		if (data.lesson) {
 			Object.keys(data.lesson).forEach((key) => {
 				lesson[key] = data.lesson[key]

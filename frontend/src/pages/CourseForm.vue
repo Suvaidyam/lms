@@ -81,7 +81,7 @@
 											</Button>
 											<div class="mt-2 text-gray-600 text-sm">
 												{{
-													__('Appears on the course card in the course list')
+												__('Appears on the course card in the course list')
 												}}
 											</div>
 										</div>
@@ -105,6 +105,7 @@
 								</div>
 							</div>
 						</div>
+<<<<<<< Updated upstream
 						<FormControl
 							v-model="course.video_link"
 							:label="__('Preview Video')"
@@ -115,6 +116,54 @@
 							"
 							class="mb-4"
 						/>
+=======
+						<div class="flex ">
+
+							<div class="mb-4 w-1/2">
+								<div class="text-xs text-gray-600 mb-2">
+									{{ __('Course PDF') }}
+									<span class="text-red-500">*</span>
+								</div>
+								<FileUploader :required="true">
+									<input type="file" ref="custom_course_document" @change="handlePdfUpload"
+										accept=".doc,.docx" class="hidden" />
+
+									<!-- Custom button to open file picker -->
+									<Button @click="openpdfFileSelector" class="custom-upload-btn">
+										📄 Upload Course PDF
+									</Button>
+
+									<!-- Show selected file name -->
+									<p v-if="course.custom_course_document" class="mt-2 ml-2 text-gray-700">Selected: {{
+										course.custom_course_document }}</p>
+								</FileUploader>
+							</div>
+							<div class="mb-4 w-1/2">
+								<div class="text-xs text-gray-600 mb-2">
+									{{ __('Course Doc') }}
+									<span class="text-red-500">*</span>
+								</div>
+								<FileUploader>
+									<input type="file" ref="v" @change="handleDocUpload" accept=".doc,.docx"
+										class="hidden" />
+
+									<!-- Custom button to open file picker -->
+									<Button @click="opendocFileSelector" class="custom-upload-btn">
+										📄 Upload Course DOC
+									</Button>
+
+									<!-- Show selected file name -->
+									<p v-if="course.custom_course_doc" class="mt-2 ml-2 text-gray-700">Selected: {{
+										course.custom_course_doc
+										}}</p>
+								</FileUploader>
+							</div>
+						</div>
+						<FormControl v-model="course.video_link" :label="__('Preview Video')" :placeholder="__(
+							'Paste the youtube link of a short video introducing the course'
+						)
+							" class="mb-4" />
+>>>>>>> Stashed changes
 						<div class="mb-4">
 							<div class="mb-1.5 text-xs text-gray-600">
 								{{ __('Tags') }}
@@ -161,21 +210,12 @@
 							{{ __('Settings') }}
 						</div>
 						<div class="grid grid-cols-3 gap-10 mb-4">
-							<div
-								v-if="user.data?.is_moderator"
-								class="flex flex-col space-y-4"
-							>
-								<FormControl
-									type="checkbox"
-									v-model="course.published"
-									:label="__('Published')"
-								/>
-								<FormControl
-									v-model="course.published_on"
-									:label="__('Published On')"
-									type="date"
-									class="mb-5"
-								/>
+							<div v-if="user.data?.is_moderator" class="flex flex-col space-y-4">
+								<FormControl type="checkbox" v-model="course.has_semester" :label="__('Has Semester')" />
+
+								<FormControl type="checkbox" v-model="course.published" :label="__('Published')" />
+								<FormControl v-model="course.published_on" :label="__('Published On')" type="date"
+									class="mb-5" />
 							</div>
 							<div class="flex flex-col space-y-3">
 								<FormControl
@@ -229,12 +269,8 @@
 				</div>
 			</div>
 			<div class="border-l pt-5">
-				<CourseOutline
-					v-if="courseResource.data"
-					:courseName="courseResource.data.name"
-					:title="course.title"
-					:allowEdit="true"
-				/>
+				<CourseOutline v-if="courseResource.data" :courseName="courseResource.data.name" :title="course.title" :has_semester="course.has_semester"
+					:allowEdit="true" />
 			</div>
 		</div>
 	</div>
@@ -298,6 +334,7 @@ const course = reactive({
 	paid_course: false,
 	course_price: '',
 	currency: '',
+	has_semester: true,
 })
 
 onMounted(() => {
@@ -390,6 +427,7 @@ const courseResource = createResource({
 			'disable_self_learning',
 			'paid_course',
 			'featured',
+			'has_semester',
 			'enable_certification',
 		]
 		for (let idx in checkboxes) {

@@ -550,6 +550,10 @@ def update_source_chapter(lesson, chapter, idx, hasMoved=False):
 
 	update_index(lessons, chapter)
 
+@frappe.whitelist() 
+def delete_reference(doctype, idx ,parent):
+    frappe.db.delete(doctype, {"idx": idx, "parent": parent})
+    return "deleted"
 
 def update_target_chapter(lesson, chapter, idx):
 	lessons = frappe.get_all(

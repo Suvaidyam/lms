@@ -12,9 +12,9 @@
 			>
 				<p class="mb-4">
 					{{
-						__(
-							'This lesson is not available for preview. Please enroll in the course to access it.'
-						)
+					__(
+					'This lesson is not available for preview. Please enroll in the course to access it.'
+					)
 					}}
 				</p>
 				<Button v-if="user.data" @click="enrollStudent()" variant="solid">
@@ -179,11 +179,20 @@
 						:progress="lessonProgress"
 					/>
 				</div>
+<<<<<<< Updated upstream
 				<CourseOutline
 					:courseName="courseName"
 					:key="chapterNumber"
 					:getProgress="lesson.data.membership ? true : false"
 				/>
+=======
+				<!-- <CourseOutline :courseName="courseName" :key="chapterNumber"
+					:getProgress="lesson.data.membership ? true : false" /> -->
+				<CourseOutline :courseName="courseName" :semester="lesson.data.custom_course_semester"
+					:module="lesson.data.custom_course_module" :topic="lesson.data.custom_course_topic" :chapter="lesson.data.chapter"
+					:getProgress="lesson.data.membership ? true : false" :allowEdit=false  :has_semester="lesson.data.has_semester"/>
+				
+>>>>>>> Stashed changes
 			</div>
 		</div>
 	</div>
@@ -217,6 +226,17 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	semesterNumber: {
+		type: String,
+	},
+	moduleNumber: {
+		type: String,
+		required: true,
+	},
+	topicNumber: {
+		type: String,
+		required: true,
+	},
 	chapterNumber: {
 		type: String,
 		required: true,
@@ -233,25 +253,53 @@ onMounted(() => {
 
 const lesson = createResource({
 	url: 'lms.lms.utils.get_lesson',
-	cache: ['lesson', props.courseName, props.chapterNumber, props.lessonNumber],
+	// cache: ['lesson', props.courseName, props.semesterNumber, props.moduleNumber, props.topicNumber, props.chapterNumber, props.lessonNumber],
 	makeParams(values) {
-		return {
-			course: props.courseName,
-			chapter: values ? values.chapter : props.chapterNumber,
-			lesson: values ? values.lesson : props.lessonNumber,
+		if (props.semesterNumber) {
+			return {
+				course: props.courseName,
+				semester: props.semesterNumber,
+				module: props.moduleNumber,
+				topic: props.topicNumber,
+				chapter: values ? values.chapter : props.chapterNumber,
+				lesson: values ? values.lesson : props.lessonNumber,
+			}
+		} else {
+			return {
+				course: props.courseName,
+				module: props.moduleNumber,
+				topic: props.topicNumber,
+				chapter: values ? values.chapter : props.chapterNumber,
+				lesson: values ? values.lesson : props.lessonNumber,
+			}
 		}
 	},
 	auto: true,
 	onSuccess(data) {
-		if (Object.keys(data).length === 0) {
-			router.push({
-				name: 'CourseDetail',
-				params: { courseName: props.courseName },
-			})
-			return
-		}
+		// if (Object.keys(data).length === 0) {
+		// 	router.push({
+		// 		name: 'CourseDetail',
+		// 		params: { courseName: props.courseName },
+		// 	})
+		// 	return
+		// }
+		
+		lessonDetails.data = data
 		lessonProgress.value = data.membership?.progress
-		if (data.content) editor.value = renderEditor('editor', data.content)
+		if (data.content) {
+			
+			nextTick(() => {
+				editor.value = renderEditor('editor', data.content)
+			})
+		}
+		// if (
+		// 	data.instructor_content &&
+		// 	JSON.parse(data.instructor_content)?.blocks?.length > 1
+		// )
+		// 	instructorEditor.value = renderEditor(
+		// 		'instructor-content',
+		// 		data.instructor_content
+		// 	)
 		if (
 			data.instructor_content &&
 			JSON.parse(data.instructor_content)?.blocks?.length > 1
@@ -304,18 +352,42 @@ const progress = createResource({
 	},
 })
 
-const breadcrumbs = computed(() => {
+// const breadcrumbs = computed(() => {
+// 	let items = [{ label: 'Courses', route: { name: 'Courses' } }]
+// 	items.push({
+// 		label: lesson?.data?.course_title,
+// 		route: { name: 'CourseDetail', params: { courseName: props.courseName } },
+// 	})
+// 	items.push({
+// 		label: lesson?.data?.title,
+// 		route: {
+// 			name: 'Lesson',
+// 			params: {
+// 				courseName: props.courseName,
+// 				chapterNumber: props.chapterNumber,
+// 				lessonNumber: props.lessonNumber,
+// 			},
+// 		},
+// 	})
+// 	return items
+// })
+ const breadcrumbs = computed(() => {
+ 	// console.log(lesson?.data.name, "lesson in breadcrums------------");
+
 	let items = [{ label: 'Courses', route: { name: 'Courses' } }]
 	items.push({
 		label: lesson?.data?.course_title,
 		route: { name: 'CourseDetail', params: { courseName: props.courseName } },
 	})
 	items.push({
-		label: lesson?.data?.title,
+		label: lesson?.data?.name,
 		route: {
 			name: 'Lesson',
 			params: {
 				courseName: props.courseName,
+				// semesterNumber: props.semesterNumber,
+				moduleNumber: props.moduleNumber,
+				topicNumber: props.topicNumber,
 				chapterNumber: props.chapterNumber,
 				lessonNumber: props.lessonNumber,
 			},
@@ -323,6 +395,14 @@ const breadcrumbs = computed(() => {
 	})
 	return items
 })
+
+// const breadcrumbs = computed(() => {
+// 	let items = [{ label: 'Courses', route: { name: 'Courses' } }]
+// 	items.push({ label: lesson?.data?.course_title, route: { name: 'CourseDetail', params: { courseName: props.courseName } } })
+// 	items.push({ label: lesson?.data?.name, route: { name: 'Lesson', params: { courseName: props.courseName, moduleNumber: props.moduleNumber, topicNumber: props.topicNumber, chapterNumber: props.chapterNumber, lessonNumber: props.lessonNumber } } })
+// 	return items
+// })
+
 
 watch(
 	[() => route.params.chapterNumber, () => route.params.lessonNumber],

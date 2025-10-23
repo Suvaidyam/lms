@@ -1,0 +1,93 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{###} {title}",
+ "creation": "2025-06-13 13:53:49.095322",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "course",
+  "column_break_jzcd",
+  "course_semester",
+  "column_break_msze",
+  "course_module",
+  "section_break_uncv",
+  "chapters"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Course",
+   "options": "LMS Course",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_jzcd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_msze",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "course_semester",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Course  Semester",
+   "options": "Course Semester"
+  },
+  {
+   "fieldname": "course_module",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Course Module",
+   "options": "Course Module"
+  },
+  {
+   "fieldname": "section_break_uncv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "chapters",
+   "fieldtype": "Table",
+   "label": "Chapters",
+   "options": "Chapter Reference"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-28 14:23:32.881174",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "Submodule",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
