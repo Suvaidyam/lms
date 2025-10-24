@@ -48,7 +48,7 @@ class AssessmentScoreData(Document):
 			except (ValueError, TypeError):
 				return 0
 
-	
+		cal="Calculating for table:"
 		for row in child_table:
 			# Safely convert to floats
 			continue_assessment = safe_float(getattr(row, cont_field, 0) or 0)
