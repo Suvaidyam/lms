@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-10 11:28:07.218363",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "semester",
+  "column_break_gsnq",
+  "batch"
+ ],
+ "fields": [
+  {
+   "fieldname": "semester",
+   "fieldtype": "Select",
+   "label": "Semester",
+   "options": "\nSemester I\nSemester II\nSemester III\nSemester IV\nSemester V\nSemester VI\nSemester VII\nSemester VIII"
+  },
+  {
+   "fieldname": "column_break_gsnq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "batch",
+   "fieldtype": "Select",
+   "label": "Batch",
+   "options": "\nBatch-1\nBatch-2\nBatch-3\nBatch-4\nBatch-5"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-10-23 16:24:48.300571",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "Bulk Download Assessment Score Card",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

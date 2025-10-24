@@ -1,15 +1,10 @@
 <template>
 	<div v-if="lesson.data" class="">
-		<header
-			class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-3 py-2.5 sm:px-5"
-		>
+		<header class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-3 py-2.5 sm:px-5">
 			<Breadcrumbs class="h-7" :items="breadcrumbs" />
 		</header>
 		<div class="grid md:grid-cols-[70%,30%] h-screen">
-			<div
-				v-if="lesson.data.no_preview"
-				class="border-r text-center pt-10 px-5 md:px-0 pb-10"
-			>
+			<div v-if="lesson.data.no_preview" class="border-r text-center pt-10 px-5 md:px-0 pb-10">
 				<p class="mb-4">
 					{{
 					__(
@@ -30,17 +25,14 @@
 						{{ lesson.data.title }}
 					</div>
 					<div class="flex items-center mt-2 md:mt-0">
-						<router-link
-							v-if="lesson.data.prev"
-							:to="{
-								name: 'Lesson',
-								params: {
-									courseName: courseName,
-									chapterNumber: lesson.data.prev.split('.')[0],
-									lessonNumber: lesson.data.prev.split('.')[1],
-								},
-							}"
-						>
+						<router-link v-if="lesson.data.prev" :to="{
+							name: 'Lesson',
+							params: {
+								courseName: courseName,
+								chapterNumber: lesson.data.prev.split('.')[0],
+								lessonNumber: lesson.data.prev.split('.')[1],
+							},
+						}">
 							<Button class="mr-2">
 								<template #prefix>
 									<ChevronLeft class="w-4 h-4 stroke-1" />
@@ -50,32 +42,29 @@
 								</span>
 							</Button>
 						</router-link>
-						<router-link
-							v-if="allowEdit()"
-							:to="{
-								name: 'LessonForm',
-								params: {
-									courseName: courseName,
-									chapterNumber: props.chapterNumber,
-									lessonNumber: props.lessonNumber,
-								},
-							}"
-						>
+						<router-link v-if="allowEdit()" :to="{
+							name: 'LessonForm',
+							params: {
+								courseName: courseName,
+								semester: lesson.data.custom_course_semester,
+								module: lesson.data.custom_course_module,
+								topic: lesson.data.custom_course_topic,
+								chapter: lesson.data.chapter,
+								lessonNumber: props.lessonNumber,
+							},
+						}">
 							<Button class="mr-2">
 								{{ __('Edit') }}
 							</Button>
 						</router-link>
-						<router-link
-							v-if="lesson.data.next"
-							:to="{
-								name: 'Lesson',
-								params: {
-									courseName: courseName,
-									chapterNumber: lesson.data.next.split('.')[0],
-									lessonNumber: lesson.data.next.split('.')[1],
-								},
-							}"
-						>
+						<router-link v-if="lesson.data.next" :to="{
+							name: 'Lesson',
+							params: {
+								courseName: courseName,
+								chapterNumber: lesson.data.next.split('.')[0],
+								lessonNumber: lesson.data.next.split('.')[1],
+							},
+						}">
 							<Button>
 								<template #suffix>
 									<ChevronRight class="w-4 h-4 stroke-1" />
@@ -85,13 +74,10 @@
 								</span>
 							</Button>
 						</router-link>
-						<router-link
-							v-else
-							:to="{
-								name: 'CourseDetail',
-								params: { courseName: courseName },
-							}"
-						>
+						<router-link v-else :to="{
+							name: 'CourseDetail',
+							params: { courseName: courseName },
+						}">
 							<Button>
 								{{ __('Back to Course') }}
 							</Button>
@@ -100,69 +86,41 @@
 				</div>
 
 				<div class="flex items-center mt-2">
-					<span
-						class="h-6 mr-1"
-						:class="{
-							'avatar-group overlap': lesson.data.instructors?.length > 1,
-						}"
-					>
-						<UserAvatar
-							v-for="instructor in lesson.data.instructors"
-							:user="instructor"
-						/>
+					<span class="h-6 mr-1" :class="{
+						'avatar-group overlap': lesson.data.instructors?.length > 1,
+					}">
+						<UserAvatar v-for="instructor in lesson.data.instructors" :user="instructor" />
 					</span>
-					<CourseInstructors
-						v-if="lesson.data?.instructors"
-						:instructors="lesson.data.instructors"
-					/>
+					<CourseInstructors v-if="lesson.data?.instructors" :instructors="lesson.data.instructors" />
 				</div>
-				<div
-					v-if="
-						lesson.data.instructor_content &&
-						JSON.parse(lesson.data.instructor_content)?.blocks?.length > 1 &&
-						allowInstructorContent()
-					"
-					class="bg-gray-100 p-3 rounded-md mt-6"
-				>
+				<div v-if="
+					lesson.data.instructor_content &&
+					JSON.parse(lesson.data.instructor_content)?.blocks?.length > 1 &&
+					allowInstructorContent()
+				" class="bg-gray-100 p-3 rounded-md mt-6">
 					<div class="text-gray-600 font-medium">
 						{{ __('Instructor Notes') }}
 					</div>
-					<div
-						id="instructor-content"
-						class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal"
-					></div>
+					<div id="instructor-content"
+						class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal">
+					</div>
 				</div>
-				<div
-					v-else-if="lesson.data.instructor_notes"
-					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-6"
-				>
+				<div v-else-if="lesson.data.instructor_notes"
+					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-6">
 					<LessonContent :content="lesson.data.instructor_notes" />
 				</div>
-				<div
-					v-if="lesson.data.content"
-					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-5"
-				>
+				<div v-if="lesson.data.content"
+					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-5">
 					<div id="editor"></div>
 				</div>
-				<div
-					v-else
-					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-5"
-				>
-					<LessonContent
-						v-if="lesson.data?.body"
-						:content="lesson.data.body"
-						:youtube="lesson.data.youtube"
-						:quizId="lesson.data.quiz_id"
-					/>
+				<div v-else
+					class="ProseMirror prose prose-table:table-fixed prose-td:p-2 prose-th:p-2 prose-td:border prose-th:border prose-td:border-gray-300 prose-th:border-gray-300 prose-td:relative prose-th:relative prose-th:bg-gray-100 prose-sm max-w-none !whitespace-normal mt-5">
+					<LessonContent v-if="lesson.data?.body" :content="lesson.data.body" :youtube="lesson.data.youtube"
+						:quizId="lesson.data.quiz_id" />
 				</div>
 				<div class="mt-20">
-					<Discussions
-						v-if="allowDiscussions"
-						:title="'Questions'"
-						:doctype="'Course Lesson'"
-						:docname="lesson.data.name"
-						:key="lesson.data.name"
-					/>
+					<Discussions v-if="allowDiscussions" :title="'Questions'" :doctype="'Course Lesson'"
+						:docname="lesson.data.name" :key="lesson.data.name" />
 				</div>
 			</div>
 			<div class="sticky top-10">
@@ -174,32 +132,20 @@
 						{{ Math.ceil(lessonProgress) }}% {{ __('completed') }}
 					</div>
 
-					<ProgressBar
-						v-if="user && lesson.data.membership"
-						:progress="lessonProgress"
-					/>
+					<ProgressBar v-if="user && lesson.data.membership" :progress="lessonProgress" />
 				</div>
-<<<<<<< Updated upstream
-				<CourseOutline
-					:courseName="courseName"
-					:key="chapterNumber"
-					:getProgress="lesson.data.membership ? true : false"
-				/>
-=======
 				<!-- <CourseOutline :courseName="courseName" :key="chapterNumber"
 					:getProgress="lesson.data.membership ? true : false" /> -->
-				<CourseOutline :courseName="courseName" :semester="lesson.data.custom_course_semester"
-					:module="lesson.data.custom_course_module" :topic="lesson.data.custom_course_topic" :chapter="lesson.data.chapter"
-					:getProgress="lesson.data.membership ? true : false" :allowEdit=false  :has_semester="lesson.data.has_semester"/>
-				
->>>>>>> Stashed changes
+				<CourseOutline :courseName="courseName" :semester="lesson.data.semester"
+					:module="lesson.data.module" :topic="lesson.data.topic" :chapter="lesson.data.chapter"
+					:getProgress="lesson.data.membership ? true : false" :allowEdit=false />
 			</div>
 		</div>
 	</div>
 </template>
 <script setup>
 import { createResource, Breadcrumbs, Button } from 'frappe-ui'
-import { computed, watch, inject, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, watch, inject, ref, onMounted, onBeforeUnmount, reactive } from 'vue'
 import CourseOutline from '@/components/CourseOutline.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -211,6 +157,8 @@ import LessonContent from '@/components/LessonContent.vue'
 import CourseInstructors from '@/components/CourseInstructors.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 
+import { nextTick } from 'vue'
+
 const user = inject('$user')
 const router = useRouter()
 const route = useRoute()
@@ -221,6 +169,20 @@ const lessonProgress = ref(0)
 const timer = ref(0)
 let timerInterval
 
+// const props = defineProps({
+// 	courseName: {
+// 		type: String,
+// 		required: true,
+// 	},
+// 	chapterNumber: {
+// 		type: String,
+// 		required: true,
+// 	},
+// 	lessonNumber: {
+// 		type: String,
+// 		required: true,
+// 	},
+// })
 const props = defineProps({
 	courseName: {
 		type: String,
@@ -228,6 +190,7 @@ const props = defineProps({
 	},
 	semesterNumber: {
 		type: String,
+		required: true,
 	},
 	moduleNumber: {
 		type: String,
@@ -244,50 +207,91 @@ const props = defineProps({
 	lessonNumber: {
 		type: String,
 		required: true,
-	},
+	}
 })
+
+
+let lessonDetails=reactive({})
+
+if (lessonDetails) {
+	lessonDetails.data = {}
+} else {
+	lessonDetails.data = null
+	
+}
+
 
 onMounted(() => {
 	startTimer()
 })
 
+// const lesson = createResource({
+// 	url: 'lms.lms.utils.get_lesson',
+// 	cache: ['lesson', props.courseName, props.chapterNumber, props.lessonNumber],
+// 	makeParams(values) {
+// 		return {
+// 			course: props.courseName,
+// 			chapter: values ? values.chapter : props.chapterNumber,
+// 			lesson: values ? values.lesson : props.lessonNumber,
+// 		}
+// 	},
+// 	auto: true,
+// 	onSuccess(data) {
+// 		if (Object.keys(data).length === 0) {
+// 			router.push({
+// 				name: 'CourseDetail',
+// 				params: { courseName: props.courseName },
+// 			})
+// 			return
+// 		}
+// 		lessonProgress.value = data.membership?.progress
+// 		if (data.content) editor.value = renderEditor('editor', data.content)
+// 		if (
+// 			data.instructor_content &&
+// 			JSON.parse(data.instructor_content)?.blocks?.length > 1
+// 		)
+// 			instructorEditor.value = renderEditor(
+// 				'instructor-content',
+// 				data.instructor_content
+// 			)
+// 		editor.value?.isReady.then(() => {
+// 			checkIfDiscussionsAllowed()
+// 		})
+
+// 		if (!editor.value && data.body) {
+// 			const quizRegex = /\{\{ Quiz\(".*"\) \}\}/
+// 			const hasQuiz = quizRegex.test(data.body)
+// 			if (!hasQuiz) allowDiscussions.value = true
+// 		}
+// 	},
+// })
+
 const lesson = createResource({
 	url: 'lms.lms.utils.get_lesson',
-	// cache: ['lesson', props.courseName, props.semesterNumber, props.moduleNumber, props.topicNumber, props.chapterNumber, props.lessonNumber],
+	cache: ['lesson', props.courseName, props.semesterNumber, props.moduleNumber, props.topicNumber, props.chapterNumber, props.lessonNumber],
 	makeParams(values) {
-		if (props.semesterNumber) {
-			return {
-				course: props.courseName,
-				semester: props.semesterNumber,
-				module: props.moduleNumber,
-				topic: props.topicNumber,
-				chapter: values ? values.chapter : props.chapterNumber,
-				lesson: values ? values.lesson : props.lessonNumber,
-			}
-		} else {
-			return {
-				course: props.courseName,
-				module: props.moduleNumber,
-				topic: props.topicNumber,
-				chapter: values ? values.chapter : props.chapterNumber,
-				lesson: values ? values.lesson : props.lessonNumber,
-			}
+		return {
+			course: props.courseName,
+			semester: props.semesterNumber,
+			module: props.moduleNumber,
+			topic: props.topicNumber,
+			chapter: values ? values.chapter : props.chapterNumber,
+			lesson: values ? values.lesson : props.lessonNumber,
 		}
 	},
 	auto: true,
 	onSuccess(data) {
-		// if (Object.keys(data).length === 0) {
-		// 	router.push({
-		// 		name: 'CourseDetail',
-		// 		params: { courseName: props.courseName },
-		// 	})
-		// 	return
-		// }
-		
+		if (Object.keys(data).length === 0) {
+			router.push({
+				name: 'CourseDetail',
+				params: { courseName: props.courseName },
+			})
+			return
+		}
 		lessonDetails.data = data
 		lessonProgress.value = data.membership?.progress
+		// if (data.content) editor.value = renderEditor('editor', data.content)
 		if (data.content) {
-			
 			nextTick(() => {
 				editor.value = renderEditor('editor', data.content)
 			})
@@ -303,11 +307,15 @@ const lesson = createResource({
 		if (
 			data.instructor_content &&
 			JSON.parse(data.instructor_content)?.blocks?.length > 1
-		)
-			instructorEditor.value = renderEditor(
-				'instructor-content',
-				data.instructor_content
-			)
+		) {
+			nextTick(() => {
+				instructorEditor.value = renderEditor(
+					'instructor-content',
+					data.instructor_content
+				)
+			})
+		}
+
 		editor.value?.isReady.then(() => {
 			checkIfDiscussionsAllowed()
 		})
@@ -371,9 +379,7 @@ const progress = createResource({
 // 	})
 // 	return items
 // })
- const breadcrumbs = computed(() => {
- 	// console.log(lesson?.data.name, "lesson in breadcrums------------");
-
+const breadcrumbs = computed(() => {
 	let items = [{ label: 'Courses', route: { name: 'Courses' } }]
 	items.push({
 		label: lesson?.data?.course_title,
@@ -385,7 +391,7 @@ const progress = createResource({
 			name: 'Lesson',
 			params: {
 				courseName: props.courseName,
-				// semesterNumber: props.semesterNumber,
+				semesterNumber: props.semesterNumber,
 				moduleNumber: props.moduleNumber,
 				topicNumber: props.topicNumber,
 				chapterNumber: props.chapterNumber,
@@ -405,25 +411,59 @@ const progress = createResource({
 
 
 watch(
-	[() => route.params.chapterNumber, () => route.params.lessonNumber],
+	[
+		() => route.params.semesterNumber,
+		() => route.params.moduleNumber,
+		() => route.params.topicNumber,
+		() => route.params.chapterNumber,
+		() => route.params.lessonNumber,
+	],
 	(
-		[newChapterNumber, newLessonNumber],
-		[oldChapterNumber, oldLessonNumber]
+		[
+			newSemesterNumber,
+			newModuleNumber,
+			newTopicNumber,
+			newChapterNumber,
+			newLessonNumber,
+		]
 	) => {
-		if (newChapterNumber || newLessonNumber) {
-			editor.value = null
-			instructorEditor.value = null
-			allowDiscussions.value = false
-			lesson.submit({
-				chapter: newChapterNumber,
-				lesson: newLessonNumber,
-			})
-			clearInterval(timerInterval)
-			timer.value = 0
-			startTimer()
-		}
+		editor.value = null
+		instructorEditor.value = null
+		allowDiscussions.value = false
+		lesson.submit({
+			semester: newSemesterNumber,
+			module: newModuleNumber,
+			topic: newTopicNumber,
+			chapter: newChapterNumber,
+			lesson: newLessonNumber,
+		})
+		clearInterval(timerInterval)
+		timer.value = 0
+		startTimer()
 	}
 )
+
+// watch(
+// 	[() => route.params.chapterNumber, () => route.params.lessonNumber],
+// 	(
+// 		[newChapterNumber, newLessonNumber],
+// 		[oldChapterNumber, oldLessonNumber]
+// 	) => {
+// 		if (newChapterNumber || newLessonNumber) {
+// 			editor.value = null
+// 			instructorEditor.value = null
+// 			allowDiscussions.value = false
+// 			lesson.submit({
+// 				chapter: newChapterNumber,
+// 				lesson: newLessonNumber,
+// 			})
+// 			clearInterval(timerInterval)
+// 			timer.value = 0
+// 			startTimer()
+// 		}
+// 	}
+// )
+
 
 const startTimer = () => {
 	timerInterval = setInterval(() => {

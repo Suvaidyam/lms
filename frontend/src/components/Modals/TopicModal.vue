@@ -7,15 +7,13 @@
 				label: TopicDetail ? __('Edit') : __('Create'),
 				variant: 'solid',
 				onClick: (close) =>
-					TopicDetail ? editTopic(close) : addTopicChild(close),
+					TopicDetail ? editTopic(close) : addTopic(close),
 			},
 		],
 	}">
 		<template #body-content>
 			<div class="space-y-4 text-base">
-				<FormControl v-if="TopicDetail" label="Title" v-model="Topic.title" :required="true" />
-				<Link v-else doctype="Submodule" v-model="Topic.title" :filters="{ course_module: props.module }"
-					label="Add Topic" :required="true" />
+				<FormControl label="Title" v-model="Topic.title" :required="true" />
 				<Switch size="sm" :label="__('SCORM Package')"
 					:description="__('Enable this only if you want to upload a SCORM package as a Topic.')"
 					v-model="Topic.is_scorm_package" />
@@ -65,7 +63,6 @@ import { showToast, getFileSize } from '@/utils/'
 import { capture } from '@/telemetry'
 import { FileText, X } from 'lucide-vue-next'
 import { useSettings } from '@/stores/settings'
-import Link from '@/components/Controls/Link.vue'
 
 const show = defineModel()
 const outline = defineModel('outline')
@@ -153,31 +150,6 @@ const addTopic = async (close) => {
 						},
 					}
 				)
-			},
-			onError(err) {
-				showToast(__('Error'), err.messages?.[0] || err, 'x')
-			},
-		}
-	)
-}
-
-const addTopicChild = async (close) => {
-	if (!Topic.title) {
-		showToast(__('Error'), __('Please select a Topic'), 'x')
-		return
-	}
-
-	TopicReference.submit(
-		{ name: Topic.title }, // 👈 take the value selected from Link
-		{
-			onSuccess() {
-				cleanTopic()
-				if (!settingsStore.onboardingDetails.data?.is_onboarded) {
-					settingsStore.onboardingDetails.reload()
-				}
-				outline.value.reload()
-				showToast(__('Success'), __('Topic Child added successfully'), 'check')
-				close()
 			},
 			onError(err) {
 				showToast(__('Error'), err.messages?.[0] || err, 'x')

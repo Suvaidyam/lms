@@ -14,14 +14,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Topic",
-   "options": "Submodule",
+   "options": "Course Topic",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-23 13:24:32.208345",
+ "modified": "2025-06-13 13:56:28.781804",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Course Topic Child",

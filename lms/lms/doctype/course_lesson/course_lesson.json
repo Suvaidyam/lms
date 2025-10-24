@@ -33,15 +33,6 @@
  ],
  "fields": [
   {
-   "fieldname": "chapter",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Course Chapter",
-   "options": "Course Chapter",
-   "reqd": 1
-  },
-  {
    "default": "0",
    "fieldname": "include_in_preview",
    "fieldtype": "Check",
@@ -73,16 +64,6 @@
   {
    "fieldname": "help",
    "fieldtype": "HTML"
-  },
-  {
-   "fetch_from": "chapter.course",
-   "fieldname": "course",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Course",
-   "options": "LMS Course",
-   "read_only": 1
   },
   {
    "description": "Quiz will appear at the bottom of the lesson.",
@@ -157,11 +138,29 @@
    "fieldtype": "Check",
    "label": "Is SCORM Package",
    "read_only": 1
+  },
+  {
+   "fetch_from": "chapter.course",
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Course",
+   "options": "LMS Course"
+  },
+  {
+   "fieldname": "chapter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Course Chapter",
+   "options": "Course Chapter",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-14 13:46:56.838659",
+ "modified": "2025-06-13 17:38:10.250983",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Course Lesson",

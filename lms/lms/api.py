@@ -520,7 +520,82 @@ def delete_lesson(lesson, chapter):
 	frappe.db.delete("LMS Course Progress", {"lesson": lesson})
 
 	# Delete Lesson
-	frappe.db.delete("Course Lesson", lesson)
+	# frappe.db.delete("Course Lesson", lesson)
+	doc = frappe.get_doc("Course Lesson", lesson)
+	doc.delete()
+
+@frappe.whitelist()
+def delete_chapter(chapter):
+	chapterInfo = frappe.db.get_value(
+		"Course Chapter", chapter, ["is_scorm_package", "scorm_package_path"], as_dict=True
+	)
+
+	if chapterInfo.is_scorm_package:
+		delete_scorm_package(chapterInfo.scorm_package_path)
+
+	frappe.db.delete("Chapter Reference", {"chapter": chapter})
+	frappe.db.delete("Lesson Reference", {"parent": chapter})
+	frappe.db.delete("Course Lesson", {"chapter": chapter})
+	frappe.db.delete("Course Chapter", chapter)
+ 
+@frappe.whitelist()
+def delete_topic(topic, chapters=None):
+    chapter_reference = frappe.get_all(
+        "Chapter Reference", 
+        filters={"parent": topic}, 
+        fields=["name", "chapter"]
+    )
+
+    chapters = []
+    for chapter in chapter_reference:
+        chap = frappe.db.get_value("Course Chapter", {"name": chapter["chapter"]})
+        chapters.append(chap)
+    
+    for chapter in chapters:
+        delete_chapter(chapter) 
+    
+    frappe.db.delete("Course Topic Child", {"topic": topic})
+    frappe.db.delete("Course Topic", topic)       
+	
+
+@frappe.whitelist()
+def delete_module(module):
+    topic_reference = frappe.get_all(
+        "Course Topic Child", 
+        filters={"parent": module}, 
+        fields=["name", "topic"]
+    )
+
+    topics = []
+    for topic in topic_reference:
+        top = frappe.db.get_value("Course Topic", {"name": topic["topic"]})
+        topics.append(top)
+
+    for topic in topics:
+        delete_topic(topic)
+
+    frappe.db.delete("Course Module Child", {"module": module})
+    frappe.db.delete("Course Module", module)
+
+@frappe.whitelist()
+def delete_semester(semester):
+    module_reference = frappe.get_all(
+        "Course Module Child", 
+        filters={"parent": semester}, 
+        fields=["name", "module"]
+    )
+
+    modules = []
+    for module in module_reference:
+        top = frappe.db.get_value("Course Module", {"name": module["module"]})
+        modules.append(top)
+
+    for module in modules:
+        delete_module(module)
+
+    frappe.db.delete("Course Semester Child", {"semester": semester})
+    frappe.db.delete("Course Semester", semester)
+  
 
 
 @frappe.whitelist()
@@ -800,7 +875,7 @@ def update_course_statistics():
 	courses = frappe.get_all("LMS Course", fields=["name"])
 
 	for course in courses:
-		lessons = get_lesson_count(course.name)
+		# lessons = get_lesson_count(course.name)
 
 		enrollments = frappe.db.count(
 			"LMS Enrollment", {"course": course.name, "member_type": "Student"}
@@ -812,7 +887,7 @@ def update_course_statistics():
 		frappe.db.set_value(
 			"LMS Course",
 			course.name,
-			{"lessons": lessons, "enrollments": enrollments, "rating": avg_rating},
+			{ "enrollments": enrollments, "rating": avg_rating},
 		)
 
 
@@ -836,51 +911,74 @@ def get_announcements(batch):
 		order_by="communication_date desc",
 	)
 
-
 @frappe.whitelist()
 def delete_course(course):
+	semester_reference = frappe.get_all(
+        "Course Semester Child", 
+        filters={"parent": course}, 
+        fields=["name", "semester"]
+    )
 
-	chapters = frappe.get_all("Course Chapter", {"course": course}, pluck="name")
-
-	chapter_references = frappe.get_all(
-		"Chapter Reference", {"parent": course}, pluck="name"
-	)
-
-	for chapter in chapters:
-		lessons = frappe.get_all("Course Lesson", {"chapter": chapter}, pluck="name")
-
-		lesson_references = frappe.get_all(
-			"Lesson Reference", {"parent": chapter}, pluck="name"
-		)
-
-		for lesson in lesson_references:
-			frappe.delete_doc("Lesson Reference", lesson)
-
-		for lesson in lessons:
-			topics = frappe.get_all(
-				"Discussion Topic",
-				{"reference_doctype": "Course Lesson", "reference_docname": lesson},
-				pluck="name",
-			)
-
-			for topic in topics:
-				frappe.db.delete("Discussion Reply", {"topic": topic})
-
-				frappe.db.delete("Discussion Topic", topic)
-
-			frappe.delete_doc("Course Lesson", lesson)
-
-	for chapter in chapter_references:
-		frappe.delete_doc("Chapter Reference", chapter)
-
-	for chapter in chapters:
-		frappe.delete_doc("Course Chapter", chapter)
+	semesters = []
+	for semester in semester_reference:
+		semes = frappe.db.get_value("Course Semester", {"name": semester["semester"]})
+		semesters.append(semes)
+  
+	for semester in semesters:
+		delete_semester(semester)
+	
 
 	frappe.db.delete("LMS Course Progress", {"course": course})
 	frappe.db.delete("LMS Quiz", {"course": course})
 	frappe.db.delete("LMS Quiz Submission", {"course": course})
 	frappe.db.delete("LMS Enrollment", {"course": course})
 	frappe.delete_doc("LMS Course", course)
+
+# @frappe.whitelist()
+
+# def delete_course(course):
+
+# 	chapters = frappe.get_all("Course Chapter", {"course": course}, pluck="name")
+
+# 	chapter_references = frappe.get_all(
+# 		"Chapter Reference", {"parent": course}, pluck="name"
+# 	)
+
+# 	for chapter in chapters:
+# 		lessons = frappe.get_all("Course Lesson", {"chapter": chapter}, pluck="name")
+
+# 		lesson_references = frappe.get_all(
+# 			"Lesson Reference", {"parent": chapter}, pluck="name"
+# 		)
+
+# 		for lesson in lesson_references:
+# 			frappe.delete_doc("Lesson Reference", lesson)
+
+# 		for lesson in lessons:
+# 			topics = frappe.get_all(
+# 				"Discussion Topic",
+# 				{"reference_doctype": "Course Lesson", "reference_docname": lesson},
+# 				pluck="name",
+# 			)
+
+# 			for topic in topics:
+# 				frappe.db.delete("Discussion Reply", {"topic": topic})
+
+# 				frappe.db.delete("Discussion Topic", topic)
+
+# 			frappe.delete_doc("Course Lesson", lesson)
+
+# 	for chapter in chapter_references:
+# 		frappe.delete_doc("Chapter Reference", chapter)
+
+# 	for chapter in chapters:
+# 		frappe.delete_doc("Course Chapter", chapter)
+
+# 	frappe.db.delete("LMS Course Progress", {"course": course})
+# 	frappe.db.delete("LMS Quiz", {"course": course})
+# 	frappe.db.delete("LMS Quiz Submission", {"course": course})
+# 	frappe.db.delete("LMS Enrollment", {"course": course})
+# 	frappe.delete_doc("LMS Course", course)
 
 
 def give_dicussions_permission():
@@ -902,36 +1000,162 @@ def give_dicussions_permission():
 				).save(ignore_permissions=True)
 
 
+# @frappe.whitelist()
+# def upsert_chapter(title, course, is_scorm_package, scorm_package, name=None):
+# 	values = frappe._dict(
+# 		{"title": title, "course": course, "is_scorm_package": is_scorm_package}
+# 	)
+
+# 	if is_scorm_package:
+# 		scorm_package = frappe._dict(scorm_package)
+# 		extract_path = extract_package(course, title, scorm_package)
+
+# 		values.update(
+# 			{
+# 				"scorm_package": scorm_package.name,
+# 				"scorm_package_path": extract_path.split("public")[1],
+# 				"manifest_file": get_manifest_file(extract_path).split("public")[1],
+# 				"launch_file": get_launch_file(extract_path).split("public")[1],
+# 			}
+# 		)
+
+# 	if name:
+# 		chapter = frappe.get_doc("Course Chapter", name)
+# 	else:
+# 		chapter = frappe.new_doc("Course Chapter")
+
+# 	chapter.update(values)
+# 	chapter.save()
+
+# 	if is_scorm_package and not len(chapter.lessons):
+# 		add_lesson(title, chapter.name, course)
+
+# 	return chapter
+
+
+
 @frappe.whitelist()
-def upsert_chapter(title, course, is_scorm_package, scorm_package, name=None):
+def upsert_Semester(title,course, is_scorm_package, scorm_package=None, name=None):
+	print("upsert_Semester--------------------------===+++", title, course, is_scorm_package, scorm_package, name)
 	values = frappe._dict(
 		{"title": title, "course": course, "is_scorm_package": is_scorm_package}
 	)
-
 	if is_scorm_package:
-		scorm_package = frappe._dict(scorm_package)
-		extract_path = extract_package(course, title, scorm_package)
+			scorm_package = frappe._dict(scorm_package)
+			extract_path = extract_package(course, title, scorm_package)
 
-		values.update(
-			{
-				"scorm_package": scorm_package.name,
-				"scorm_package_path": extract_path.split("public")[1],
-				"manifest_file": get_manifest_file(extract_path).split("public")[1],
-				"launch_file": get_launch_file(extract_path).split("public")[1],
-			}
+			values.update(
+				{
+					"scorm_package": scorm_package.name,
+					"scorm_package_path": extract_path.split("public")[1],
+					"manifest_file": get_manifest_file(extract_path).split("public")[1],
+					"launch_file": get_launch_file(extract_path).split("public")[1],
+				}
+		)
+
+	if name:
+		module = frappe.get_doc("Course Semester", name)
+	else:
+		module = frappe.new_doc("Course Semester")
+	module.update(values)
+	module.save()
+
+	# if is_scorm_package and not len(chapter.lessons):
+	# 	add_lesson(title, chapter.name, course)
+	print(module,"modulepp--------------------------")
+	return module
+
+@frappe.whitelist()
+def upsert_Module(title,semester,course, is_scorm_package, scorm_package=None, name=None):
+	print("upsert_Module--------------------------===+++", title, course,semester, is_scorm_package, scorm_package, name)
+	values = frappe._dict(
+		{"title": title, "course_semester": semester, "course":course}
+	)
+	if is_scorm_package:
+			scorm_package = frappe._dict(scorm_package)
+			extract_path = extract_package(semester, title, scorm_package)
+
+			values.update(
+				{
+					"scorm_package": scorm_package.name,
+					"scorm_package_path": extract_path.split("public")[1],
+					"manifest_file": get_manifest_file(extract_path).split("public")[1],
+					"launch_file": get_launch_file(extract_path).split("public")[1],
+				}
+		)
+
+	if name:
+		module = frappe.get_doc("Course Module", name)
+	else:
+		module = frappe.new_doc("Course Module")
+	module.update(values)
+	module.save()
+
+	# if is_scorm_package and not len(chapter.lessons):
+	# 	add_lesson(title, chapter.name, course)
+	print(module,"modulepp--------------------------")
+	return module
+
+@frappe.whitelist()
+def upsert_Topic(title, module ,semester,course, is_scorm_package, scorm_package=None, name=None):
+	print("upsert_Topic--------------------------===+++", title, course,semester, module, is_scorm_package, scorm_package, name)
+	values = frappe._dict(
+		{"title": title, "course_module":module , "course_semester": semester, "course":course}
+	)
+	if is_scorm_package:
+			scorm_package = frappe._dict(scorm_package)
+			extract_path = extract_package(semester, title, scorm_package)
+
+			values.update(
+				{
+					"scorm_package": scorm_package.name,
+					"scorm_package_path": extract_path.split("public")[1],
+					"manifest_file": get_manifest_file(extract_path).split("public")[1],
+					"launch_file": get_launch_file(extract_path).split("public")[1],
+				}
+		)
+
+	if name:
+		topic = frappe.get_doc("Course Topic", name)
+	else:
+		topic = frappe.new_doc("Course Topic")
+	topic.update(values)
+	topic.save()
+
+	# if is_scorm_package and not len(chapter.lessons):
+	# 	add_lesson(title, chapter.name, course)
+	print(topic,"topicpp--------------------------")
+	return topic
+
+@frappe.whitelist()
+def upsert_chapter(title, topic , module ,semester,course, is_scorm_package, scorm_package=None, name=None):
+	print("upsert_Topic--------------------------===+++", title, course,semester, module, is_scorm_package, scorm_package, name)
+	values = frappe._dict(
+		{"title": title, "custom_course_topic": topic, "custom_module":module , "custom_semester": semester, "course":course}
+	)
+	if is_scorm_package:
+			scorm_package = frappe._dict(scorm_package)
+			extract_path = extract_package(semester, title, scorm_package)
+
+			values.update(
+				{
+					"scorm_package": scorm_package.name,
+					"scorm_package_path": extract_path.split("public")[1],
+					"manifest_file": get_manifest_file(extract_path).split("public")[1],
+					"launch_file": get_launch_file(extract_path).split("public")[1],
+				}
 		)
 
 	if name:
 		chapter = frappe.get_doc("Course Chapter", name)
 	else:
 		chapter = frappe.new_doc("Course Chapter")
-
 	chapter.update(values)
 	chapter.save()
 
-	if is_scorm_package and not len(chapter.lessons):
-		add_lesson(title, chapter.name, course)
-
+	# if is_scorm_package and not len(chapter.lessons):
+	# 	add_lesson(title, chapter.name, course)
+	print(chapter,"chapterpp--------------------------")
 	return chapter
 
 
@@ -1027,20 +1251,20 @@ def add_lesson(title, chapter, course):
 	lesson_reference.insert()
 
 
-@frappe.whitelist()
-def delete_chapter(chapter):
-	chapterInfo = frappe.db.get_value(
-		"Course Chapter", chapter, ["is_scorm_package", "scorm_package_path"], as_dict=True
-	)
+# @frappe.whitelist()
+# def delete_chapter(chapter):
+# 	chapterInfo = frappe.db.get_value(
+# 		"Course Chapter", chapter, ["is_scorm_package", "scorm_package_path"], as_dict=True
+# 	)
 
-	if chapterInfo.is_scorm_package:
-		delete_scorm_package(chapterInfo.scorm_package_path)
+# 	if chapterInfo.is_scorm_package:
+# 		delete_scorm_package(chapterInfo.scorm_package_path)
 
-	frappe.db.delete("Chapter Reference", {"chapter": chapter})
-	frappe.db.delete("Lesson Reference", {"parent": chapter})
-	frappe.db.delete("Course Lesson", {"chapter": chapter})
-	frappe.db.delete("Course Chapter", chapter)
-
+# 	frappe.db.delete("Chapter Reference", {"chapter": chapter})
+# 	frappe.db.delete("Lesson Reference", {"parent": chapter})
+# 	frappe.db.delete("Course Lesson", {"chapter": chapter})
+# 	frappe.db.delete("Course Chapter", chapter)
+ 
 
 def delete_scorm_package(scorm_package_path):
 	scorm_package_path = frappe.get_site_path("public", scorm_package_path[1:])
@@ -1175,3 +1399,36 @@ def prepare_heatmap_data(start_date, number_of_days, date_count):
 def get_week_difference(start_date, current_date):
 	diff_in_days = date_diff(current_date, start_date)
 	return diff_in_days // 7
+
+
+
+
+
+@frappe.whitelist(allow_guest=True)
+def get_user_details(usr=None):
+    user_details = frappe.db.get_value("User", {"name": usr}, ["name","full_name", "email"], as_dict=True)
+    roles = frappe.get_all(
+        "Has Role",
+        filters={"parent": user_details.name},
+        fields=[ "role"],
+        order_by="idx"
+    )
+    user_details["roles"] = [r["role"] for r in roles]
+    return user_details
+
+@frappe.whitelist(allow_guest=True)
+def get_enrolled_courses(usr=None):
+	enrolled_courses=frappe.get_all("LMS Enrollment" ,filters={"member":usr} ,fields=["name","course","member","progress","member_name","payment","current_lesson"])
+ 
+	return enrolled_courses
+
+
+    
+    
+ 
+ 
+	
+   
+        
+        
+        

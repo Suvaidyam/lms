@@ -122,6 +122,7 @@ const props = defineProps({
 		default: null,
 	},
 })
+
 </script>
 <style>
 .course-image {

@@ -1,27 +1,35 @@
 <template>
-	<Dialog v-model="show" :options="{
+	<Dialog
+		v-model="show"
+		:options="{
 			title: ModuleDetail ? __('Edit Module') : __('Add Module'),
 			size: 'lg',
 			actions: [
 				{
-					label: ModuleDetail ? __('Edit') : __('Add Module'),
+					label: ModuleDetail ? __('Edit') : __('Create'),
 					variant: 'solid',
 					onClick: (close) =>
-						ModuleDetail ? editModule(close) : addModuleChild(close),
+						ModuleDetail ? editModule(close) : addModule(close),
 				},
 			],
-		}">
+		}"
+	>
 		<template #body-content>
 			<div class="space-y-4 text-base">
-				<FormControl v-if="ModuleDetail" label="Title" v-model="Module.title" :required="true" />
-				<Link v-else doctype="Course Module" v-model="Module.title" :filters="{  }"
-					label="Add Module" :required="true" />
-				<Switch size="sm" :label="__('SCORM Package')"
+				<FormControl label="Title" v-model="Module.title" :required="true" />
+				<Switch
+					size="sm"
+					:label="__('SCORM Package')"
 					:description="__('Enable this only if you want to upload a SCORM package as a Module.')"
-					v-model="Module.is_scorm_package" />
+					v-model="Module.is_scorm_package"
+				/>
 				<div v-if="Module.is_scorm_package">
-					<FileUploader v-if="!Module.scorm_package" :fileTypes="['.zip']" :validateFile="validateFile"
-						@success="(file) => (Module.scorm_package = file)">
+					<FileUploader
+						v-if="!Module.scorm_package"
+						:fileTypes="['.zip']"
+						:validateFile="validateFile"
+						@success="(file) => (Module.scorm_package = file)"
+					>
 						<template v-slot="{ file, progress, uploading, openFileSelector }">
 							<div class="mb-4">
 								<Button @click="openFileSelector" :loading="uploading">
@@ -41,8 +49,15 @@
 									{{ getFileSize(Module.scorm_package.file_size) }}
 								</span>
 							</div>
+<<<<<<< HEAD
 							<X @click="() => (Module.scorm_package = null)"
 								class="bg-gray-200 rounded-md cursor-pointer stroke-1.5 w-5 h-5 p-1 ml-4" />
+=======
+							<X
+								@click="() => (Module.scorm_package = null)"
+								class="bg-gray-200 rounded-md cursor-pointer stroke-1.5 w-5 h-5 p-1 ml-4"
+							/>
+>>>>>>> dev_bittuk
 						</div>
 					</div>
 				</div>
@@ -65,7 +80,6 @@ import { showToast, getFileSize } from '@/utils/'
 import { capture } from '@/telemetry'
 import { FileText, X } from 'lucide-vue-next'
 import { useSettings } from '@/stores/settings'
-import Link from '@/components/Controls/Link.vue'
 
 const show = defineModel()
 const outline = defineModel('outline')
@@ -83,10 +97,6 @@ const props = defineProps({
 	ModuleDetail: {
 		type: Object,
 		default: null,
-	},
-	has_semester: {
-		type: Boolean,
-		default: false,
 	},
 })
 
@@ -114,7 +124,7 @@ const ModuleResource = createResource({
 	},
 })
 
-const ModuleReferenceforsemester = createResource({
+const ModuleReference = createResource({
 	url: 'frappe.client.insert',
 	makeParams(values) {
 		return {
@@ -129,48 +139,6 @@ const ModuleReferenceforsemester = createResource({
 		}
 	},
 })
-const ModuleReferenceforcourse = createResource({
-	url: 'frappe.client.insert',
-	makeParams(values) {
-		return {
-			doc: {
-				doctype: 'Course Module Child',
-				module: values.name,
-				parent: props.course,
-				parenttype: 'LMS Course',
-				parentfield: 'modules',
-			},
-
-		}
-	},
-})
-
-
-const addModuleChild = async (close) => {
-	if (!Module.title) {
-		showToast(__('Error'), __('Please select a Module'), 'x')
-		return
-	}
-	const ModuleReference = props.has_semester ? ModuleReferenceforsemester : ModuleReferenceforcourse
-	
-	ModuleReference.submit(
-		{ name: Module.title }, // 👈 take the value selected from Link
-		{
-			onSuccess() {
-				cleanModule()
-				if (!settingsStore.onboardingDetails.data?.is_onboarded) {
-					settingsStore.onboardingDetails.reload()
-				}
-				outline.value.reload()
-				showToast(__('Success'), __('Module Child added successfully'), 'check')
-				close()
-			},
-			onError(err) {
-				showToast(__('Error'), err.messages?.[0] || err, 'x')
-			},
-		}
-	)
-}
 
 const addModule = async (close) => {
 	ModuleResource.submit(
