@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-06 12:09:40.947822",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "or__continue_assessment_70",
+  "or__continue_assessment_pf",
+  "or__end_assessment_30",
+  "or__end_assessment_pf",
+  "or_total_marks",
+  "or_total_pf",
+  "or_final_result_pf",
+  "credits",
+  "section_break_omop",
+  "or_maximum_marks",
+  "or_obtained_marks",
+  "or_",
+  "section_break_ycbc",
+  "assessment_total",
+  "weighted_total",
+  "obtained_weighted",
+  "total_percent",
+  "module_filnal"
+ ],
+ "fields": [
+  {
+   "fieldname": "or__continue_assessment_70",
+   "fieldtype": "Data",
+   "label": "OR - Continue Assessment (70)"
+  },
+  {
+   "fieldname": "or__continue_assessment_pf",
+   "fieldtype": "Select",
+   "label": "OR - Continue Assessment (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "or__end_assessment_30",
+   "fieldtype": "Data",
+   "label": "OR - End Assessment (30)"
+  },
+  {
+   "fieldname": "or__end_assessment_pf",
+   "fieldtype": "Select",
+   "label": "OR - End Assessment (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "or_total_marks",
+   "fieldtype": "Data",
+   "label": "OR (Total Marks)"
+  },
+  {
+   "fieldname": "or_total_pf",
+   "fieldtype": "Select",
+   "label": "OR (Total) (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "or_final_result_pf",
+   "fieldtype": "Select",
+   "label": "OR Final Result (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "credits",
+   "fieldtype": "Int",
+   "label": "Credits"
+  },
+  {
+   "fieldname": "section_break_omop",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "or_maximum_marks",
+   "fieldtype": "Data",
+   "label": "OR Maximum Marks"
+  },
+  {
+   "fieldname": "or_obtained_marks",
+   "fieldtype": "Data",
+   "label": "OR Obtained Marks"
+  },
+  {
+   "fieldname": "or_",
+   "fieldtype": "Percent",
+   "label": "OR %"
+  },
+  {
+   "fieldname": "section_break_ycbc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "assessment_total",
+   "fieldtype": "Data",
+   "label": "Assessment Total"
+  },
+  {
+   "fieldname": "weighted_total",
+   "fieldtype": "Data",
+   "label": "Weighted Total"
+  },
+  {
+   "fieldname": "obtained_weighted",
+   "fieldtype": "Data",
+   "label": "Obtained Weighted"
+  },
+  {
+   "fieldname": "total_percent",
+   "fieldtype": "Percent",
+   "label": "Total Percent "
+  },
+  {
+   "fieldname": "module_filnal",
+   "fieldtype": "Select",
+   "label": "Module Filnal",
+   "options": "\nPass\nFail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-24 12:41:47.607619",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "OR Field Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

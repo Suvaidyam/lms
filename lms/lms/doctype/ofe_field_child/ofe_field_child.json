@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-06 12:15:12.070306",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ofe__continue_assessment_70",
+  "ofe__continue_assessment_pf",
+  "ofe__end_assessment_30",
+  "ofe__end_assessment_pf",
+  "ofe__total_marks",
+  "ofe_total_pf",
+  "ofe_final_result_pf",
+  "credits",
+  "section_break_ycbc",
+  "assessment_total",
+  "weighted_total",
+  "obtained_weighted",
+  "total_percent",
+  "module_filnal"
+ ],
+ "fields": [
+  {
+   "fieldname": "ofe__continue_assessment_70",
+   "fieldtype": "Data",
+   "label": "OFE - Continue Assessment (70)"
+  },
+  {
+   "fieldname": "ofe__continue_assessment_pf",
+   "fieldtype": "Select",
+   "label": "OFE - Continue Assessment (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "ofe__end_assessment_30",
+   "fieldtype": "Data",
+   "label": "OFE - End Assessment (30)"
+  },
+  {
+   "fieldname": "ofe__end_assessment_pf",
+   "fieldtype": "Select",
+   "label": "OFE - End Assessment (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "ofe__total_marks",
+   "fieldtype": "Data",
+   "label": "OFE (Total Marks)"
+  },
+  {
+   "fieldname": "ofe_total_pf",
+   "fieldtype": "Select",
+   "label": "OFE (Total) (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "ofe_final_result_pf",
+   "fieldtype": "Select",
+   "label": "OFE Final Result (P/F)",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "credits",
+   "fieldtype": "Int",
+   "label": "Credits"
+  },
+  {
+   "fieldname": "section_break_ycbc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "assessment_total",
+   "fieldtype": "Data",
+   "label": "Assessment Total"
+  },
+  {
+   "fieldname": "weighted_total",
+   "fieldtype": "Data",
+   "label": "Weighted Total"
+  },
+  {
+   "fieldname": "obtained_weighted",
+   "fieldtype": "Data",
+   "label": "Obtained Weighted"
+  },
+  {
+   "fieldname": "total_percent",
+   "fieldtype": "Percent",
+   "label": "Total Percent "
+  },
+  {
+   "fieldname": "module_filnal",
+   "fieldtype": "Select",
+   "label": "Module Filnal",
+   "options": "\nPass\nFail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-24 12:41:29.631981",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "OFE Field Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
