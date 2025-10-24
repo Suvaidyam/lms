@@ -48,7 +48,7 @@ class AssessmentScoreData(Document):
 			except (ValueError, TypeError):
 				return 0
 
-		cal="Calculating for table:"
+		cal="Calculating for table:1"
   
 		for row in child_table:
 			# Safely convert to floats
