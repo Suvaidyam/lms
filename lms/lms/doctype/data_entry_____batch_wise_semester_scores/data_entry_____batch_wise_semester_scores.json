@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-08 11:09:51.564561",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "course",
+  "column_break_oxsv",
+  "semester",
+  "column_break_enkp",
+  "batch",
+  "section_break_vkks",
+  "import_file"
+ ],
+ "fields": [
+  {
+   "fieldname": "course",
+   "fieldtype": "Select",
+   "label": "Course",
+   "options": "Farmer Scientist Course (FSC)\nPG Diploma in Natural Farming\nNatural Farming Foundation Course"
+  },
+  {
+   "fieldname": "column_break_oxsv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "semester",
+   "fieldtype": "Select",
+   "label": "Semester",
+   "options": "Semester I\nSemester II\nSemester III\nSemester IV\nSemester V\nSemester VI\nSemester VII\nSemester VIII"
+  },
+  {
+   "fieldname": "column_break_enkp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "batch",
+   "fieldtype": "Select",
+   "label": "Batch",
+   "options": "\nBatch-1\nBatch-2\nBatch-3\nBatch-4\nBatch-5"
+  },
+  {
+   "fieldname": "section_break_vkks",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "import_file",
+   "fieldtype": "Attach",
+   "label": "Import File"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-10-24 12:50:17.991503",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "Data Entry  -  Batch-wise Semester Scores",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
