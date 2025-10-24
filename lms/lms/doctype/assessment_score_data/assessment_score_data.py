@@ -86,6 +86,8 @@ class AssessmentScoreData(Document):
 			# Accumulate totals
 			total_credits += credits
 			total_weighted += obtained_weighted
+   
+   
 		
 		
 		self.total_credits = int(self.total_credits or 0) + int(total_credits or 0)
