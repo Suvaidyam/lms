@@ -25,7 +25,7 @@
   "score_card",
   "column_break_srsj",
   "total_credits",
-  "year",
+  "assessment_year",
   "semester_1_tab",
   "own_fields",
   "lms_fields",
@@ -40,7 +40,6 @@
   "semester_4_tab",
   "ct_fields",
   "crv_fields",
-  "rm_fields",
   "dnf_fields"
  ],
  "fields": [
@@ -54,7 +53,8 @@
    "fieldname": "frappe_id",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Frappe ID"
+   "label": "Frappe ID",
+   "options": "User"
   },
   {
    "fieldname": "district",
@@ -215,12 +215,6 @@
    "options": "Managing Farms"
   },
   {
-   "fieldname": "rm_fields",
-   "fieldtype": "Table",
-   "label": "RM fields",
-   "options": "RM Field Child"
-  },
-  {
    "fieldname": "dnf_fields",
    "fieldtype": "Table",
    "label": "DNF fields",
@@ -236,15 +230,15 @@
    "label": "Total Credits"
   },
   {
-   "fieldname": "year",
+   "fieldname": "assessment_year",
    "fieldtype": "Select",
-   "label": "Year",
+   "label": "Assessment Year",
    "options": "\n2023-2024\n2024-2025\n2025-2026\n2026-2027\n2027-2028\n2028-2029\n2029-2030"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-23 11:25:35.486140",
+ "modified": "2025-10-28 17:21:42.783089",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Assessment Score Data",

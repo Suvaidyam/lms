@@ -10,12 +10,6 @@
   "food_systems__continue_assessment_pf",
   "food_systems__end_assessment_30",
   "food_systems__end_assessment_pf",
-  "food_systems_total_marks",
-  "food_systems_total_pf",
-  "food_systems_final_result",
-  "food_systems_maximum_marks",
-  "food_systems_obtained_marks",
-  "food_systems_",
   "credits",
   "section_break_ycbc",
   "assessment_total",
@@ -48,38 +42,6 @@
    "options": "\nPass\nFail"
   },
   {
-   "fieldname": "food_systems_total_marks",
-   "fieldtype": "Data",
-   "label": "Food Systems (Total marks)"
-  },
-  {
-   "fieldname": "food_systems_total_pf",
-   "fieldtype": "Select",
-   "label": "Food Systems (Total) (P/F)",
-   "options": "\nPass\nFail"
-  },
-  {
-   "fieldname": "food_systems_final_result",
-   "fieldtype": "Select",
-   "label": "Food Systems \u2013 Final Result",
-   "options": "\nPass\nFail"
-  },
-  {
-   "fieldname": "food_systems_maximum_marks",
-   "fieldtype": "Data",
-   "label": "Food Systems Maximum marks"
-  },
-  {
-   "fieldname": "food_systems_obtained_marks",
-   "fieldtype": "Data",
-   "label": "Food Systems Obtained Marks"
-  },
-  {
-   "fieldname": "food_systems_",
-   "fieldtype": "Percent",
-   "label": "Food Systems %"
-  },
-  {
    "fieldname": "credits",
    "fieldtype": "Int",
    "label": "Credits"
@@ -106,7 +68,8 @@
   {
    "fieldname": "total_percent",
    "fieldtype": "Percent",
-   "label": "Total Percent "
+   "label": "Total Percent ",
+   "precision": "2"
   },
   {
    "fieldname": "module_filnal",
@@ -118,7 +81,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-24 12:43:15.516806",
+ "modified": "2025-10-28 17:03:53.185782",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Food Systems Child",

@@ -7,7 +7,9 @@
  "field_order": [
   "semester",
   "column_break_gsnq",
-  "batch"
+  "batch",
+  "column_break_jiqc",
+  "district"
  ],
  "fields": [
   {
@@ -25,12 +27,22 @@
    "fieldtype": "Select",
    "label": "Batch",
    "options": "\nBatch-1\nBatch-2\nBatch-3\nBatch-4\nBatch-5"
+  },
+  {
+   "fieldname": "column_break_jiqc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Link",
+   "label": "District",
+   "options": "District"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-23 16:24:48.300571",
+ "modified": "2025-10-24 16:58:48.559618",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Bulk Download Assessment Score Card",

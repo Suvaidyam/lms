@@ -11,6 +11,7 @@ frappe.ui.form.on("Bulk Download Assessment Score Card", {
 				args: {
 					semester: frm.doc.semester,
 					batch: frm.doc.batch,
+					district: frm.doc.district,
 				},
 				freeze: true, // show loading indicator
 				freeze_message: __("Downloading, please wait..."),

@@ -11,7 +11,15 @@
   "column_break_enkp",
   "batch",
   "section_break_vkks",
-  "import_file"
+  "import_file",
+  "section_break_keeb",
+  "template_s1b1",
+  "template_s2b1",
+  "template_s3b1",
+  "template_s4b1",
+  "column_break_nfrr",
+  "template_s1b2",
+  "template_s2b2"
  ],
  "fields": [
   {
@@ -48,12 +56,57 @@
    "fieldname": "import_file",
    "fieldtype": "Attach",
    "label": "Import File"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester I' && doc.batch == 'Batch-1'",
+   "fieldname": "template_s1b1",
+   "fieldtype": "Attach",
+   "label": "Template(Sem1 & batch1)"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester I' && doc.batch == 'Batch-2'",
+   "fieldname": "template_s1b2",
+   "fieldtype": "Attach",
+   "label": "Template(Sem1 & batch2)"
+  },
+  {
+   "fieldname": "section_break_keeb",
+   "fieldtype": "Section Break",
+   "label": "Download Templates"
+  },
+  {
+   "fieldname": "column_break_nfrr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester II' && doc.batch == 'Batch-1'",
+   "fieldname": "template_s2b1",
+   "fieldtype": "Attach",
+   "label": "Template(Sem2 & batch1)"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester II' && doc.batch == 'Batch-2'",
+   "fieldname": "template_s2b2",
+   "fieldtype": "Attach",
+   "label": "Template(Sem2 & batch2)"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester III' && doc.batch == 'Batch-1'",
+   "fieldname": "template_s3b1",
+   "fieldtype": "Attach",
+   "label": "Template(Sem3 & batch1)"
+  },
+  {
+   "depends_on": "eval: doc.semester == 'Semester IV' && doc.batch == 'Batch-1'",
+   "fieldname": "template_s4b1",
+   "fieldtype": "Attach",
+   "label": "Template(Sem4 & batch1)"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-24 12:50:17.991503",
+ "modified": "2025-10-28 13:26:38.581584",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Data Entry  -  Batch-wise Semester Scores",

@@ -10,10 +10,6 @@
   "nf__continue_assessment_pf",
   "nf__end_assessment_30",
   "nf__end_assessment_pf",
-  "nf_maximum_marks",
-  "nf_total_marks",
-  "nf_total_pf",
-  "nf__final_result",
   "credits",
   "section_break_ycbc",
   "assessment_total",
@@ -50,32 +46,6 @@
    "options": "\nPass\nFail"
   },
   {
-   "fieldname": "nf_maximum_marks",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "NF (Maximum Marks)"
-  },
-  {
-   "fieldname": "nf_total_marks",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "NF (Total Marks)"
-  },
-  {
-   "fieldname": "nf_total_pf",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "NF (Total) (P/F)",
-   "options": "\nPass\nFail"
-  },
-  {
-   "fieldname": "nf__final_result",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "NF - Final Result",
-   "options": "\nPass\nFail"
-  },
-  {
    "fieldname": "credits",
    "fieldtype": "Int",
    "label": "Credits"
@@ -102,7 +72,8 @@
   {
    "fieldname": "total_percent",
    "fieldtype": "Percent",
-   "label": "Total Percent "
+   "label": "Total Percent ",
+   "precision": "2"
   },
   {
    "fieldname": "module_filnal",
@@ -114,7 +85,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-24 12:44:00.267846",
+ "modified": "2025-10-28 17:05:09.243435",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Nf Field Child",

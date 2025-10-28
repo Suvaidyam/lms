@@ -18,25 +18,32 @@ class AssessmentScoreData(Document):
 		self.semester_obtaind_marks=0
 		self.total_credits=0
 		self.no_of_modules_pass=0
-     
-		self.calculate_fields("own_fields", "own_field__continue_assessment_70", "own_field__end_assessment_30")
-		self.calculate_fields("lms_fields", "lms__continuous_assessment_70", "lms__end_assessment_30")
-		self.calculate_fields("nf_fields",'nf__continue_assessment_70','nf__end_assessment_30')
-		self.calculate_fields("managing_farms",'managing_farms__continue_assessment_70','managing_farms__end_assessment_30')
-		self.calculate_fields("research_methods",'research_methods__continue_assessment_70','research_methods__end_assessment_30')
-		self.calculate_fields("food_systems",'food_systems__continue_assessment_70','food_systems__end_assessment_30')
-		self.calculate_fields("ofe_fields",'ofe__continue_assessment_70','ofe__end_assessment_30')
-		self.calculate_fields("or_fields",'or__continue_assessment_70','or__end_assessment_30')
-		self.calculate_fields("ct_fields",'ct__continue_assessment_70','ct_end_assessment_30')
-		self.calculate_fields("crv_fields",'crv__continue_assessment_70','crv__end_assessment_30')
-		self.calculate_fields("dnf_fields",'dnf__continuous_assessment_70','dnf__end_assessment_30')
+    
+
+		self.calculate_fields("own_fields", "own_field__continue_assessment_70", "own_field__end_assessment_30", "own_field__continue_assessment_pf", "own_field__end_assessment_pf")
+		self.calculate_fields("lms_fields", "lms__continuous_assessment_70", "lms__end_assessment_30", "lms__continuous_assessment_pf", "lms__end_assessment_pf")
+		self.calculate_fields("nf_fields", "nf__continue_assessment_70", "nf__end_assessment_30", "nf__continue_assessment_pf", "nf__end_assessment_pf")
+		self.calculate_fields("managing_farms", "managing_farms__continue_assessment_70", "managing_farms__end_assessment_30", "managing_farms__continue_assessment_pf", "managing_farms__end_assessment_pf")
+		self.calculate_fields("research_methods", "research_methods__continue_assessment_70", "research_methods__end_assessment_30", "research_methods__continue_assessment_pf", "research_methods__end_assessment_pf")
+		self.calculate_fields("food_systems", "food_systems__continue_assessment_70", "food_systems__end_assessment_30", "food_systems__continue_assessment_pf", "food_systems__end_assessment_pf")
+		self.calculate_fields("ofe_fields", "ofe__continue_assessment_70", "ofe__end_assessment_30", "ofe__continue_assessment_pf", "ofe__end_assessment_pf")
+		self.calculate_fields("or_fields", "or__continue_assessment_70", "or__end_assessment_30", "or__continue_assessment_pf", "or__end_assessment_pf")
+		self.calculate_fields("ct_fields", "ct__continue_assessment_70", "ct__end_assessment_30", "ct__continue_assessment_pf", "ct__end_assessment_pf")
+		self.calculate_fields("crv_fields", "crv__continue_assessment_70", "crv__end_assessment_30", "crv__continue_assessment_pf", "crv__end_assessment_pf")
+		self.calculate_fields("dnf_fields", "dnf__continuous_assessment_70", "dnf__end_assessment_30", "dnf__continuous_assessment_pf", "dnf__end_assessment_pf")
+
 
 		self.semester_passfail = "Fail" if self._any_fail_found else "Pass"
 		self.semester_= round((self.semester_obtaind_marks / self.semester_maximum_marks * 100), 2) if self.semester_maximum_marks else 0
 		self.semester_gpa = round((self.semester_ / 10), 2)
 
+	
+	
+	
+		
 
-	def calculate_fields(self, table_name, cont_field, end_field):
+
+	def calculate_fields(self, table_name, cont_field, end_field, cont_pf_field, end_pf_field):
 		total_credits = 0
 		total_weighted = 0
 		
@@ -73,6 +80,10 @@ class AssessmentScoreData(Document):
 			weighted_continue_threshold = 70 * 0.5  # 35
 			weighted_end_threshold = 30 * 0.4       # 12
 			weighted_total_threshold = 100 * 0.5          # 50
+
+			setattr(row, cont_pf_field, "Pass" if continue_assessment >= weighted_continue_threshold else "Fail")
+			setattr(row, end_pf_field, "Pass" if end_assessment >= weighted_end_threshold else "Fail")
+
 
 			if continue_assessment >= weighted_continue_threshold and end_assessment >= weighted_end_threshold and total >= weighted_total_threshold:
 				print("Pass=================")
