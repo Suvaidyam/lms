@@ -1,0 +1,18 @@
+[
+ {
+  "batch": "Batch-1",
+  "course": "Farmer Scientist Course (FSC)",
+  "docstatus": 0,
+  "doctype": "Data Entry  -  Batch-wise Semester Scores",
+  "import_file": "/private/files/Template(Sem-II & Batch-1).xlsx",
+  "modified": "2025-10-29 10:12:42.401334",
+  "name": "Data Entry  -  Batch-wise Semester Scores",
+  "semester": "Semester II",
+  "template_s1b1": "/private/files/Template(Sem-I & Batch-1).xlsx",
+  "template_s1b2": "/private/files/Template(Sem-I & Batch-2).xlsx",
+  "template_s2b1": "/private/files/Template(Sem-II & Batch-1).xlsx",
+  "template_s2b2": "/private/files/Template(Sem-II & Batch-2).xlsx",
+  "template_s3b1": "/private/files/Template(Sem-III & Batch-1).xlsx",
+  "template_s4b1": "/private/files/Template(Sem-IV & Batch-1).xlsx"
+ }
+]
