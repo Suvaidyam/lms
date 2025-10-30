@@ -1,0 +1,52 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"3rGyhQtWjj\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">FSC Score Card</span>\",\"col\":12}},{\"id\":\"BilmHLscaJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Assessment Score Data List\",\"col\":5}},{\"id\":\"3I1gziS4ra\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Bulk Download Assessment Score Card Result\",\"col\":6}},{\"id\":\"wy0k9_dNdV\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Data Entry For Assessment Score\",\"col\":6}}]",
+ "creation": "2025-10-30 15:08:08.851525",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "projects",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "FSC Score Card",
+ "links": [],
+ "modified": "2025-10-30 15:25:43.996689",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "FSC Score Card",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 47.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Assessment Score Data List",
+   "link_to": "Assessment Score Data",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Data Entry For Assessment Score",
+   "link_to": "Data Entry  -  Batch-wise Semester Scores",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Bulk Download Assessment Score Card Result",
+   "link_to": "Bulk Download Assessment Score Card",
+   "type": "DocType"
+  }
+ ],
+ "title": "FSC Score Card"
+}

@@ -6,13 +6,21 @@ import frappe
 from frappe.model.document import Document
 
 class AssessmentScoreData(Document):
+    
+	def after_insert(self):
+		self.apply_user_permissions()
+	
+	def before_delete(self):
+		self.delete_user_permissions()
+        
 	def before_save(self):
 		self._any_fail_found = False
 		self.semester_maximum_marks=0
 		self.semester_obtaind_marks=0
 		self.total_credits=0
 		self.no_of_modules_pass=0
-    
+
+		
 
 		self.calculate_fields("own_fields", "own_field__continue_assessment_70", "own_field__end_assessment_30", "own_field__continue_assessment_pf", "own_field__end_assessment_pf")
 		self.calculate_fields("lms_fields", "lms__continuous_assessment_70", "lms__end_assessment_30", "lms__continuous_assessment_pf", "lms__end_assessment_pf")
@@ -100,4 +108,36 @@ class AssessmentScoreData(Document):
 		self.semester_maximum_marks = int(self.semester_maximum_marks or 0) + int(total_credits or 0) * 100
 		self.total_obtained_weighted = total_weighted
 		self.semester_obtaind_marks = int(self.semester_obtaind_marks or 0) + int(total_weighted or 0)
+  
+  
+	def apply_user_permissions(self):
+		if not frappe.db.exists("User Permission", {"user": self.frappe_id, "allow": self.doctype,}):
+			new_doc = frappe.new_doc("User Permission")
+			new_doc.user = self.frappe_id
+			new_doc.allow = self.doctype
+			new_doc.apply_to_all_doctypes = 1
+			new_doc.for_value = self.name
+			new_doc.insert()
+   
+	# def delete_user_permissions(self):
+	# 	record_count = frappe.db.count("Assessment Score Data", {"frappe_id": self.frappe_id})
+	# 	print("Record Count================="*100, record_count)
+	# 	# if record_count == 1:
+	# 	frappe.db.delete("User Permission", {"user": self.frappe_id, "allow": self.doctype, "for_value": self.name})
+
+	def delete_user_permissions(self):
+    # Count how many Assessment Score Data records exist for this frappe_id
+		record_count = frappe.db.count("Assessment Score Data", {"frappe_id": self.frappe_id})
+		
+		# If this is the only one, remove its user permission
+		if record_count == 1:
+			frappe.db.delete(
+				"User Permission",
+				{
+					"user": self.frappe_id,
+					"allow": self.doctype,
+					"for_value": self.name
+				},
+				ignore_permissions=True
+			)	
 		

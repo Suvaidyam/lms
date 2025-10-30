@@ -14,7 +14,7 @@ app_license = "AGPL"
 # Includes in <head>
 # ------------------
 fixtures = [
-     {"doctype": "Data Entry  -  Batch-wise Semester Scores"},
+    #  {"doctype": "Data Entry  -  Batch-wise Semester Scores"},
 				
 	# "Regional Training Centre",
 	# "Education Table",

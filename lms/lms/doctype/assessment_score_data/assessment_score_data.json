@@ -51,7 +51,7 @@
   },
   {
    "fieldname": "frappe_id",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Frappe ID",
    "options": "User"
@@ -163,49 +163,49 @@
   {
    "fieldname": "lms_fields",
    "fieldtype": "Table",
-   "label": "Lms fields",
+   "label": "Learning Managing & Scaling",
    "options": "Lms Field Child"
   },
   {
    "fieldname": "nf_fields",
    "fieldtype": "Table",
-   "label": "Nf fields",
+   "label": "Natural Farming Fundamentals",
    "options": "Nf Field Child"
   },
   {
    "fieldname": "research_methods",
    "fieldtype": "Table",
-   "label": "Research methods",
+   "label": "Research Methods",
    "options": "Research Methods Child"
   },
   {
    "fieldname": "food_systems",
    "fieldtype": "Table",
-   "label": "Food systems",
+   "label": "Food Systems and Value Chains",
    "options": "Food Systems Child"
   },
   {
    "fieldname": "ofe_fields",
    "fieldtype": "Table",
-   "label": "OFE fields",
+   "label": "Own Experiments",
    "options": "OFE Field Child"
   },
   {
    "fieldname": "or_fields",
    "fieldtype": "Table",
-   "label": "OR fields",
+   "label": "Own Research",
    "options": "OR Field Child"
   },
   {
    "fieldname": "ct_fields",
    "fieldtype": "Table",
-   "label": "CT fields",
+   "label": "Cadre Training",
    "options": "CT Field Child"
   },
   {
    "fieldname": "crv_fields",
    "fieldtype": "Table",
-   "label": "CRV fields",
+   "label": "Climate Resilient Village",
    "options": "CRV Filed Child"
   },
   {
@@ -217,7 +217,7 @@
   {
    "fieldname": "dnf_fields",
    "fieldtype": "Table",
-   "label": "DNF fields",
+   "label": "Deepning NF",
    "options": "DNF Fields Child"
   },
   {
@@ -238,7 +238,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 17:21:42.783089",
+ "modified": "2025-10-30 14:57:56.879527",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Assessment Score Data",
