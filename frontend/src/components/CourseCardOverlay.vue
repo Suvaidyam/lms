@@ -29,7 +29,7 @@
 						{{ __('Continue Learning') }}
 					</span>
 				</Button>
-			</router-link> -->
+			</router-link> 
 			<router-link v-if="course.data.membership" :to="{
 				name: 'Lesson1',
 				params: {

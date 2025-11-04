@@ -79,21 +79,7 @@
 								</div>
 							</div>
 						</div>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-						<FormControl
-							v-model="course.video_link"
-							:label="__('Preview Video')"
-							:placeholder="
-								__(
-									'Paste the youtube link of a short video introducing the course'
-								)
-							"
-							class="mb-4"
-						/>
-=======
-=======
->>>>>>> dev_bittuk
+
 						<div class="flex ">
 
 							<div class="mb-4 w-1/2">
@@ -102,13 +88,8 @@
 									<span class="text-red-500">*</span>
 								</div>
 								<FileUploader :required="true">
-<<<<<<< HEAD
-									<input type="file" ref="custom_course_document" @change="handlePdfUpload"
-										accept=".doc,.docx" class="hidden" />
-=======
 									<input type="file" ref="custom_course_document" @change="handlePdfUpload" accept=".doc,.docx"
 										class="hidden" />
->>>>>>> dev_bittuk
 
 									<!-- Custom button to open file picker -->
 									<Button @click="openpdfFileSelector" class="custom-upload-btn">
@@ -137,11 +118,7 @@
 									<!-- Show selected file name -->
 									<p v-if="course.custom_course_doc" class="mt-2 ml-2 text-gray-700">Selected: {{
 										course.custom_course_doc
-<<<<<<< HEAD
-										}}</p>
-=======
 									}}</p>
->>>>>>> dev_bittuk
 								</FileUploader>
 							</div>
 						</div>
@@ -149,10 +126,7 @@
 							'Paste the youtube link of a short video introducing the course'
 						)
 							" class="mb-4" />
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> dev_bittuk
+
 						<div class="mb-4">
 							<div class="mb-1.5 text-xs text-gray-600">
 								{{ __('Tags') }}
@@ -203,11 +177,6 @@
 						</div>
 						<div class="grid grid-cols-3 gap-10 mb-4">
 							<div v-if="user.data?.is_moderator" class="flex flex-col space-y-4">
-<<<<<<< HEAD
-								<FormControl type="checkbox" v-model="course.has_semester" :label="__('Has Semester')" />
-
-=======
->>>>>>> dev_bittuk
 								<FormControl type="checkbox" v-model="course.published" :label="__('Published')" />
 								<FormControl v-model="course.published_on" :label="__('Published On')" type="date"
 									class="mb-5" />
@@ -238,11 +207,7 @@
 				</div>
 			</div>
 			<div class="border-l pt-5">
-<<<<<<< HEAD
-				<CourseOutline v-if="courseResource.data" :courseName="courseResource.data.name" :title="course.title" :has_semester="course.has_semester"
-=======
 				<CourseOutline v-if="courseResource.data" :courseName="courseResource.data.name" :title="course.title"
->>>>>>> dev_bittuk
 					:allowEdit="true" />
 			</div>
 		</div>
