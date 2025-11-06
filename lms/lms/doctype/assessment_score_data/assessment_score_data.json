@@ -2,6 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
+ "autoname": "format:{name1}-{batch}-{semester}",
  "creation": "2025-10-07 15:04:48.093997",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -238,10 +239,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-30 14:57:56.879527",
+ "modified": "2025-11-06 11:11:10.638217",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Assessment Score Data",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

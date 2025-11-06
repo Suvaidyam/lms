@@ -7,7 +7,7 @@ frappe.ui.form.on("Bulk Download Assessment Score Card", {
 		frm.add_custom_button(__("Download Score Card"), function () {
 			// Call your custom API endpoint
 			frappe.call({
-				method: "hrms.api.academy.generate_bulk_score_card", // replace with your actual method path
+				method: "lms.api.academy.generate_bulk_score_card", // replace with your actual method path
 				args: {
 					semester: frm.doc.semester,
 					batch: frm.doc.batch,
