@@ -6,9 +6,10 @@ import frappe
 from frappe.model.document import Document
 
 class AssessmentScoreData(Document):
-    
 	def after_insert(self):
-		self.apply_user_permissions()
+		user_exists = frappe.db.exists("User", {"name": self.frappe_id}) if self.frappe_id else False
+		if user_exists:
+			self.apply_user_permissions()
 	
 	def before_delete(self):
 		self.delete_user_permissions()
@@ -30,7 +31,7 @@ class AssessmentScoreData(Document):
 		self.calculate_fields("food_systems", "food_systems__continue_assessment_70", "food_systems__end_assessment_30", "food_systems__continue_assessment_pf", "food_systems__end_assessment_pf")
 		self.calculate_fields("ofe_fields", "ofe__continue_assessment_70", "ofe__end_assessment_30", "ofe__continue_assessment_pf", "ofe__end_assessment_pf")
 		self.calculate_fields("or_fields", "or__continue_assessment_70", "or__end_assessment_30", "or__continue_assessment_pf", "or__end_assessment_pf")
-		self.calculate_fields("ct_fields", "ct__continue_assessment_70", "ct__end_assessment_30", "ct__continue_assessment_pf", "ct__end_assessment_pf")
+		self.calculate_fields("ct_fields", "ct__continue_assessment_70", "ct_end_assessment_30", "ct__continue_assessment_pf", "ct__end_assessment_pf")
 		self.calculate_fields("crv_fields", "crv__continue_assessment_70", "crv__end_assessment_30", "crv__continue_assessment_pf", "crv__end_assessment_pf")
 		self.calculate_fields("dnf_fields", "dnf__continuous_assessment_70", "dnf__end_assessment_30", "dnf__continuous_assessment_pf", "dnf__end_assessment_pf")
 
@@ -88,12 +89,10 @@ class AssessmentScoreData(Document):
 
 
 			if continue_assessment >= weighted_continue_threshold and end_assessment >= weighted_end_threshold and total >= weighted_total_threshold:
-				print("Pass=================")
 				self.no_of_modules_pass += 1
 				row.module_filnal = "Pass"
 				
 			else:
-				print(table_name,"Fail=================")
 				row.module_filnal = "Fail"
 				self._any_fail_found = True 
 

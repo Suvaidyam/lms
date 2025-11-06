@@ -10,8 +10,14 @@ frappe.ui.form.on("Data Entry  -  Batch-wise Semester Scores", {
 	refresh(frm) {
 		if (frm.doc.import_file) {
 			frm.add_custom_button(__("Start Import"), () => {
+				if (frm.doc.__unsaved) {
+					frappe.msgprint(
+						"Please save the document before starting the import."
+					);
+					return;
+				}
 				frappe.call({
-					method: "hrms.api.academy.start_import",
+					method: "lms.api.academy.start_import",
 					args: {
 						docname: frm.doc.name,
 						semester: frm.doc.semester,

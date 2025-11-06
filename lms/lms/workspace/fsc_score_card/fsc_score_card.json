@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "FSC Score Card",
  "links": [],
- "modified": "2025-10-30 15:25:43.996689",
+ "modified": "2025-11-05 11:02:12.226268",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "FSC Score Card",
@@ -22,7 +22,11 @@
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "Agriculture Manager"
+  }
+ ],
  "sequence_id": 47.0,
  "shortcuts": [
   {
