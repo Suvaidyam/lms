@@ -12,7 +12,7 @@ frappe.ui.form.on("Assessment Score Data", {
                     return;
                 }
 				frappe.call({
-					method: "hrms.api.academy.background_generate_score_cards",
+					method: "lms.api.academy.background_generate_score_cards",
 					args: {
 						assessment_name: frm.doc.name,
 						semester: frm.doc.semester,
