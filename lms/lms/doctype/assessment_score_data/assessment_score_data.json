@@ -36,7 +36,6 @@
   "research_methods",
   "food_systems",
   "semester_3_tab",
-  "ofe_fields",
   "or_fields",
   "semester_4_tab",
   "ct_fields",
@@ -186,12 +185,6 @@
    "options": "Food Systems Child"
   },
   {
-   "fieldname": "ofe_fields",
-   "fieldtype": "Table",
-   "label": "Own Experiments",
-   "options": "OFE Field Child"
-  },
-  {
    "fieldname": "or_fields",
    "fieldtype": "Table",
    "label": "Own Research",
@@ -239,7 +232,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-06 11:11:10.638217",
+ "modified": "2025-11-07 18:33:29.280148",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Assessment Score Data",
