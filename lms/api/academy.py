@@ -3,10 +3,16 @@ import csv
 from frappe.utils.file_manager import get_file
 from frappe.utils.xlsxutils import read_xlsx_file_from_attached_file
 import os
+import zipfile
 from frappe.utils import get_site_path
-# from frappe.utils.pdf import merge_pdfs
 from frappe.utils.file_manager import save_file
 from frappe.utils.pdf import get_pdf
+
+
+
+
+
+
 
 
 @frappe.whitelist()
@@ -67,6 +73,7 @@ def start_import():
             "own_field__continue_assessment_70": row_dict.get("Own field - Continue Assessment (70)"),
             "own_field__end_assessment_30": row_dict.get("Own field - End Assessment (30)"),
             "credits":row_dict.get("Own field - Credits"),
+            "subject_code":row_dict.get("Own field - Subject Code"),
             
         }
         
@@ -74,24 +81,28 @@ def start_import():
             "lms__continuous_assessment_70": row_dict.get("LMS - Continuous Assessment (70)"),
             "lms__end_assessment_30": row_dict.get("LMS - End Assessment (30)"),
             "credits":row_dict.get("LMS - Credits"),
+            "subject_code":row_dict.get("LMS - Subject Code"),
         }
         
         Nf_row ={
             "nf__continue_assessment_70": row_dict.get("NF - Continue Assessment (70)"),
             "nf__end_assessment_30": row_dict.get("NF - End Assessment (30)"),
             "credits":row_dict.get("NF - Credits"),
+            "subject_code":row_dict.get("NF - Subject Code"),
         }
         
         managing_farms_row = {
             "managing_farms__continue_assessment_70": row_dict.get("Managing Farms - Continue Assessment (70)"),
             "managing_farms__end_assessment_30": row_dict.get("Managing Farms - End Assessment (30)"),
             "credits":row_dict.get("Managing Farms - Credits"),
+            "subject_code":row_dict.get("Managing Farms - Subject Code"),
         }
         
         research_methods_row = {                                                                   
             "research_methods__continue_assessment_70": row_dict.get("Research Methods - Continue Assessment (70)"),
             "research_methods__end_assessment_30": row_dict.get("Research Methods - End Assessment (30)"),
             "credits":row_dict.get("Research Methods - Credits"),
+            "subject_code":row_dict.get("Research Methods - Subject Code"),
             
         }
 
@@ -99,26 +110,25 @@ def start_import():
             "food_systems__continue_assessment_70": row_dict.get("Food Systems - Continue Assessment (70)"),
             "food_systems__end_assessment_30": row_dict.get("Food Systems - End Assessment (30)"),
             "credits":row_dict.get("Food Systems - Credits"),
+            "subject_code":row_dict.get("Food Systems - Subject Code"),
+
             
         }
         
-        ofe_fields_row = {
-            "ofe__continue_assessment_70": row_dict.get("OFE - Continue Assessment (70)"),
-            "ofe__end_assessment_30": row_dict.get("OFE - End Assessment (30)"),
-            "credits":row_dict.get("OFE - Credits"),
-            
-        }
+        
         
         or_fields_row = {
             "or__continue_assessment_70": row_dict.get("OR - Continue Assessment (70)"),
             "or__end_assessment_30": row_dict.get("OR - End Assessment (30)"),
             "credits":row_dict.get("OR - Credits"),
+            "subject_code":row_dict.get("OR - Subject Code"),
             
         }
         ct_fields_row = {
             "ct__continue_assessment_70": row_dict.get("CT - Continue Assessment (70)"),
             "ct_end_assessment_30": row_dict.get("CT - End Assessment (30)"),
             "credits":row_dict.get("CT - Credits"),
+            "subject_code":row_dict.get("CT - Subject Code"),
             
         }
         
@@ -126,6 +136,7 @@ def start_import():
             "crv__continue_assessment_70": row_dict.get("CRV - Continue Assessment (70)"),
             "crv__end_assessment_30": row_dict.get("CRV - End Assessment (30)"),
             "credits":row_dict.get("CRV - Credits"),
+            "subject_code":row_dict.get("CRV - Subject Code"),
             
         }
         
@@ -133,6 +144,7 @@ def start_import():
             "dnf__continuous_assessment_70": row_dict.get("DNF - Continuous Assessment (70)"),
             "dnf__end_assessment_30": row_dict.get("DNF - End Assessment (30)"),
             "credits":row_dict.get("DNF - Credits"),
+            "subject_code":row_dict.get("DNF - Subject Code"),
             
         }
         
@@ -140,6 +152,7 @@ def start_import():
             "rm__continuous_assessment_70": row_dict.get("RM - Continuous Assessment (70)"),
             "rm__end_assessment_30": row_dict.get("RM - End Assessment (30)"),
             "credits":row_dict.get("RM - Credits"),
+            "subject_code":row_dict.get("RM - Subject Code"),
             
         }
         # if has_data(own_row):
@@ -176,7 +189,6 @@ def start_import():
         append_at_top(new_doc, "managing_farms", managing_farms_row)
         append_at_top(new_doc, "research_methods", research_methods_row)
         append_at_top(new_doc, "food_systems", food_systems_row)
-        append_at_top(new_doc, "ofe_fields", ofe_fields_row)
         append_at_top(new_doc, "or_fields", or_fields_row)
         append_at_top(new_doc, "ct_fields", ct_fields_row)
         append_at_top(new_doc, "crv_fields", crv_fields_row)
@@ -205,12 +217,7 @@ def append_at_top(doc, table_field, data):
 
 
 
-import frappe
-import os
-import zipfile
-from frappe.utils import get_site_path
-from frappe.utils.file_manager import save_file
-from frappe.utils.pdf import get_pdf
+
 
 
 @frappe.whitelist()
@@ -274,10 +281,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
     by semester and batch, attach them to each record, and create a ZIP file
     attached to a new 'Bulk Assessment Score Card' record.
     """
-    import zipfile, os
-    from frappe.utils.file_manager import save_file
-    from frappe.utils import get_site_path
-    from frappe.utils.pdf import get_pdf
+
 
     frappe.log_error(f"🚀 Starting bulk score card generation | Semester: {semester}, Batch: {batch}", "Bulk Score Card Generation")
 
@@ -320,8 +324,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
                 pdf_template = frappe.get_doc("Print Format", "Assessment Score Data").html
                 html_content = frappe.render_template(pdf_template, {"doc": doc})
                 pdf_bytes = get_pdf(html_content)
-
-                filename = f"{doc.name1 or doc.name}.pdf"
+                filename = f"{doc.name1 or doc.name}-{batch}-{semester}-.pdf"
                 filepath = os.path.join(get_site_path("private", "files"), filename)
 
                 with open(filepath, "wb") as f:
@@ -329,7 +332,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
 
                 pdf_filepaths.append(filepath)
 
-                # Save PDF in File Manager
+               
                 uploaded_file = save_file(
                     filename,
                     open(filepath, "rb").read(),
@@ -341,6 +344,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
                 doc.score_card = uploaded_file.file_url
                 doc.save(ignore_permissions=True)
                 frappe.db.commit()
+            
                 
                 if assessment_name:
                     return {
@@ -353,6 +357,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
                     "docname": doc.name,
                     "file_url": uploaded_file.file_url
                 })
+               
 
                 generated_count += 1
 

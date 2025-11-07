@@ -20,7 +20,7 @@ frappe.ui.form.on("Bulk Assessment Score Card", {
 				
 
 				if (data.generated + data.failed === data.total) {
-					// frappe.hide_progress();
+					
 					setTimeout(() => frm.reload_doc(), 1000);
 				}
 			}

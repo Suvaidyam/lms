@@ -11,6 +11,7 @@
   "own_field__end_assessment_30",
   "own_field__end_assessment_pf",
   "credits",
+  "subject_code",
   "section_break_ykza",
   "assessment_total",
   "weighted_total",
@@ -80,12 +81,17 @@
    "fieldtype": "Select",
    "label": "Module Filnal",
    "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "subject_code",
+   "fieldtype": "Data",
+   "label": "Subject Code"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-28 17:07:03.862911",
+ "modified": "2025-11-07 17:44:49.281721",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Own Field Child",

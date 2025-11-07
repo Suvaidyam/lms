@@ -6,13 +6,7 @@ import frappe
 from frappe.model.document import Document
 
 class AssessmentScoreData(Document):
-	def after_insert(self):
-		user_exists = frappe.db.exists("User", {"name": self.frappe_id}) if self.frappe_id else False
-		if user_exists:
-			self.apply_user_permissions()
 	
-	def before_delete(self):
-		self.delete_user_permissions()
         
 	def before_save(self):
 		self._any_fail_found = False
@@ -109,34 +103,8 @@ class AssessmentScoreData(Document):
 		self.semester_obtaind_marks = int(self.semester_obtaind_marks or 0) + int(total_weighted or 0)
   
   
-	def apply_user_permissions(self):
-		if not frappe.db.exists("User Permission", {"user": self.frappe_id, "allow": self.doctype,}):
-			new_doc = frappe.new_doc("User Permission")
-			new_doc.user = self.frappe_id
-			new_doc.allow = self.doctype
-			new_doc.apply_to_all_doctypes = 1
-			new_doc.for_value = self.name
-			new_doc.insert()
+	
    
-	# def delete_user_permissions(self):
-	# 	record_count = frappe.db.count("Assessment Score Data", {"frappe_id": self.frappe_id})
-	# 	print("Record Count================="*100, record_count)
-	# 	# if record_count == 1:
-	# 	frappe.db.delete("User Permission", {"user": self.frappe_id, "allow": self.doctype, "for_value": self.name})
+	
 
-	def delete_user_permissions(self):
-    # Count how many Assessment Score Data records exist for this frappe_id
-		record_count = frappe.db.count("Assessment Score Data", {"frappe_id": self.frappe_id})
-		
-		# If this is the only one, remove its user permission
-		if record_count == 1:
-			frappe.db.delete(
-				"User Permission",
-				{
-					"user": self.frappe_id,
-					"allow": self.doctype,
-					"for_value": self.name
-				},
-				ignore_permissions=True
-			)	
-		
+	
