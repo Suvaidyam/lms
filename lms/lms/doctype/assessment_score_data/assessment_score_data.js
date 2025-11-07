@@ -28,10 +28,11 @@ frappe.ui.form.on("Assessment Score Data", {
 							// window.open(r.message);
 							const link = document.createElement("a");
 							link.href = r.message.file_url;
-							link.download = ""; // Let the browser use the original filename
+							link.download = ""; 
 							document.body.appendChild(link);
 							link.click();
 							document.body.removeChild(link);
+							frm.reload_doc();
 						}
 					},
 				});
