@@ -8,39 +8,40 @@
  "engine": "InnoDB",
  "field_order": [
   "name1",
+  "column_break_lwha",
   "frappe_id",
-  "district",
   "column_break_iwql",
   "mobile_number",
-  "semester",
+  "column_break_revy",
+  "district",
+  "section_break_vrvg",
   "batch",
+  "column_break_gyjb",
+  "assessment_year",
+  "column_break_qoyb",
+  "semester",
+  "column_break_deqe",
+  "designation",
+  "section_break_kelh",
+  "scorecard",
   "section_break_zjwz",
   "semester_maximum_marks",
+  "column_break_qusv",
   "semester_obtaind_marks",
-  "semester_",
   "column_break_ilrw",
+  "semester_",
+  "column_break_pdab",
   "semester_gpa",
+  "section_break_sykj",
   "no_of_modules_pass",
+  "column_break_tukq",
   "semester_passfail",
+  "column_break_vikm",
+  "total_credits",
+  "column_break_cdff",
   "score_details_section",
   "score_card",
-  "column_break_srsj",
-  "total_credits",
-  "assessment_year",
-  "semester_1_tab",
-  "own_fields",
-  "lms_fields",
-  "nf_fields",
-  "semester_2_tab",
-  "managing_farms",
-  "research_methods",
-  "food_systems",
-  "semester_3_tab",
-  "or_fields",
-  "semester_4_tab",
-  "ct_fields",
-  "crv_fields",
-  "dnf_fields"
+  "column_break_srsj"
  ],
  "fields": [
   {
@@ -135,86 +136,6 @@
    "label": "Score Card"
   },
   {
-   "fieldname": "semester_1_tab",
-   "fieldtype": "Tab Break",
-   "label": "Semester 1"
-  },
-  {
-   "fieldname": "semester_2_tab",
-   "fieldtype": "Tab Break",
-   "label": "Semester 2"
-  },
-  {
-   "fieldname": "semester_3_tab",
-   "fieldtype": "Tab Break",
-   "label": "Semester 3"
-  },
-  {
-   "fieldname": "semester_4_tab",
-   "fieldtype": "Tab Break",
-   "label": "Semester 4"
-  },
-  {
-   "fieldname": "own_fields",
-   "fieldtype": "Table",
-   "label": "Own fields",
-   "options": "Own Field Child"
-  },
-  {
-   "fieldname": "lms_fields",
-   "fieldtype": "Table",
-   "label": "Learning Managing & Scaling",
-   "options": "Lms Field Child"
-  },
-  {
-   "fieldname": "nf_fields",
-   "fieldtype": "Table",
-   "label": "Natural Farming Fundamentals",
-   "options": "Nf Field Child"
-  },
-  {
-   "fieldname": "research_methods",
-   "fieldtype": "Table",
-   "label": "Research Methods",
-   "options": "Research Methods Child"
-  },
-  {
-   "fieldname": "food_systems",
-   "fieldtype": "Table",
-   "label": "Food Systems and Value Chains",
-   "options": "Food Systems Child"
-  },
-  {
-   "fieldname": "or_fields",
-   "fieldtype": "Table",
-   "label": "Own Research",
-   "options": "OR Field Child"
-  },
-  {
-   "fieldname": "ct_fields",
-   "fieldtype": "Table",
-   "label": "Cadre Training",
-   "options": "CT Field Child"
-  },
-  {
-   "fieldname": "crv_fields",
-   "fieldtype": "Table",
-   "label": "Climate Resilient Village",
-   "options": "CRV Filed Child"
-  },
-  {
-   "fieldname": "managing_farms",
-   "fieldtype": "Table",
-   "label": "Managing Farms",
-   "options": "Managing Farms"
-  },
-  {
-   "fieldname": "dnf_fields",
-   "fieldtype": "Table",
-   "label": "Deepning NF",
-   "options": "DNF Fields Child"
-  },
-  {
    "fieldname": "column_break_srsj",
    "fieldtype": "Column Break"
   },
@@ -228,11 +149,76 @@
    "fieldtype": "Select",
    "label": "Assessment Year",
    "options": "\n2023-2024\n2024-2025\n2025-2026\n2026-2027\n2027-2028\n2028-2029\n2029-2030"
+  },
+  {
+   "fieldname": "column_break_lwha",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_revy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_vrvg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_gyjb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qoyb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_deqe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Farmer Scientist",
+   "fieldname": "designation",
+   "fieldtype": "Select",
+   "label": "Designation",
+   "options": "\nFarmer Scientist\nMentor"
+  },
+  {
+   "fieldname": "column_break_qusv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_pdab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_sykj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_tukq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_vikm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cdff",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_kelh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "scorecard",
+   "fieldtype": "Table",
+   "label": "Scorecard",
+   "options": "Assessment Marksheet Child"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-07 18:33:29.280148",
+ "modified": "2025-11-15 17:27:29.431027",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "Assessment Score Data",

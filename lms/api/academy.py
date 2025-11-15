@@ -10,14 +10,8 @@ from frappe.utils.pdf import get_pdf
 
 
 
-
-
-
-
-
 @frappe.whitelist()
 def start_import():
-    # ✅ Correct way to load document
     doc = frappe.get_doc("Data Entry  -  Batch-wise Semester Scores")
 
     if not doc.import_file:
@@ -25,196 +19,123 @@ def start_import():
 
     file_name, file_content = get_file(doc.import_file)
 
-    # Handle Excel or CSV depending on extension
+    # Read Excel or CSV
     if file_name.endswith(('.xlsx', '.xlsm')):
         rows = read_xlsx_file_from_attached_file(doc.import_file)
     elif file_name.endswith('.csv'):
         content = file_content.decode('utf-8').splitlines()
-        reader = csv.reader(content)
-        rows = list(reader)
+        rows = list(csv.reader(content))
     else:
-        frappe.throw("Unsupported file format. Please upload .xlsx or .csv file.")
+        frappe.throw("Invalid file format. Upload .xlsx or .csv.")
 
     if not rows:
-        frappe.throw("The uploaded file is empty or unreadable.")
+        frappe.throw("Uploaded file is empty.")
 
-    # headers = [h.strip() for h in rows[0]]
     headers = [(h or "").strip() for h in rows[0]]
     data_rows = rows[1:]
+
     inserted_count = 0
     updated_count = 0
 
+    # Your required subject order
+    subject_order = [
+        "NF",
+        "Own field",
+        "OR",
+        "CT",
+        "CRV",
+        "Managing Farms",
+        "DNF",
+        "Food Systems",
+        "LMS",
+        "Research Methods"
+    ]
+
     for row in data_rows:
         row_dict = dict(zip(headers, row))
-        existing_doc = frappe.db.get_value("Assessment Score Data", {"semester": doc.semester, "batch": doc.batch, "district": row_dict.get("District"), "name1": row_dict.get("Name")},"name")
+
+        # Check existing
+        existing_doc = frappe.db.get_value(
+            "Assessment Score Data",
+            {
+                "semester": doc.semester,
+                "batch": doc.batch,
+                "district": row_dict.get("District"),
+                "name1": row_dict.get("Name")
+            },
+            "name"
+        )
+
         if existing_doc:
             new_doc = frappe.get_doc("Assessment Score Data", existing_doc)
             updated_count += 1
         else:
             new_doc = frappe.new_doc("Assessment Score Data")
             inserted_count += 1
+
+        # --------------------------------------
+        # MAIN STUDENT FIELDS
+        # --------------------------------------
         new_doc.batch = doc.batch
         new_doc.semester = doc.semester
         new_doc.district = row_dict.get("District")
         new_doc.name1 = row_dict.get("Name")
         new_doc.mobile_number = row_dict.get("Mobile number")
-        new_doc.frappe_id = row_dict.get("Frappe ID")
-        new_doc.semester_maximum_marks = row_dict.get("Semester Maximum Marks")
-        new_doc.semester_obtaind_marks = row_dict.get("Semester Obtained Marks")
-        new_doc.semester_ = row_dict.get("Semester %")
-        new_doc.semester_gpa =  row_dict.get("Semester GPA")
-        new_doc.semester_passfail =row_dict.get("Semester Pass/Fail")
-        new_doc.no_of_modules_pass =row_dict.get("No of modules Passed")
-        new_doc.assessment_year = row_dict.get("Assessment Year")  
+        new_doc.frappe_id = row_dict.get("Frappe ID")    
+        new_doc.assessment_year = row_dict.get("Assessment Year")
+        new_doc.custom_designation = row_dict.get("Designation")
+        new_doc.designation = row_dict.get("Designation")
         
-        
-        
-        own_row = {
-            "own_field__continue_assessment_70": row_dict.get("Own field - Continue Assessment (70)"),
-            "own_field__end_assessment_30": row_dict.get("Own field - End Assessment (30)"),
-            "credits":row_dict.get("Own field - Credits"),
-            "subject_code":row_dict.get("Own field - Subject Code"),
-            
-        }
-        
-        Lms_row ={
-            "lms__continuous_assessment_70": row_dict.get("LMS - Continuous Assessment (70)"),
-            "lms__end_assessment_30": row_dict.get("LMS - End Assessment (30)"),
-            "credits":row_dict.get("LMS - Credits"),
-            "subject_code":row_dict.get("LMS - Subject Code"),
-        }
-        
-        Nf_row ={
-            "nf__continue_assessment_70": row_dict.get("NF - Continue Assessment (70)"),
-            "nf__end_assessment_30": row_dict.get("NF - End Assessment (30)"),
-            "credits":row_dict.get("NF - Credits"),
-            "subject_code":row_dict.get("NF - Subject Code"),
-        }
-        
-        managing_farms_row = {
-            "managing_farms__continue_assessment_70": row_dict.get("Managing Farms - Continue Assessment (70)"),
-            "managing_farms__end_assessment_30": row_dict.get("Managing Farms - End Assessment (30)"),
-            "credits":row_dict.get("Managing Farms - Credits"),
-            "subject_code":row_dict.get("Managing Farms - Subject Code"),
-        }
-        
-        research_methods_row = {                                                                   
-            "research_methods__continue_assessment_70": row_dict.get("Research Methods - Continue Assessment (70)"),
-            "research_methods__end_assessment_30": row_dict.get("Research Methods - End Assessment (30)"),
-            "credits":row_dict.get("Research Methods - Credits"),
-            "subject_code":row_dict.get("Research Methods - Subject Code"),
-            
-        }
 
-        food_systems_row = {
-            "food_systems__continue_assessment_70": row_dict.get("Food Systems - Continue Assessment (70)"),
-            "food_systems__end_assessment_30": row_dict.get("Food Systems - End Assessment (30)"),
-            "credits":row_dict.get("Food Systems - Credits"),
-            "subject_code":row_dict.get("Food Systems - Subject Code"),
+        # --------------------------------------
+        # DYNAMIC SUBJECT DETECTION
+        # --------------------------------------
+        subjects = {}
 
-            
-        }
-        
-        
-        
-        or_fields_row = {
-            "or__continue_assessment_70": row_dict.get("OR - Continue Assessment (70)"),
-            "or__end_assessment_30": row_dict.get("OR - End Assessment (30)"),
-            "credits":row_dict.get("OR - Credits"),
-            "subject_code":row_dict.get("OR - Subject Code"),
-            
-        }
-        ct_fields_row = {
-            "ct__continue_assessment_70": row_dict.get("CT - Continue Assessment (70)"),
-            "ct_end_assessment_30": row_dict.get("CT - End Assessment (30)"),
-            "credits":row_dict.get("CT - Credits"),
-            "subject_code":row_dict.get("CT - Subject Code"),
-            
-        }
-        
-        crv_fields_row = {
-            "crv__continue_assessment_70": row_dict.get("CRV - Continue Assessment (70)"),
-            "crv__end_assessment_30": row_dict.get("CRV - End Assessment (30)"),
-            "credits":row_dict.get("CRV - Credits"),
-            "subject_code":row_dict.get("CRV - Subject Code"),
-            
-        }
-        
-        dnf_fields_row = {
-            "dnf__continuous_assessment_70": row_dict.get("DNF - Continuous Assessment (70)"),
-            "dnf__end_assessment_30": row_dict.get("DNF - End Assessment (30)"),
-            "credits":row_dict.get("DNF - Credits"),
-            "subject_code":row_dict.get("DNF - Subject Code"),
-            
-        }
-        
-        rm_fields_row = {
-            "rm__continuous_assessment_70": row_dict.get("RM - Continuous Assessment (70)"),
-            "rm__end_assessment_30": row_dict.get("RM - End Assessment (30)"),
-            "credits":row_dict.get("RM - Credits"),
-            "subject_code":row_dict.get("RM - Subject Code"),
-            
-        }
-        # if has_data(own_row):
-        #     new_doc.append("own_fields", own_row)
-        # if has_data(Lms_row):
-        #     new_doc.append("lms_fields", Lms_row)
-        # if has_data(Nf_row):
-        #     new_doc.append("nf_fields", Nf_row)
-        # if has_data(managing_farms_row):
-        #     new_doc.append("managing_farms", managing_farms_row)
-        # if has_data(research_methods_row):
-        #     new_doc.append("research_methods", research_methods_row)
-        # if has_data(food_systems_row):
-        #     new_doc.append("food_systems", food_systems_row)
-        # if has_data(ofe_fields_row):
-        #     new_doc.append("ofe_fields", ofe_fields_row)
-        # if has_data(or_fields_row):
-        #     new_doc.append("or_fields", or_fields_row)
-        # if has_data(ct_fields_row):
-        #     new_doc.append("ct_fields", ct_fields_row)
-        # if has_data(crv_fields_row):
-        #     new_doc.append("crv_fields", crv_fields_row)
-        # if has_data(dnf_fields_row):
-        #     new_doc.append("dnf_fields", dnf_fields_row)
-        # if has_data(rm_fields_row):
-        #     new_doc.append("rm_fields", rm_fields_row)
-        
-        # helper function to insert at 0th index
-   
-        # use helper for all rows
-        append_at_top(new_doc, "own_fields", own_row)
-        append_at_top(new_doc, "lms_fields", Lms_row)
-        append_at_top(new_doc, "nf_fields", Nf_row)
-        append_at_top(new_doc, "managing_farms", managing_farms_row)
-        append_at_top(new_doc, "research_methods", research_methods_row)
-        append_at_top(new_doc, "food_systems", food_systems_row)
-        append_at_top(new_doc, "or_fields", or_fields_row)
-        append_at_top(new_doc, "ct_fields", ct_fields_row)
-        append_at_top(new_doc, "crv_fields", crv_fields_row)
-        append_at_top(new_doc, "dnf_fields", dnf_fields_row)
-        append_at_top(new_doc, "rm_fields", rm_fields_row)
+        for header in headers:
+            if " - " not in header:
+                continue
 
-        
+            subject_name, field_name = header.split(" - ", 1)
+            subject_name = subject_name.strip()
+            field_name = field_name.strip()
+
+            if subject_name not in subjects:
+                subjects[subject_name] = {}
+
+            subjects[subject_name][field_name] = row_dict.get(header)
+
+        # Remove existing subject rows
+        new_doc.set("scorecard", [])
+
+        # --------------------------------------
+        # APPEND IN CUSTOM ORDER
+        # --------------------------------------
+        for subject_name in subject_order:
+            if subject_name not in subjects:
+                continue  # Skip subject that does not exist for this student
+
+            fields = subjects[subject_name]
+
+            new_doc.append("scorecard", {
+                "subject_name": fields.get("Subject Name"),
+                "subject_code": fields.get("Subject Code"),
+                "credits": fields.get("Credits"),
+                "continuous_assessment": (
+                    fields.get("Continue Assessment (70)") or
+                    fields.get("Continuous Assessment (70)")
+                ),
+                "end_assessment": fields.get("End Assessment (30)")
+            })
+
+        # Save
         if existing_doc:
             new_doc.save(ignore_permissions=True)
-        else:    
+        else:
             new_doc.insert(ignore_permissions=True)
 
     frappe.db.commit()
-    return f"{inserted_count} record(s) inserted and {updated_count} record(s) updated successfully."
-
-def has_data(d):
-    """Return True if at least one non-empty value exists."""
-    return any(v not in (None, "", " ") for v in d.values())
-def append_at_top(doc, table_field, data):
-    if has_data(data):
-        doc.set(table_field, [])
-        doc.append(table_field, data)
-        getattr(doc, table_field).insert(0, getattr(doc, table_field).pop())
-
-
-
+    return f"{inserted_count} inserted • {updated_count} updated successfully."
 
 
 
@@ -383,6 +304,16 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
                 user=frappe.session.user
             )
 
+        if not pdf_filepaths:
+            _update_bulk_record(record_name, "Failed", None)
+            frappe.log_error("⚠️ No PDFs generated — ZIP not created or attached.", "Bulk Score Card Generation")
+            return {
+                "success": False,
+                "message": "No PDFs generated, so ZIP was not created.",
+                "generated_count": generated_count,
+                "failed_count": failed_count
+            }
+        
         # 🔹 3️⃣ Create ZIP
         zip_filename = f"ScoreCards_({batch}_{semester}).zip"
         zip_path = os.path.join(get_site_path("private", "files"), zip_filename)
