@@ -17,8 +17,6 @@ frappe.ui.form.on("Bulk Assessment Score Card", {
 				frm.set_value("track_records", data.progress);
 				frm.refresh_field("track_records");
 
-				
-
 				if (data.generated + data.failed === data.total) {
 					
 					setTimeout(() => frm.reload_doc(), 1000);
