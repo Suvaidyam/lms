@@ -12,7 +12,7 @@ from frappe.utils.pdf import get_pdf
 
 @frappe.whitelist()
 def start_import():
-    doc = frappe.get_doc("Data Entry  -  Batch-wise Semester Scores")
+    doc = frappe.get_doc("Data Entry - Batch-wise Semester Scores")
 
     if not doc.import_file:
         frappe.throw("Please upload a file first (.xlsx or .csv).")
@@ -85,6 +85,7 @@ def start_import():
         new_doc.assessment_year = row_dict.get("Assessment Year")
         new_doc.custom_designation = row_dict.get("Designation")
         new_doc.designation = row_dict.get("Designation")
+        new_doc.issue_date=doc.issue_date
         
 
         # --------------------------------------

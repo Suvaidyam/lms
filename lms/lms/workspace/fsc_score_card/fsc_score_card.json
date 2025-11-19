@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "FSC Score Card",
  "links": [],
- "modified": "2025-11-05 11:02:12.226268",
+ "modified": "2025-11-19 23:20:28.119111",
  "modified_by": "Administrator",
  "module": "LMS",
  "name": "FSC Score Card",
@@ -41,7 +41,7 @@
    "color": "Grey",
    "doc_view": "List",
    "label": "Data Entry For Assessment Score",
-   "link_to": "Data Entry  -  Batch-wise Semester Scores",
+   "link_to": "Data Entry - Batch-wise Semester Scores",
    "type": "DocType"
   },
   {
