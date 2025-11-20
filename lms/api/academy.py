@@ -44,10 +44,17 @@ def start_import():
         "OR",
         "CT",
         "CRV",
+<<<<<<< HEAD
         "LMS",
         "Managing Farms",
         "Food Systems",
         "DNF",
+=======
+		"LMS",
+        "Managing Farms",
+        "Food Systems",
+		"DNF",        
+>>>>>>> b9bb575c (Reorder items in the list of fields)
         "Research Methods"
     ]
 
