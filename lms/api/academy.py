@@ -44,10 +44,10 @@ def start_import():
         "OR",
         "CT",
         "CRV",
-        "Managing Farms",
-        "DNF",
-        "Food Systems",
         "LMS",
+        "Managing Farms",
+        "Food Systems",
+        "DNF",
         "Research Methods"
     ]
 
@@ -65,6 +65,7 @@ def start_import():
             },
             "name"
         )
+        print("existing_doc"*20, row_dict.get("Name"),row_dict.get("Frappe ID"))
 
         if existing_doc:
             new_doc = frappe.get_doc("Assessment Score Data", existing_doc)
@@ -73,6 +74,7 @@ def start_import():
             new_doc = frappe.new_doc("Assessment Score Data")
             inserted_count += 1
 
+        district_code = frappe.db.get_value("District", {"district_name": row_dict.get("District")}, "name")
         # --------------------------------------
         # MAIN STUDENT FIELDS
         # --------------------------------------
@@ -86,6 +88,8 @@ def start_import():
         new_doc.custom_designation = row_dict.get("Designation")
         new_doc.designation = row_dict.get("Designation")
         new_doc.issue_date=doc.issue_date
+        if district_code:
+            new_doc.district_name = district_code
         
 
         # --------------------------------------
@@ -144,24 +148,21 @@ def start_import():
 
 @frappe.whitelist()
 def generate_bulk_score_card(semester=None, batch=None, district=None):
-    # if not semester or not batch:
-    #     frappe.throw("Please provide both semester and batch.")
-    # frappe.msgprint(f'Bulk score card generation started in background for {district}.')
-    district_name = frappe.db.get_value("District", district, "district_name")
    
-    print("me"*100, semester, batch, district,district_name)
+   
+   
     filters = {
         "semester": semester,
         "batch": batch,
-        **({"district": district_name} if district_name else {})
+        **({"district_name": district} if district else {}) 
     }
     score_data_exists = frappe.db.exists(
         "Assessment Score Data", filters
     )
     
     msg=f"No Assessment Score Data found for the given Semester and Batch."
-    if district_name:
-        msg=f"No Assessment Score Data found for the given Semester, Batch and District: {district_name}."  
+    if district:
+        msg=f"No Assessment Score Data found for the given Semester, Batch and District: {district}."  
     if not score_data_exists:
         frappe.throw(msg)
 
@@ -170,7 +171,7 @@ def generate_bulk_score_card(semester=None, batch=None, district=None):
             "user": frappe.session.user,
             "request_date": frappe.utils.now_datetime(),
             "semester": semester,
-            'district': district_name,
+            'district': district,
             "batch": batch,
             "status": "Pending",
         })
@@ -182,7 +183,7 @@ def generate_bulk_score_card(semester=None, batch=None, district=None):
         semester=semester,
         batch=batch,
         record_name= doc.name,
-        district_name=district_name,
+        district_name=district,
         queue="long",
         timeout=3600,
         job_id=f"Generate Score Cards {semester}-{batch}"
@@ -215,7 +216,7 @@ def background_generate_score_cards(record_name=None, semester=None, batch=None,
         filters = {
             "semester": semester,
             "batch": batch,
-            **({"district": district_name} if district_name else {}),
+            **({"district_name": district_name} if district_name else {}),
             **({"name": assessment_name} if assessment_name else {})
         }
         records = frappe.get_all(
