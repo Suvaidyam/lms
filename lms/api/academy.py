@@ -44,10 +44,10 @@ def start_import():
         "OR",
         "CT",
         "CRV",
-        "LMS",
+		"LMS",
         "Managing Farms",
         "Food Systems",
-        "DNF",
+		"DNF",        
         "Research Methods"
     ]
 
