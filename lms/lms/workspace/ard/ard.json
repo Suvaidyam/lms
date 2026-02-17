@@ -1,0 +1,60 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"1Y6Hrh0OP2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">ARD</span>\",\"col\":12}},{\"id\":\"ACYXqvFh46\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Farmer List\",\"col\":4}},{\"id\":\"RwBX5uBSbA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Iggaarl Settings\",\"col\":4}},{\"id\":\"dQunSisIjL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Research Context\",\"col\":3}}]",
+ "creation": "2026-02-16 11:42:11.848136",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "small-file",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "ARD",
+ "links": [],
+ "modified": "2026-02-16 12:12:28.951574",
+ "modified_by": "Administrator",
+ "module": "LMS",
+ "name": "ARD",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "ARD Admin"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 49.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Farmer List",
+   "link_to": "IGGAARL Farmer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Iggaarl Settings",
+   "link_to": "IGGAARL Settings",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Research Context",
+   "link_to": "Research Context",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "ARD"
+}

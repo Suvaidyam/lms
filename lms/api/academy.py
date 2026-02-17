@@ -405,3 +405,8 @@ def _update_bulk_record(record_name, status, file_url=None):
             f"Failed to update Bulk Assessment Score Card record {record_name}: {str(e)}",
             "Bulk Assessment Score Card Update"
         )
+        
+
+
+
+
